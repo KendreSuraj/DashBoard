@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './style.css';
+import './Login.style.css';
 import logoImage from '../../../src/assets/images/avataar_logo_black.png';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const LogIn = () => {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     email: '',
     password: '',
   });
-  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -19,9 +21,11 @@ const LogIn = () => {
       [name]: value,
     });
   };
+
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate('/dashboard');
@@ -31,9 +35,11 @@ const LogIn = () => {
     <div className="login-container">
       <div className="image-form-container">
         <img src={logoImage} alt="avataar_logo" className="logo-image" />
+
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-container">
             <label htmlFor="email">Email</label>
+
             <input
               name="email"
               type="email"
@@ -43,8 +49,10 @@ const LogIn = () => {
               onChange={handleChange}
             />
           </div>
+
           <div className="input-container password-input">
             <label htmlFor="password">Password</label>
+
             <div className="password-input-inner">
               <input
                 name="password"
@@ -54,6 +62,7 @@ const LogIn = () => {
                 value={user.password}
                 onChange={handleChange}
               />
+
               <button
                 onClick={() => handleShowPassword()}
                 className="password-toggle-button"
@@ -63,6 +72,7 @@ const LogIn = () => {
               </button>
             </div>
           </div>
+
           <button type="submit" className="login-button">
             Log In
           </button>

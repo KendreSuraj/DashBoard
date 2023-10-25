@@ -30,31 +30,38 @@
   flex-direction: column;
   gap: 10px;
 }
+
 .input-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
 }
+
 label {
   font-weight: bold;
 }
+
 .login-form input {
   padding: 13px;
   border: 1.3px solid #ccc;
   border-radius: 4px;
   outline: none;
 }
+
 .password-input {
   position: relative;
 }
+
 .password-input-inner {
   display: flex;
 }
+
 .password-input input {
   flex: 1;
   /* padding-right: 40px; */
 }
+
 .password-toggle-button {
   position: absolute;
   top: 70%;
@@ -64,6 +71,7 @@ label {
   border: none;
   cursor: pointer;
 }
+
 .login-button {
   padding: 10px;
   background-color: #007bff;
