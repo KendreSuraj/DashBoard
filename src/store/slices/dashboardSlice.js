@@ -1,26 +1,23 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  upcomingBookings: [],
+  pastBookings: [],
+  upcomingBookingData: {},
+  pastBookingData: {},
+  isLoading: false,
+  error: null,
+};
 
+const dashboardSlice = createSlice({
+  name: 'dashboard',
+  initialState,
+  reducers: {
+    todayBookings(state, action) {
+      state.data = action.payload;
+    },
+  },
+});
 
-
-export const gettodayBookings = createAsyncThunk('gettodaybookings', async () => {
-    const res = await axios('/getbookings');
-    const data = await res.data[0];
-    return data;
-  }); 
-
-const dashboardSlice=createSlice({
-    name:"dashboard",
-    initialState:[],
-    reducers:{
-     todayBookings(state,action){
-        state.push(action.payload)
-     },
-    }
-})
-
-console.log("test actions",dashboardSlice.actions)
+export const { todayBookings } = dashboardSlice.actions;
 export default dashboardSlice.reducer;
-export const {todayBookings}=dashboardSlice.actions;
-
