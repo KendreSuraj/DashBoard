@@ -28,7 +28,7 @@ const LogIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    navigate('/booking');
   };
 
   return (

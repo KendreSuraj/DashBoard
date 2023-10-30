@@ -1,0 +1,21 @@
+.MuiToolbar-regular {
+  display: flex;
+  min-height: 56px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* @media only screen and (max-width: 870px) {
+  .Appbar {
+    display: none;
+  }
+} */
+
+.search-component {
+  margin-right: 50px;
+  background-color: white;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}

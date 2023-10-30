@@ -1,0 +1,11 @@
+.menu-item-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.menu-item-text {
+  margin-left: 10px;
+  text-align: center;
+}
