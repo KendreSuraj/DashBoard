@@ -2,8 +2,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import LogIn from './pages/Login/LogIn';
-import Dashboard from './pages/Dashboard/Dashboard';
 import Layout from './components/layout/Layout';
+import Profile from './pages/Profile/Profile';
+import { routes } from './routes';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LogIn />} />
           <Route element={<Layout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            {routes}
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </Router>

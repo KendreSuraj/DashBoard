@@ -1,0 +1,12 @@
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table-header {
+  background-color: #e6e0e0;
+}
+
+.table-cell {
+  font-weight: bold !important;
+}
