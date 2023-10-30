@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,7 +27,6 @@ function MenuDropdownComponent({
       onClose={handleClose}
       PaperProps={PaperProps}
     >
-
       {menuItems.map((item, index) => (
         <div key={item.name}>
           <MenuItem onClick={handleClose}>
@@ -40,7 +38,6 @@ function MenuDropdownComponent({
           {index < menuItems.length - 1 && <Divider />}
         </div>
       ))}
-      
     </Menu>
   );
 }

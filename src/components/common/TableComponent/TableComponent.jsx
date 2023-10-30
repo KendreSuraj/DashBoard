@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import './TableComponent.style.css';
 
@@ -13,14 +12,10 @@ import {
 } from '@mui/material';
 
 const TableComponent = ({ data }) => {
-
   return (
     <div className="table-container">
-
       <TableContainer component={Paper}>
-
         <Table>
-
           <TableHead>
             <TableRow className="table-header">
               {data.length > 0 &&
@@ -43,11 +38,8 @@ const TableComponent = ({ data }) => {
               </TableRow>
             ))}
           </TableBody>
-          
         </Table>
-
       </TableContainer>
-
     </div>
   );
 };

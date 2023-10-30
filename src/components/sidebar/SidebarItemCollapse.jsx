@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
   Collapse,
@@ -50,7 +49,6 @@ const SidebarItemCollapse = ({ item }) => {
         />
 
         {open ? <ExpandLessOutlinedIcon /> : <ExpandMoreOutlinedIcon />}
-        
       </ListItemButton>
       <Collapse in={open} timeout="auto">
         <List>

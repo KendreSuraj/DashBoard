@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { ListItemButton, ListItemIcon } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -6,9 +5,8 @@ import { Link } from 'react-router-dom';
 import colorConfigs from '../../../src/config/colorConfigs';
 
 const SidebarItem = ({ item }) => {
-
   const { appState } = useSelector((state) => state.appState);
-  
+
   return item.sidebarProps && item.path ? (
     <ListItemButton
       component={Link}

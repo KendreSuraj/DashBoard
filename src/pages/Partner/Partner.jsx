@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Partner = () => {
-  return (
-    <div>Partner</div>
-  )
-}
+  return <div>Partner</div>;
+};
 
-export default Partner
+export default Partner;

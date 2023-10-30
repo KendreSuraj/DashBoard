@@ -25,9 +25,7 @@ const Sidebar = () => {
         },
       }}
     >
-
       <List disablePadding>
-
         <Toolbar>
           <img className="header-img" src={logoImage} alt="logo" />
         </Toolbar>
@@ -41,9 +39,7 @@ const Sidebar = () => {
             )
           ) : null,
         )}
-        
       </List>
-
     </Drawer>
   );
 };
