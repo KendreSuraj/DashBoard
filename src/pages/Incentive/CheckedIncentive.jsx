@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const CheckedIncentive = () => {
-  return (
-    <div>CheckedIncentive</div>
-  )
-}
+  return <div>CheckedIncentive</div>;
+};
 
-export default CheckedIncentive
+export default CheckedIncentive;

@@ -7,7 +7,6 @@ import colorConfigs from '../../config/colorConfigs';
 import { Box, Toolbar } from '@mui/material';
 
 const Layout = () => (
-
   <Box sx={{ display: 'flex' }}>
     <Header />
 
@@ -34,7 +33,6 @@ const Layout = () => (
       <Toolbar />
       <Outlet />
     </Box>
-    
   </Box>
 );
 
