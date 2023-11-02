@@ -5,6 +5,7 @@ import LogIn from './pages/Login/LogIn';
 import Layout from './components/layout/Layout';
 import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
+import ViewProductDetails from './pages/Product/ViewProductDetails';
 
 function App() {
   return (
@@ -15,6 +16,10 @@ function App() {
           <Route element={<Layout />}>
             {routes}
             <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/viewproductdetails"
+              element={<ViewProductDetails />}
+            />
           </Route>
         </Routes>
       </Router>
