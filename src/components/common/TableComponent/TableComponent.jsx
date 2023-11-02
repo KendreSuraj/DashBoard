@@ -11,6 +11,7 @@ import {
   Paper,
 } from '@mui/material';
 
+
 const TableComponent = ({ data }) => {
   return (
     <div className="table-container">
