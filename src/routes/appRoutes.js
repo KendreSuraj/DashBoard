@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+// import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import Booking from '../pages/Booking/Booking';
@@ -10,7 +10,8 @@ import CheckedIncentive from '../pages/Incentive/CheckedIncentive';
 import UnCheckedIncentive from '../pages/Incentive/UnCheckedIncentive';
 import Partner from '../pages/Partner/Partner';
 import { Report } from '../pages/Report/Report';
-
+import CategoryIcon from '@mui/icons-material/Category';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 const appRoutes = [
   // {
   //   index: true,
@@ -32,7 +33,7 @@ const appRoutes = [
     state: 'productdetails',
     sidebarProps: {
       displayText: 'Products',
-      icon: <CollectionsIcon />,
+      icon: <CategoryIcon />,
     },
   },
   {
@@ -73,7 +74,7 @@ const appRoutes = [
     state: 'partner',
     sidebarProps: {
       displayText: 'Our Partner',
-      icon: <ArticleOutlinedIcon />,
+      icon: <Diversity3Icon />,
     },
   },
   {
