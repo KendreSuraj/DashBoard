@@ -9,33 +9,87 @@ import {
   TableCell,
   TableBody,
   Paper,
+  Button,
 } from '@mui/material';
 
+const TableComponent = ({
+  data,
+  hiddenFields,
+  showUpdateButton,
+  viewButton,
+  updateDetails,
+  viewDetails,
+}) => {
+  const handleUpdate = (id) => {
+    updateDetails(id);
+  };
 
-const TableComponent = ({ data }) => {
+  const handleViewDetails = (details) => {
+    viewDetails(details);
+  };
+
   return (
     <div className="table-container">
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow className="table-header">
-              {data.length > 0 &&
-                Object.keys(data[0]).map((key, index) => (
-                  <TableCell key={index} className="table-cell">
-                    {key}
-                  </TableCell>
-                ))}
+              {data?.length > 0 &&
+                Object.keys(data[0]).map((key, index) => {
+                  if (!hiddenFields || !hiddenFields.includes(key)) {
+                    return (
+                      <TableCell key={index} className="table-cell">
+                        {key
+                          .replace(/_/g, ' ')
+                          .replace(/([a-z])([A-Z])/g, '$1 $2')
+                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                      </TableCell>
+                    );
+                  }
+                  return null;
+                })}
+              {viewButton && <TableCell className="table-cell">view</TableCell>}
+              {showUpdateButton && (
+                <TableCell className="table-cell">Actions</TableCell>
+              )}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {data.map((row, rowIndex) => (
+            {data?.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
-                {Object.values(row).map((value, colIndex) => (
-                  <TableCell key={colIndex} className="table-cell">
-                    {value}
+                {Object.keys(row).map((key, colIndex) => {
+                  if (!hiddenFields || !hiddenFields.includes(key)) {
+                    return (
+                      <TableCell key={colIndex} className="table-cell">
+                        {row[key]}
+                      </TableCell>
+                    );
+                  }
+                  return null;
+                })}
+                {viewButton && (
+                  <TableCell className="table-cell">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleViewDetails(row)}
+                    >
+                      View
+                    </Button>
                   </TableCell>
-                ))}
+                )}
+                {showUpdateButton && (
+                  <TableCell className="table-cell">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleUpdate(row.id)}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

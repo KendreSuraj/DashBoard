@@ -4,12 +4,13 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import './SearchComponent.style.css';
 
-const SearchComponent = ({ onSearch }) => {
+const SearchComponent = () => {
   const [searchText, setSearchText] = useState('');
 
-  const handleSearch = () => {
-    onSearch(searchText);
-  };
+  // const handleSearch = () => {
+  //   { onSearch }
+  //   onSearch(searchText);
+  // };
 
   return (
     <TextField
@@ -20,7 +21,7 @@ const SearchComponent = ({ onSearch }) => {
       onChange={(e) => setSearchText(e.target.value)}
       InputProps={{
         endAdornment: (
-          <IconButton color="primary" onClick={handleSearch}>
+          <IconButton color="primary">
             <SearchIcon />
           </IconButton>
         ),
