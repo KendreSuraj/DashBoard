@@ -1,8 +1,30 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getBookings = createAsyncThunk('user/login', async () => {
-  const res = await axios.post('/user/login');
-  const data = await res.status;
-  return data;
-});
+const apiUrl = process.env.REACT_APP_API_URL;
+export const fetchLogin = createAsyncThunk(
+  'user/login',
+  async ({ email, password }) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/api/v1/auth/login`,
+        {
+          email,
+          password,
+          role: 'ADMIN',
+        },
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: '',
+          },
+        },
+      );
+      const data = res.data;
+      return data;
+    } catch (error) {
+      alert(error?.response?.data?.status?.message);
+      throw error;
+    }
+  },
+);

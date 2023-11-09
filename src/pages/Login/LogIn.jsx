@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.style.css';
 import logoImage from '../../../src/assets/images/avataar_logo_black.png';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLogin } from '../../store/actions/loginAction';
 
 const LogIn = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const loginUser = useSelector((state) => state.login);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     email: '',
@@ -26,9 +29,28 @@ const LogIn = () => {
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    if (loginUser?.login?.status?.code === 200) {
+      localStorage.setItem('userData', JSON.stringify(loginUser));
+      navigate('/booking');
+    }
+  }, [loginUser]);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      navigate('/booking');
+    }
+  }, [dispatch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/booking');
+    dispatch(
+      fetchLogin({
+        email: user.email,
+        password: user.password,
+      }),
+    );
   };
 
   return (
