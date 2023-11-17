@@ -13,6 +13,6 @@ export const menuItems = [
 
 export const usersProfile = [
   { name: 'Profile', route: '/profile', icon: <AccountCircleIcon /> },
-  { name: 'My Dashboard', route: '/mydashboard', icon: <DashboardIcon /> },
+  // { name: 'My Dashboard', route: '/mydashboard', icon: <DashboardIcon /> },
   { name: 'Logout', route: '/logout', icon: <ExitToAppIcon /> },
 ];

@@ -61,6 +61,7 @@ const Booking = () => {
             'addressPlaceId',
             'productSessionId',
             'isConsent',
+            'productImage',
           ]}
         />
       ) : (

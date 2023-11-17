@@ -30,7 +30,7 @@ const ProductDetails = () => {
           <TableComponent
             data={productList}
             hiddenFields={['image', 'description']}
-            viewButton={true}
+            viewButton={'view'}
             updateDetails={handleUpdateDetails}
             viewDetails={handleViewDetails}
           />

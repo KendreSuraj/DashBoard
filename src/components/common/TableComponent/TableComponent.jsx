@@ -30,12 +30,12 @@ const TableComponent = ({
 
   return (
     <div className="table-container">
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow className="table-header">
-              {data?.length > 0 &&
-                Object.keys(data[0]).map((key, index) => {
+      {data && data.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow className="table-header">
+                {Object.keys(data[0]).map((key, index) => {
                   if (!hiddenFields || !hiddenFields.includes(key)) {
                     return (
                       <TableCell key={index} className="table-cell">
@@ -48,53 +48,60 @@ const TableComponent = ({
                   }
                   return null;
                 })}
-              {viewButton && <TableCell className="table-cell">view</TableCell>}
-              {showUpdateButton && (
-                <TableCell className="table-cell">Actions</TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {data?.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                {Object.keys(row).map((key, colIndex) => {
-                  if (!hiddenFields || !hiddenFields.includes(key)) {
-                    return (
-                      <TableCell key={colIndex} className="table-cell">
-                        {row[key]}
-                      </TableCell>
-                    );
-                  }
-                  return null;
-                })}
                 {viewButton && (
-                  <TableCell className="table-cell">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleViewDetails(row)}
-                    >
-                      View
-                    </Button>
-                  </TableCell>
+                  <TableCell className="table-cell">view</TableCell>
                 )}
                 {showUpdateButton && (
-                  <TableCell className="table-cell">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleUpdate(row.id)}
-                    >
-                      Update
-                    </Button>
-                  </TableCell>
+                  <TableCell className="table-cell">Actions</TableCell>
                 )}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+
+            <TableBody>
+              {data.map((row, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  {Object.keys(row).map((key, colIndex) => {
+                    if (!hiddenFields || !hiddenFields.includes(key)) {
+                      return (
+                        <TableCell key={colIndex} className="table-cell">
+                          {row[key]}
+                        </TableCell>
+                      );
+                    }
+                    return null;
+                  })}
+                  {viewButton && (
+                    <TableCell className="table-cell">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleViewDetails(row)}
+                      >
+                        {viewButton}
+                      </Button>
+                    </TableCell>
+                  )}
+                  {showUpdateButton && (
+                    <TableCell className="table-cell">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleUpdate(row.id)}
+                      >
+                        Update
+                      </Button>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <div className="no-data-found">
+          <p>Data not found</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { fetchLogin } from '../actions/loginAction';
 
 const initialState = {
   loginDetails: {},
@@ -7,14 +8,21 @@ const initialState = {
 };
 
 export const loginSlice = createSlice({
-  name: 'login',
+  name: 'loginUser',
   initialState,
-  reducers: {
-    loginUser: (state, action) => {
-      state.loginDetails = action.payload;
-    },
+  extraReducers: (builder) => {
+    builder.addCase(fetchLogin.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchLogin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.login = action.payload;
+    });
+    builder.addCase(fetchLogin.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
   },
 });
 
-export const { loginUser } = loginSlice.actions;
 export default loginSlice.reducer;
