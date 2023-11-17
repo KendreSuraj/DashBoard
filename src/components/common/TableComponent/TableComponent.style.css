@@ -10,3 +10,9 @@
 .table-cell {
   font-weight: bold !important;
 }
+
+.no-data-found {
+  text-align: center;
+  font-weight: bold;
+  color: red;
+}

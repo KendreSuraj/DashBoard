@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { getToken } from '../../components/common/userLocalStorageUtils';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 export const fetchLogin = createAsyncThunk(
@@ -28,3 +29,21 @@ export const fetchLogin = createAsyncThunk(
     }
   },
 );
+
+export const logoutUser = async (id) => {
+  console.log('test id', id);
+  try {
+    const res = await axios.delete(`${apiUrl}/api/v1/auth/logout?id=${id}`, {
+      headers: {
+        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+        token: getToken(),
+      },
+    });
+    const data = res.data;
+    console.log('Test log out  data', data);
+    return data;
+  } catch (error) {
+    console.error('Error in logout', error);
+    throw error;
+  }
+};
