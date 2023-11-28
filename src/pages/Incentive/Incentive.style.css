@@ -1,0 +1,12 @@
+.incentive-date-rage,.incentiv-pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+  }
+  .incentive-date-rage input {
+    padding: 10px;
+    width: 180px;
+  }
+  .incentive-heading{
+   text-align:center;
+  }

@@ -1,0 +1,72 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: #f2f2f2;
+}
+
+.custom-table input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inline-form {
+  display: flex;
+  align-items: center;
+}
+
+.custom-table button {
+  margin-left: 10px;
+}
+.center {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.final-submit-button {
+  padding: 10px 20px;
+  background-color: #45a049;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.min-width-input {
+  min-width: 80px;
+}
+
+.incentive-edit-form-button {
+  width: 100px;
+  height: 35px;
+  border-radius: 5px;
+  margin-top: -6px;
+  border: 2px solid;
+}
+
+.button-green {
+  background: green;
+  color: white;
+  border-color: green;
+}
+
+@media screen and (max-width: 600px) {
+  .custom-table th,
+  .custom-table td {
+    font-size: 12px;
+  }
+}

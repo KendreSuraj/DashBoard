@@ -10,7 +10,7 @@ import { fetchLogin } from '../../store/actions/loginAction';
 const LogIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginUser = useSelector((state) => state.login);
+  const loginUser = useSelector((state) => state.login.loginDetails);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     email: '',
@@ -30,7 +30,7 @@ const LogIn = () => {
   };
 
   useEffect(() => {
-    if (loginUser?.login?.status?.code === 200) {
+    if (loginUser?.status?.code === 200) {
       localStorage.setItem('userData', JSON.stringify(loginUser));
       navigate('/booking');
     }
