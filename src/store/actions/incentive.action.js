@@ -26,7 +26,7 @@ export const fetchIncentive = createAsyncThunk(
   },
 );
 
-export const fetchIncentiveSeteps = createAsyncThunk(
+export const fetchIncentiveSteps = createAsyncThunk(
   'incentive/fetchIncentiveSteps',
   async (params) => {
     try {
@@ -45,52 +45,56 @@ export const fetchIncentiveSeteps = createAsyncThunk(
   }
 )
 
-export const submitIncentive = async (body) => {
-  try {
-    const res = await axios.post(
-      `${apiUrl}/api/v1/admin/partner/check-incentive`,
-      body,
-      {
-        headers: {
-          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-          token: getToken(),
+export const submitIncentive = createAsyncThunk(
+  'incentive/submitincentive',
+  async (body) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/api/v1/admin/partner/check-incentive`,
+        body,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
         },
-      },
-    );
+      );
 
-    const data = res.data;
-    if (data.status.code === 200) {
-      alert(data.status.message)
-      window.location.reload(0, 0)
+      const data = res.data;
+      if (data.status.code === 200) {
+        alert(data.status.message)
+        window.location.reload(0, 0)
+        return data;
+      }
+    } catch (error) {
+      console.error('Error in submit incentive', error);
+      throw error;
+    }
+  })
+
+export const finalIncentiveSubmit = createAsyncThunk(
+  'incentive/finalincentivesubmit',
+  async (body) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/api/v1/admin/partner/submit-incentive`,
+        body,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+
+      const data = res.data;
+      if (data.status.code === 200) {
+        alert(data.status.message)
+      }
       return data;
+    } catch (error) {
+      console.error('Error in Final Submit', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error in submit incentive', error);
-    throw error;
-  }
-};
-
-export const finalIncentiveSubmit = async (body) => {
-  try {
-    const res = await axios.post(
-      `${apiUrl}/api/v1/admin/partner/submit-incentive`,
-      body,
-      {
-        headers: {
-          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-          token: getToken(),
-        },
-      },
-    );
-
-    const data = res.data;
-    if (data.status.code === 200) {
-      alert(data.status.message)
-    }
-    return data;
-  } catch (error) {
-    console.error('Error in Final Submit', error);
-    throw error;
-  }
-};
+  });
 

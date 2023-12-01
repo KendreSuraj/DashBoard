@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
-import { fetchIncentiveSeteps } from '../../store/actions/incentive.action';
+import { fetchIncentiveSteps } from '../../store/actions/incentive.action';
 
 export const ViewCheckedIncentive = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ export const ViewCheckedIncentive = () => {
 
   useEffect(() => {
     dispatch(
-      fetchIncentiveSeteps({
+      fetchIncentiveSteps({
         sessionId,
         sessionSchedulesId,
         partnerId,

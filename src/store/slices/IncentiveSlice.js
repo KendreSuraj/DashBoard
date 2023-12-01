@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchIncentive, fetchIncentiveSeteps } from '../actions/incentive.action.js';
+import { fetchIncentive, fetchIncentiveSteps, submitIncentive, finalIncentiveSubmit } from '../actions/incentive.action.js';
 
 const initialState = {
     incentiveList: [],
@@ -24,14 +24,37 @@ const incentiveSlice = createSlice({
             state.isLoading = false;
             state.error = action.error.message;
         });
-        builder.addCase(fetchIncentiveSeteps.pending, (state) => {
+
+        builder.addCase(fetchIncentiveSteps.pending, (state) => {
             state.isLoading = true;
         });
-        builder.addCase(fetchIncentiveSeteps.fulfilled, (state, action) => {
+        builder.addCase(fetchIncentiveSteps.fulfilled, (state, action) => {
             state.isLoading = false;
             state.incentiveSteps = action.payload;
         });
-        builder.addCase(fetchIncentiveSeteps.rejected, (state, action) => {
+        builder.addCase(fetchIncentiveSteps.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
+
+        builder.addCase(submitIncentive.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(submitIncentive.fulfilled, (state, action) => { // eslint-disable-line no-unused-vars
+            state.isLoading = false;
+        });
+        builder.addCase(submitIncentive.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
+
+        builder.addCase(finalIncentiveSubmit.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(finalIncentiveSubmit.fulfilled, (state, action) => { // eslint-disable-line no-unused-vars
+            state.isLoading = false;
+        });
+        builder.addCase(finalIncentiveSubmit.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
         });

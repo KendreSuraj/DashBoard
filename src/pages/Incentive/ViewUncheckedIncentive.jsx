@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchIncentiveSeteps,
+  fetchIncentiveSteps,
   finalIncentiveSubmit,
   submitIncentive,
 } from '../../store/actions/incentive.action';
@@ -37,18 +37,20 @@ export default function ViewUncheckedIncentive() {
     e.preventDefault();
     const updatedData = editedData[index] ?? {};
     if (updatedData) {
-      await submitIncentive({
-        adminId: adminId,
-        partnerStepId: item.partnerStepId,
-        partnerStepIncentiveId: item.partnerStepIncentiveId,
-        amount: updatedData.allottedIncentive,
-      });
+      dispatch(
+        submitIncentive({
+          adminId: adminId,
+          partnerStepId: item.partnerStepId,
+          partnerStepIncentiveId: item.partnerStepIncentiveId,
+          amount: updatedData.allottedIncentive,
+        }),
+      );
     }
   };
 
   useEffect(() => {
     dispatch(
-      fetchIncentiveSeteps({
+      fetchIncentiveSteps({
         sessionId,
         sessionSchedulesId,
         partnerId,
@@ -70,10 +72,12 @@ export default function ViewUncheckedIncentive() {
       );
 
       if (isConfirmed) {
-        finalIncentiveSubmit({
-          adminId,
-          sessionSchedulesId,
-        });
+        dispatch(
+          finalIncentiveSubmit({
+            adminId,
+            sessionSchedulesId,
+          }),
+        );
       }
     }
   };
