@@ -31,7 +31,6 @@ export const fetchLogin = createAsyncThunk(
 );
 
 export const logoutUser = async (id) => {
-  console.log('test id', id);
   try {
     const res = await axios.delete(`${apiUrl}/api/v1/auth/logout?id=${id}`, {
       headers: {
@@ -40,7 +39,6 @@ export const logoutUser = async (id) => {
       },
     });
     const data = res.data;
-    console.log('Test log out  data', data);
     return data;
   } catch (error) {
     console.error('Error in logout', error);

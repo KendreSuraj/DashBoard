@@ -7,7 +7,8 @@ import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
 import AddProductStepForm from './pages/Product/AddProductStepForm';
-import Logout from './pages/Logout/Logout';
+import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
+import ViewUncheckedIncentive from './pages/Incentive/ViewUncheckedIncentive';
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
               element={<ViewProductDetails />}
             />
             <Route path="/addproductstep" element={<AddProductStepForm />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/viewcheckedincentive" element={<ViewCheckedIncentive />} />
+            <Route path="/viewuncheckedincentive" element={<ViewUncheckedIncentive />} />
           </Route>
         </Routes>
       </Router>

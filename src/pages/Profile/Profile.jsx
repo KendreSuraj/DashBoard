@@ -3,8 +3,7 @@ import './Profile.style.css';
 
 const Profile = () => {
   const userData = JSON.parse(localStorage.getItem('userData'));
-  console.log('Test user data', userData);
-  const LoginUser = userData?.login?.user;
+  const LoginUser = userData?.user;
   return (
     <div className="profile-container">
       <div className="value">
