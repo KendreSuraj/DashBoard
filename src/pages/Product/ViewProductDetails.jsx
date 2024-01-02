@@ -42,7 +42,7 @@ const ViewProductDetails = () => {
       <h3>Product Details</h3>
       <TableComponent
         data={[productDetails]}
-        hiddenFields={['description', 'image']}
+        hiddenFields={['description', 'image', 'slug']}
       />
       <br />
       <div>
