@@ -72,25 +72,19 @@ const TableComponent = ({
                   })}
                   {viewButton && (
                     <TableCell className="table-cell">
-                     { viewButton==='img'? <img
-                     className="view-unchecked-img"
-                     src={`${row.image}?w=100&h=100&fit=crop`}
-                     onClick={() => window.open(row.image, '_blank')}
-                     style={{
-                       cursor: 'pointer',
-                       maxWidth: '100%',
-                       maxHeight: '100%',
-                       border:'2px solid black'
-                     }}
-                     alt="img"
-                   />: <Button
+                      {viewButton === 'img' ? <img
+                        className="view-unchecked-img"
+                        src={`${row.image}?w=100&h=100&fit=crop`}
+                        onClick={() => window.open(row.image, '_blank')}
+                        alt="img"
+                      /> : <Button
                         variant="contained"
                         color="primary"
                         onClick={() => handleViewDetails(row)}
                       >
                         {viewButton}
                       </Button>
-                    } 
+                      }
                     </TableCell>
                   )}
                   {showUpdateButton && (
