@@ -72,13 +72,19 @@ const TableComponent = ({
                   })}
                   {viewButton && (
                     <TableCell className="table-cell">
-                      <Button
+                      {viewButton === 'img' ? <img
+                        className="view-unchecked-img"
+                        src={`${row.image}?w=100&h=100&fit=crop`}
+                        onClick={() => window.open(row.image, '_blank')}
+                        alt="img"
+                      /> : <Button
                         variant="contained"
                         color="primary"
                         onClick={() => handleViewDetails(row)}
                       >
                         {viewButton}
                       </Button>
+                      }
                     </TableCell>
                   )}
                   {showUpdateButton && (

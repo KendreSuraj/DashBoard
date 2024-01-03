@@ -62,6 +62,13 @@ const Booking = () => {
             'productSessionId',
             'isConsent',
             'productImage',
+            'sessionScheduleId',
+            'sessionId',
+            'orderDetailId',
+            'productId',
+            'addressCompoundCode',
+            'addressArea',
+            'userId'
           ]}
         />
       ) : (

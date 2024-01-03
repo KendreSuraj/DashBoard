@@ -26,9 +26,12 @@ export const ViewCheckedIncentive = () => {
   return (
     <div>
       <h3>Incentive Details</h3>
-      <TableComponent data={[incentiveDetails]} />
+      <TableComponent data={[incentiveDetails]} hiddenFields={['addressId', 'orderid', 'placeId',]} />
       <h3>All Steps with Incentive</h3>
-      <TableComponent data={incentiveSteps} />
+      <TableComponent data={incentiveSteps}
+        hiddenFields={['image', 'lat', 'long', 'videoUrl', 'isIncentive']}
+        viewButton={'img'}
+      />
     </div>
   );
 };

@@ -79,6 +79,15 @@ const CheckedIncentive = () => {
           'area',
           'state',
           'place_id',
+          'addressId',
+          'sessionSchedulesId',
+          'sessionId',
+          'clientId',
+          'orderid',
+          'orderDetailId',
+          'placeId',
+          'productId',
+          'partnerId',
         ]}
         viewButton={'view'}
         viewDetails={handleViewDetails}

@@ -85,7 +85,27 @@ export default function ViewUncheckedIncentive() {
   return (
     <div>
       <h3>View Unchecked Incentive</h3>
-      <TableComponent data={[incentiveDetails]} />
+      <TableComponent data={[incentiveDetails]}
+        hiddenFields={[
+          'order_id',
+          'order_detail_id',
+          'address_id',
+          'product_id',
+          'gender',
+          'compound_code',
+          'area',
+          'state',
+          'place_id',
+          'addressId',
+          'sessionSchedulesId',
+          'sessionId',
+          'clientId',
+          'orderid',
+          'orderDetailId',
+          'placeId',
+          'productId',
+          'partnerId',
+        ]} />
       <h3>All Incentive Steps</h3>
       <div className="table-container">
         <table className="custom-table">

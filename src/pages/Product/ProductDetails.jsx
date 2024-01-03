@@ -29,7 +29,7 @@ const ProductDetails = () => {
         {productList?.length > 0 ? (
           <TableComponent
             data={productList}
-            hiddenFields={['image', 'description']}
+            hiddenFields={['image', 'description', 'slug']}
             viewButton={'view'}
             updateDetails={handleUpdateDetails}
             viewDetails={handleViewDetails}
