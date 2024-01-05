@@ -20,7 +20,7 @@ const UnCheckedIncentive = () => {
   const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(tomorrow.toISOString().split('T')[0]);
   const [page, setPage] = useState('1');
-  const [filtredList, setFiltredList] = useState([])
+  const [filteredList, setFilteredList] = useState([])
   const [selected, setSelected] = useState(false)
 
   const handleViewDetails = (details) => {
@@ -28,7 +28,7 @@ const UnCheckedIncentive = () => {
   };
 
   const handleDateChange = (event) => {
-    setFiltredList([])
+    setFilteredList([])
     document.getElementById('filterBookingsDropdown').value = "";
     setSelected(false)
     if (event.target.name === 'startDate') {
@@ -41,14 +41,14 @@ const UnCheckedIncentive = () => {
   const handlePageChange = (event, value) => {
     setPage(value.toString());
     setSelected(false)
-    setFiltredList([])
+    setFilteredList([])
     document.getElementById('filterBookingsDropdown').value = "";
   };
 
   const handleSelectChanges = (e) => {
     setSelected(e.target.value === "" ? false : true)
     let selectedList = uncheckedIncentiveList?.bookings.filter(x => x.status === e.target.value)
-    setFiltredList([...selectedList])
+    setFilteredList([...selectedList])
   }
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const UnCheckedIncentive = () => {
       </div>
 
       <TableComponent
-        data={selected || filtredList.length > 0 ? filtredList : uncheckedIncentiveList?.bookings}
+        data={selected || filteredList.length > 0 ? filteredList : uncheckedIncentiveList?.bookings}
         hiddenFields={[
           'order_id',
           'order_detail_id',
