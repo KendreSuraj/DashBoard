@@ -20,12 +20,17 @@ const UnCheckedIncentive = () => {
   const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(tomorrow.toISOString().split('T')[0]);
   const [page, setPage] = useState('1');
+  const [filtredList, setFiltredList] = useState([])
+  const [selected, setSelected] = useState(false)
 
   const handleViewDetails = (details) => {
     navigate('/viewuncheckedincentive', { state: { details } });
   };
 
   const handleDateChange = (event) => {
+    setFiltredList([])
+    document.getElementById('filterBookingsDropdown').value = "";
+    setSelected(false)
     if (event.target.name === 'startDate') {
       setStartDate(event.target.value);
     } else if (event.target.name === 'endDate') {
@@ -35,7 +40,16 @@ const UnCheckedIncentive = () => {
 
   const handlePageChange = (event, value) => {
     setPage(value.toString());
+    setSelected(false)
+    setFiltredList([])
+    document.getElementById('filterBookingsDropdown').value = "";
   };
+
+  const handleSelectChanges = (e) => {
+    setSelected(e.target.value === "" ? false : true)
+    let selectedList = uncheckedIncentiveList?.bookings.filter(x => x.status === e.target.value)
+    setFiltredList([...selectedList])
+  }
 
   useEffect(() => {
     dispatch(
@@ -51,6 +65,15 @@ const UnCheckedIncentive = () => {
   return (
     <div>
       <h3 className="incentive-heading">Unchecked Incentive</h3>
+      <div className='filter-bookings'>
+        <select id="filterBookingsDropdown" onChange={handleSelectChanges}>
+          <option value="">Filter Bookings</option>
+          <option value="COMPLETED">COMPLETED</option>
+          <option value="SCHEDULED">SCHEDULED</option>
+          <option value="SESSION_START">SESSION START</option>
+          <option value="POSTPONED">POSTPONED</option>
+        </select>
+      </div>
       <div className="incentive-date-rage">
         <input
           type="date"
@@ -67,7 +90,7 @@ const UnCheckedIncentive = () => {
       </div>
 
       <TableComponent
-        data={uncheckedIncentiveList?.bookings}
+        data={selected || filtredList.length > 0 ? filtredList : uncheckedIncentiveList?.bookings}
         hiddenFields={[
           'order_id',
           'order_detail_id',
