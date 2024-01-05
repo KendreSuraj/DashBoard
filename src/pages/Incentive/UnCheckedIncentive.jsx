@@ -74,7 +74,7 @@ const UnCheckedIncentive = () => {
           <option value="POSTPONED">POSTPONED</option>
         </select>
       </div>
-      <div className="incentive-date-rage">
+      <div className="incentive-date-range">
         <input
           type="date"
           name="startDate"
