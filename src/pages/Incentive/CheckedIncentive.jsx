@@ -52,7 +52,7 @@ const CheckedIncentive = () => {
   return (
     <div>
       <h3 className="incentive-heading">Checked Incentive</h3>
-      <div className="incentive-date-rage">
+      <div className="incentive-date-range">
         <input
           type="date"
           name="startDate"
