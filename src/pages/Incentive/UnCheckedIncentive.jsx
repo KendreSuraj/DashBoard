@@ -17,9 +17,13 @@ const UnCheckedIncentive = () => {
   const pageCount = uncheckedIncentiveList?.totalPages;
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(tomorrow.toISOString().split('T')[0]);
-  const [page, setPage] = useState('1');
+  const storedStartDate = sessionStorage.getItem('startDate') || today.toISOString().split('T')[0];
+  const storedEndDate = sessionStorage.getItem('endDate') || tomorrow.toISOString().split('T')[0];
+  const storedPage = sessionStorage.getItem('page') || '1';
+
+  const [startDate, setStartDate] = useState(storedStartDate);
+  const [endDate, setEndDate] = useState(storedEndDate);
+  const [page, setPage] = useState(storedPage);
   const [filteredList, setFilteredList] = useState([])
   const [selected, setSelected] = useState(false)
 
@@ -51,7 +55,23 @@ const UnCheckedIncentive = () => {
     setFilteredList([...selectedList])
   }
 
+  const clearSpecificSessionData = () => {
+    sessionStorage.removeItem('startDate');
+    sessionStorage.removeItem('endDate');
+    sessionStorage.removeItem('page');
+  };
+  
   useEffect(() => {
+    window.addEventListener('beforeunload', clearSpecificSessionData);
+    return () => {
+      window.removeEventListener('beforeunload', clearSpecificSessionData);
+    };
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('startDate', startDate);
+    sessionStorage.setItem('endDate', endDate);
+    sessionStorage.setItem('page', page);
     dispatch(
       fetchIncentive({
         startDate: startDate,
@@ -121,6 +141,7 @@ const UnCheckedIncentive = () => {
             count={pageCount}
             color="primary"
             onChange={handlePageChange}
+            defaultPage={parseInt(page)}
           />
         </Stack>
       </div>
