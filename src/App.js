@@ -9,6 +9,7 @@ import ViewProductDetails from './pages/Product/ViewProductDetails';
 import AddProductStepForm from './pages/Product/AddProductStepForm';
 import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
 import ViewUncheckedIncentive from './pages/Incentive/ViewUncheckedIncentive';
+import BookingDetails from './pages/BookingDetails/BookingDetails';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/addproductstep" element={<AddProductStepForm />} />
             <Route path="/viewcheckedincentive" element={<ViewCheckedIncentive />} />
             <Route path="/viewuncheckedincentive" element={<ViewUncheckedIncentive />} />
+            <Route path="/booking-details/:sessionId" element={<BookingDetails />} />
           </Route>
         </Routes>
       </Router>
