@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, TextField, Button, MenuItem } from '@mui/material';
+import {  Paper, TextField, Button, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
@@ -69,9 +69,9 @@ const AllotTherapistBox = (props) => {
 
 
     return (
-        <Grid item xs={12} md={6}>
+        <div >
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
-                <h5>Allot Therapist</h5>
+                <h3>Allot Therapist</h3>
                 <form >
                     {/* Dropdown list */}
                     <TextField
@@ -206,7 +206,7 @@ const AllotTherapistBox = (props) => {
                     </Button>
                 </form>
             </Paper>
-        </Grid>
+        </div>
     );
 };
 

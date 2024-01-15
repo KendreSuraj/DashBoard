@@ -1,6 +1,6 @@
 // UpdateStatusComponent.js
 import React, { useState } from 'react';
-import { Grid, Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {  Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 const UpdateStatusComponent = ({ updateStatusHandler }) => {
     const [selectedStatus, setSelectedStatus] = useState('');
@@ -20,9 +20,9 @@ const UpdateStatusComponent = ({ updateStatusHandler }) => {
 
     };
     return (
-        <Grid item xs={12} md={6}>
+        <div>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
-                <h2>Change Status</h2>
+                <h3>Change Status</h3>
                 <form >
                     <FormControl fullWidth margin="normal">
                         <InputLabel id="status-label">Status</InputLabel>
@@ -47,7 +47,7 @@ const UpdateStatusComponent = ({ updateStatusHandler }) => {
                     </Button>
                 </form>
             </Paper>
-        </Grid>
+        </div>
     );
 };
 
