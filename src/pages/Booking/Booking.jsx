@@ -5,8 +5,10 @@ import SearchComponent from '../../components/common/SearchComponent/SearchCompo
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../store/actions/booking.action';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
+import { useNavigate } from 'react-router-dom';
 
 const Booking = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const bookingList = useSelector((state) => state.booking.bookingList);
 
@@ -24,6 +26,10 @@ const Booking = () => {
       setEndDate(event.target.value);
     }
   };
+
+  const handleBookingDetail = (details) => {
+    navigate(`/booking-details/${details.sessionId}`)
+  }
 
   useEffect(() => {
     dispatch(fetchBookings({ startDate: startDate, endDate: endDate }));
@@ -70,6 +76,8 @@ const Booking = () => {
             'addressArea',
             'userId'
           ]}
+          viewBookingButton={'view'}
+          bookingDetails={handleBookingDetail}
         />
       ) : (
         <LoaderComponent />
