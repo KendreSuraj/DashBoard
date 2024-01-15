@@ -19,6 +19,8 @@ const TableComponent = ({
   viewButton,
   updateDetails,
   viewDetails,
+  viewBookingButton,
+  bookingDetails
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -27,6 +29,10 @@ const TableComponent = ({
   const handleViewDetails = (details) => {
     viewDetails(details);
   };
+
+  const handleViewBookingDetails = (details) => {
+    bookingDetails(details)
+  }
 
   return (
     <div className="table-container">
@@ -53,6 +59,9 @@ const TableComponent = ({
                 )}
                 {showUpdateButton && (
                   <TableCell className="table-cell">Actions</TableCell>
+                )}
+                {viewBookingButton && (
+                  <TableCell className="table-cell">View</TableCell>
                 )}
               </TableRow>
             </TableHead>
@@ -96,6 +105,23 @@ const TableComponent = ({
                       >
                         Update
                       </Button>
+                    </TableCell>
+                  )}
+                  {viewBookingButton && (
+                    <TableCell className="table-cell">
+                      {viewBookingButton === 'img' ? <img
+                        className="view-unchecked-img"
+                        src={`${row.image}?w=100&h=100&fit=crop`}
+                        onClick={() => window.open(row.image, '_blank')}
+                        alt="img"
+                      /> : <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleViewBookingDetails(row)}
+                      >
+                        {viewBookingButton}
+                      </Button>
+                      }
                     </TableCell>
                   )}
                 </TableRow>
