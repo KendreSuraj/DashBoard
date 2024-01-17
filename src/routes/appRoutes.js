@@ -2,6 +2,7 @@ import React from 'react';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 // import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import Booking from '../pages/Booking/Booking';
 import ProductDetails from '../pages/Product/ProductDetails';
@@ -12,6 +13,7 @@ import Partner from '../pages/Partner/Partner';
 import { Report } from '../pages/Report/Report';
 import CategoryIcon from '@mui/icons-material/Category';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import Coupons from '../pages/Coupons/Coupons';
 const appRoutes = [
   // {
   //   index: true,
@@ -86,6 +88,16 @@ const appRoutes = [
       icon: <FormatListBulletedOutlinedIcon />,
     },
   },
+  {
+    path: '/coupons',
+    element: <Coupons />,
+    state: 'coupons',
+    sidebarProps: {
+      displayText: 'Coupons',
+      icon: <LocalActivityIcon />,
+    },
+  },
+
 ];
 
 export default appRoutes;

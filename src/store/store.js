@@ -5,6 +5,7 @@ import bookingSlice from './slices/bookingSlice';
 import partnerSlice from './slices/partnerSlice';
 import productSlice from './slices/productSlice';
 import incentiveSlice from './slices/IncentiveSlice';
+import couponSlice from './slices/couponSlice'
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     booking: bookingSlice,
     partner: partnerSlice,
     product: productSlice,
-    incentive:incentiveSlice
+    incentive:incentiveSlice,
+    coupons: couponSlice
   },
 });
 export default store;
