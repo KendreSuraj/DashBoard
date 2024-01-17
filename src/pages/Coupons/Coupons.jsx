@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchCoupon } from '../../store/actions/couponsAction';
+import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import moment from 'moment';
 import {
-    Button,
-  } from '@mui/material';
+  Button,
+} from '@mui/material';
 import { useNavigate } from 'react-router';
 
 const Coupons = () => {
@@ -44,35 +44,54 @@ const Coupons = () => {
     return formattedCouponList;
   };
   const modifiedCouponList = modifyCouponList(couponList);
+  const handleDeleteCoupon = async (couponData) => {
 
-  const addCouponClickHandler = ()=>{
+    const id = couponData.ID
+    const response = await deleteCoupon(id)
+    if (response?.status?.code === 200) {
+      window.location.reload()
+    } else {
+      alert("Can not delete coupon")
+    }
+
+
+
+  }
+
+  const addCouponClickHandler = () => {
     navigate('/add-coupon')
   }
 
   return (
     <div>
+
+      <div>
+
         <h3>Coupons</h3>
         <>
-        <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ margin: '10px' }} 
-                        onClick={addCouponClickHandler}
-                      >
-                        Add Coupon
-                      </Button>
-        {modifiedCouponList?.length > 0 ? (
-          <TableComponent
-            data={modifiedCouponList}
-          />
-        ) : (
-          <LoaderComponent />
-        )}
-      
-    </>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ margin: '10px' }}
+            onClick={addCouponClickHandler}
+          >
+            Add Coupon
+          </Button>
+          {modifiedCouponList?.length > 0 ? (
+            <TableComponent
+              data={modifiedCouponList}
+              deleteCouponButton={'delete'}
+              deleteCoupon={handleDeleteCoupon}
+            />
+          ) : (
+            <LoaderComponent />
+          )}
+
+        </>
+      </div>
     </div>
-    
-    
+
+
   );
 };
 
