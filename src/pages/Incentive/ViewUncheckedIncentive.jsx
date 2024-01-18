@@ -9,6 +9,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import './ViewUncheckedIncentive.style.css';
 import { Button } from '@mui/material';
+import moment from 'moment';
 
 export default function ViewUncheckedIncentive() {
   const dispatch = useDispatch();
@@ -117,6 +118,7 @@ export default function ViewUncheckedIncentive() {
               <th>Session Schedules ID</th>
               <th>Partner Step Incentive Id</th>
               <th>Partner Step ID</th>
+              <th>Date/Time</th>
               <th>Title</th>
               <th>Description</th>
               <th>Image</th>
@@ -135,6 +137,7 @@ export default function ViewUncheckedIncentive() {
                   <td>{item.sessionSchedulesId}</td>
                   <td>{item.partnerStepIncentiveId}</td>
                   <td>{item.partnerStepId}</td>
+                  <td>{moment(item.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</td>
                   <td>{item.title}</td>
                   <td>{item.description}</td>
                   <td>
