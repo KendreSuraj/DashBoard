@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
+// import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
+import { fetchCoupon } from '../../store/actions/couponsAction';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import moment from 'moment';
@@ -44,19 +45,19 @@ const Coupons = () => {
     return formattedCouponList;
   };
   const modifiedCouponList = modifyCouponList(couponList);
-  const handleDeleteCoupon = async (couponData) => {
+  // const handleDeleteCoupon = async (couponData) => {
 
-    const id = couponData.ID
-    const response = await deleteCoupon(id)
-    if (response?.status?.code === 200) {
-      window.location.reload()
-    } else {
-      alert("Can not delete coupon")
-    }
+  //   const id = couponData.ID
+  //   const response = await deleteCoupon(id)
+  //   if (response?.status?.code === 200) {
+  //     window.location.reload()
+  //   } else {
+  //     alert("Can not delete coupon")
+  //   }
 
 
 
-  }
+  // }
 
   const addCouponClickHandler = () => {
     navigate('/add-coupon')
@@ -80,8 +81,8 @@ const Coupons = () => {
           {modifiedCouponList?.length > 0 ? (
             <TableComponent
               data={modifiedCouponList}
-              deleteCouponButton={'delete'}
-              deleteCoupon={handleDeleteCoupon}
+              // deleteCouponButton={'delete'}
+              // deleteCoupon={handleDeleteCoupon}
             />
           ) : (
             <LoaderComponent />
