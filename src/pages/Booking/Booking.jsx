@@ -31,12 +31,16 @@ const Booking = () => {
     navigate(`/booking-details/${details.sessionId}`)
   }
 
+  const stringifiedUser = localStorage.getItem("userData")
+  const userData = stringifiedUser? JSON.parse(stringifiedUser):null
+  const concentrixUser = userData && userData.user && userData.user.concentrixUser? userData.user.concentrixUser:false 
   useEffect(() => {
     dispatch(fetchBookings({ startDate: startDate, endDate: endDate }));
   }, [dispatch, startDate, endDate]);
 
   return (
-    <div>
+    concentrixUser? <h1>You do not have access for this section</h1>:(
+      <div>
       <h3>All Bookings</h3>
       <div className="container">
         <div>
@@ -83,6 +87,7 @@ const Booking = () => {
         <LoaderComponent />
       )}
     </div>
+    )
   );
 };
 
