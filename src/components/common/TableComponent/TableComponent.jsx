@@ -139,6 +139,7 @@ const TableComponent = ({
                       /> : <Button
                         variant="contained"
                         color="primary"
+                        style={{ backgroundColor: '#D70040', color: 'white' }}
                         onClick={() => deleteCoupon(row)}
                       >
                         {deleteCouponButton}
