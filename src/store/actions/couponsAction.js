@@ -37,3 +37,25 @@ export const deleteCoupon = async (id) => {
     throw error;
   }
 }
+
+
+export const addCoupon = async (formData) => {
+  try {
+    const res = await axios.post(
+      `${apiUrl}/api/v1/admin/coupon/add-new`,
+      formData,
+      {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      },
+    );
+
+    const data = res.data;
+    return data;
+  } catch (error) {
+    console.error('Error in Add coupon', error);
+    throw error;
+  }
+};
