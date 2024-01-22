@@ -7,7 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import { usersProfile } from '../common/menuItems.js';
 import MenuDropdownComponent from '../common/MenuDropdown/MenuDropdownComponent.jsx';
-import SearchComponent from '../common/SearchComponent/SearchComponent';
+// import SearchComponent from '../common/SearchComponent/SearchComponent';
 import './Header.style.css';
 
 const Header = () => {
@@ -23,7 +23,7 @@ const Header = () => {
 
   return (
     <AppBar
-      position="fixed"
+      // position="fixed"
       sx={{
         width: `calc(100% - ${sizeConfigs.sidebar.width})`,
         ml: sizeConfigs.sidebar.width,
@@ -37,9 +37,9 @@ const Header = () => {
           {/* Avataar Skincare */}
         </Typography>
 
-        <div className="search-component">
+        {/* <div className="search-component">
           <SearchComponent />
-        </div>
+        </div> */}
 
         <Tooltip title="Open Profile">
           <IconButton onClick={handleOpenUserMenu}>

@@ -18,27 +18,31 @@ const ProductDetails = () => {
     navigate('/viewproductdetails', { state: { details } });
   };
 
+  const stringifiedUser = localStorage.getItem("userData")
+  const userData = stringifiedUser? JSON.parse(stringifiedUser):null
+  const concentrixUser = userData && userData.user && userData.user.concentrixUser? userData.user.concentrixUser:false 
+
   useEffect(() => {
     dispatch(fetchProduct());
   }, [dispatch]);
 
   return (
-    <div>
-      <h3>Product Details</h3>
-      <>
-        {productList?.length > 0 ? (
-          <TableComponent
-            data={productList}
-            hiddenFields={['image', 'description', 'slug']}
-            viewButton={'view'}
-            updateDetails={handleUpdateDetails}
-            viewDetails={handleViewDetails}
-          />
-        ) : (
-          <LoaderComponent />
-        )}
-      </>
-    </div>
+    concentrixUser? <h1>You do not have access for this.</h1>:<div>
+    <h3>Product Details</h3>
+    <>
+      {productList?.length > 0 ? (
+        <TableComponent
+          data={productList}
+          hiddenFields={['image', 'description', 'slug']}
+          viewButton={'view'}
+          updateDetails={handleUpdateDetails}
+          viewDetails={handleViewDetails}
+        />
+      ) : (
+        <LoaderComponent />
+      )}
+    </>
+  </div>
   );
 };
 
