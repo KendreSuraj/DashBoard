@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
-import { fetchCoupon } from '../../store/actions/couponsAction';
+import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import moment from 'moment';
@@ -45,35 +44,40 @@ const Coupons = () => {
     return formattedCouponList;
   };
   const modifiedCouponList = modifyCouponList(couponList);
-  // const handleDeleteCoupon = async (couponData) => {
+  const handleDeleteCoupon = async (couponData) => {
 
-  //   const id = couponData.ID
-  //   const response = await deleteCoupon(id)
-  //   if (response?.status?.code === 200) {
-  //     window.location.reload()
-  //   } else {
-  //     alert("Can not delete coupon")
-  //   }
+    const id = couponData.ID
+    const response = await deleteCoupon(id)
+    if (response?.status?.code === 200) {
+      window.location.reload()
+    } else {
+      alert("Can not delete coupon")
+    }
 
 
 
-  // }
+  }
 
   const addCouponClickHandler = () => {
     navigate('/add-coupon')
   }
 
+  const stringifiedUser = localStorage.getItem("userData")
+  const userData = stringifiedUser? JSON.parse(stringifiedUser):null
+  const hasCouponAccess = userData && userData.user && userData.user.hasCouponAccess? userData.user.hasCouponAccess:false 
+
   return (
-    <div>
+    hasCouponAccess? (
+      <div>
 
       <div>
 
         <h3>Coupons</h3>
         <>
           <Button
-            variant="contained"
+            concentrixUservariant="contained"
             color="primary"
-            style={{ margin: '10px' }}
+            style={{ margin: '10px' ,backgroundColor:'#4C4CFF',color:'white'}}
             onClick={addCouponClickHandler}
           >
             Add Coupon
@@ -81,8 +85,8 @@ const Coupons = () => {
           {modifiedCouponList?.length > 0 ? (
             <TableComponent
               data={modifiedCouponList}
-              // deleteCouponButton={'delete'}
-              // deleteCoupon={handleDeleteCoupon}
+              deleteCouponButton={'delete'}
+              deleteCoupon={handleDeleteCoupon}
             />
           ) : (
             <LoaderComponent />
@@ -91,6 +95,7 @@ const Coupons = () => {
         </>
       </div>
     </div>
+    ):<h1>You do not have access for coupons</h1>
 
 
   );
