@@ -137,8 +137,8 @@ const AddCoupon = () => {
                   onChange={handleInputChange}
                   required
                 >
-                  <MenuItem value="Flat">Flat</MenuItem>
-                  <MenuItem value="Percentage">Percentage</MenuItem>
+                  <MenuItem value="flat">flat</MenuItem>
+                  <MenuItem value="percentage">percentage</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
