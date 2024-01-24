@@ -81,7 +81,7 @@ const AddCoupon = () => {
       <h1 style={{ textAlign: 'center' }}>Coupons</h1>
       <Paper className={classes.pageContent}>
         <form className={classes.root}>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
                 variant="outlined"
