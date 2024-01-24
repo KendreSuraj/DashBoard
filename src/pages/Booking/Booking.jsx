@@ -6,11 +6,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../store/actions/booking.action';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
+
 
 const Booking = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const bookingList = useSelector((state) => state.booking.bookingList);
+  
+
+  let bookingList = useSelector((state) => state.booking.bookingList);
+  
+  bookingList=bookingList?.map(data=>{
+    const newDate = moment(data.appointmentAt);
+    return {
+      Name: data.name ? data.name: "",
+      'Phone Number': data.phoneNumber,
+      City: data.addressCity? data.addressCity: "",
+      "Service Name": data.productName? data.productName:"",
+      "Booking Date": newDate.format('YYYY-MM-DD'),
+      "Booking Time": newDate.format('hh:mm A'),
+      Building: data.building?data.building:"",
+      "Formatted Address": data.formattedAddress? data.formattedAddress:"",
+      "Product Price": data.productPrice? data.productPrice:"",
+      "Discount": data.discount? data.discount:"",
+      "Coupon Discount": data.couponDiscount? data.couponDiscount:"",
+      Total: data.total? data.total:"",
+      Count: data.count? data.count:"",
+      "Pin Code": data.addressPostalCode? data.addressPostalCode:"",
+      Status: data.status? data.status: "",
+      map: "https://www.google.com/maps/place/Avataar+Skincare+Technologies/@28.5696137,77.2235768,17z/data=!3m1!4b1!4m6!3m5!1s0xa8a9a9711674473d:0xc2f776fea8e73de8!8m2!3d28.5696137!4d77.2261517!16s%2Fg%2F11t768tgtm?entry=ttu",
+
+    }
+  })
+
+
 
   const today = new Date();
   const tomorrow = new Date();
@@ -78,7 +107,8 @@ const Booking = () => {
             'productId',
             'addressCompoundCode',
             'addressArea',
-            'userId'
+            'userId',
+            'appointmentAt'
           ]}
           viewBookingButton={'view'}
           bookingDetails={handleBookingDetail}

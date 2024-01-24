@@ -23,7 +23,6 @@ const Coupons = () => {
     return moment(date).format('MMMM Do YYYY, h:mm:ss a');
   };
 
-  // Function to modify each object in the couponList array and format start dates
   const modifyCouponList = (originalList) => {
     const formattedCouponList = originalList.map((coupon) => {
       const obj = {
@@ -77,7 +76,15 @@ const Coupons = () => {
           <Button
             concentrixUservariant="contained"
             color="primary"
-            style={{ margin: '10px' ,backgroundColor:'#4C4CFF',color:'white'}}
+            style={{ margin: '10px' ,backgroundColor:'#384456',
+            color: 'white',
+            transition: 'transform 0.3s,background-color 0.3s'
+        
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')
+        }
+          onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        
             onClick={addCouponClickHandler}
           >
             Add Coupon
