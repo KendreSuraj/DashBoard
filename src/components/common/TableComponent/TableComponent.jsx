@@ -1,5 +1,6 @@
 import React from 'react';
 import './TableComponent.style.css';
+import { Link } from 'react-router-dom';
 
 import {
   Table,
@@ -22,7 +23,7 @@ const TableComponent = ({
   viewBookingButton,
   bookingDetails,
   deleteCoupon,
-  deleteCouponButton
+  deleteCouponButton,
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -33,8 +34,8 @@ const TableComponent = ({
   };
 
   const handleViewBookingDetails = (details) => {
-    bookingDetails(details)
-  }
+    bookingDetails(details);
+  };
 
   return (
     <div className="table-container">
@@ -78,27 +79,39 @@ const TableComponent = ({
                     if (!hiddenFields || !hiddenFields.includes(key)) {
                       return (
                         <TableCell key={colIndex} className="table-cell">
-                          {row[key]}
+                          {key === 'map' ? (
+                            <Link to={row[key]} target="_blank">
+                              Click here
+                            </Link>
+                          ) : (
+                            row[key]
+                          )}
+
+                        
                         </TableCell>
+
                       );
                     }
                     return null;
                   })}
                   {viewButton && (
                     <TableCell className="table-cell">
-                      {viewButton === 'img' ? <img
-                        className="view-unchecked-img"
-                        src={`${row.image}?w=100&h=100&fit=crop`}
-                        onClick={() => window.open(row.image, '_blank')}
-                        alt="img"
-                      /> : <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleViewDetails(row)}
-                      >
-                        {viewButton}
-                      </Button>
-                      }
+                      {viewButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleViewDetails(row)}
+                        >
+                          {viewButton}
+                        </Button>
+                      )}
                     </TableCell>
                   )}
                   {showUpdateButton && (
@@ -114,37 +127,43 @@ const TableComponent = ({
                   )}
                   {viewBookingButton && (
                     <TableCell className="table-cell">
-                      {viewBookingButton === 'img' ? <img
-                        className="view-unchecked-img"
-                        src={`${row.image}?w=100&h=100&fit=crop`}
-                        onClick={() => window.open(row.image, '_blank')}
-                        alt="img"
-                      /> : <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleViewBookingDetails(row)}
-                      >
-                        {viewBookingButton}
-                      </Button>
-                      }
+                      {viewBookingButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleViewBookingDetails(row)}
+                        >
+                          {viewBookingButton}
+                        </Button>
+                      )}
                     </TableCell>
                   )}
                   {deleteCouponButton && (
                     <TableCell className="table-cell">
-                      {deleteCouponButton === 'img' ? <img
-                        className="view-unchecked-img"
-                        src={`${row.image}?w=100&h=100&fit=crop`}
-                        onClick={() => window.open(row.image, '_blank')}
-                        alt="img"
-                      /> : <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ backgroundColor: '#D70040', color: 'white' }}
-                        onClick={() => deleteCoupon(row)}
-                      >
-                        {deleteCouponButton}
-                      </Button>
-                      }
+                      {deleteCouponButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ backgroundColor: '#D70040', color: 'white' }}
+                          onClick={() => deleteCoupon(row)}
+                        >
+                          {deleteCouponButton}
+                        </Button>
+                      )}
                     </TableCell>
                   )}
                 </TableRow>
