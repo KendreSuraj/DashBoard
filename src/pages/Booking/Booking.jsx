@@ -35,6 +35,7 @@ const Booking = () => {
       "Pin Code": data.addressPostalCode? data.addressPostalCode:"",
       Status: data.status? data.status: "",
       map: "https://www.google.com/maps/place/Avataar+Skincare+Technologies/@28.5696137,77.2235768,17z/data=!3m1!4b1!4m6!3m5!1s0xa8a9a9711674473d:0xc2f776fea8e73de8!8m2!3d28.5696137!4d77.2261517!16s%2Fg%2F11t768tgtm?entry=ttu",
+      sessionId: data.sessionId? data.sessionId:null,
 
     }
   })
