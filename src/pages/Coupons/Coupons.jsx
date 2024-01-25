@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteCoupon, fetchCoupon } from '../../store/actions/couponsAction';
+// import { fetchCoupon } from '../../store/actions/couponsAction';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import moment from 'moment';
@@ -8,10 +9,15 @@ import {
   Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
+import ConfirmDialog from '../../components/common/Dialog/ConfirmDialog';
+
 
 const Coupons = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deleteCouponData, setDeleteCouponData] = useState({})
   const couponList = useSelector((state) => state.coupons.couponList);
 
   useEffect(() => {
@@ -43,22 +49,34 @@ const Coupons = () => {
     return formattedCouponList;
   };
   const modifiedCouponList = modifyCouponList(couponList);
+
   const handleDeleteCoupon = async (couponData) => {
-
-    const id = couponData.ID
-    const response = await deleteCoupon(id)
-    if (response?.status?.code === 200) {
-      window.location.reload()
-    } else {
-      alert("Can not delete coupon")
-    }
-
-
-
+    setDeleteCouponData(couponData)
+    setOpenDialog(true);
   }
+
 
   const addCouponClickHandler = () => {
     navigate('/add-coupon')
+  }
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirm = ()=>{
+    
+    const id = deleteCouponData.ID
+    deleteCoupon(id).then(response=> {
+      if (response?.status?.code === 200) {
+        setDeleteCouponData({})
+        window.location.reload()
+      } else {
+        alert("Can not delete coupon")
+      }
+    }).catch(err=>{
+      alert(err)
+    })
+    
   }
 
   const stringifiedUser = localStorage.getItem("userData")
@@ -66,43 +84,54 @@ const Coupons = () => {
   const hasCouponAccess = userData && userData.user && userData.user.hasCouponAccess? userData.user.hasCouponAccess:false 
 
   return (
-    hasCouponAccess? (
-      <div>
-
-      <div>
-
-        <h3>Coupons</h3>
-        <>
-          <Button
-            concentrixUservariant="contained"
-            color="primary"
-            style={{ margin: '10px' ,backgroundColor:'#384456',
-            color: 'white',
-            transition: 'transform 0.3s,background-color 0.3s'
-        
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')
-        }
-          onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-        
-            onClick={addCouponClickHandler}
-          >
-            Add Coupon
-          </Button>
-          {modifiedCouponList?.length > 0 ? (
-            <TableComponent
-              data={modifiedCouponList}
-              deleteCouponButton={'delete'}
-              deleteCoupon={handleDeleteCoupon}
-            />
-          ) : (
-            <LoaderComponent />
-          )}
-
-        </>
-      </div>
-    </div>
-    ):<h1>You do not have access for coupons</h1>
+    <>
+    <ConfirmDialog isOpen = {openDialog}
+                    onClose={handleCloseDialog}
+                    onConfirm = {handleConfirm}
+                    />
+      {
+        hasCouponAccess? (
+          <div>
+    
+          <div>
+    
+            <h3>Coupons</h3>
+            <>
+            
+              <Button
+                concentrixUservariant="contained"
+                color="primary"
+                style={{ margin: '10px' ,backgroundColor:'#384456',
+                color: 'white',
+                transition: 'transform 0.3s,background-color 0.3s'
+            
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')
+            }
+              onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            
+                onClick={addCouponClickHandler}
+              >
+                Add Coupon
+              </Button>
+            
+              
+              {modifiedCouponList?.length > 0 ? (
+                <TableComponent
+                  data={modifiedCouponList}
+                  deleteCouponButton={'delete'}
+                  deleteCoupon={handleDeleteCoupon}
+                />
+              ) : (
+                <LoaderComponent />
+              )}
+    
+            </>
+          </div>
+        </div>
+        ):<h1>You do not have access for coupons</h1>
+      }
+    </>
 
 
   );
