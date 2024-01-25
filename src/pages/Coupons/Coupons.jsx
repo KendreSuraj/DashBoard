@@ -60,6 +60,7 @@ const Coupons = () => {
     navigate('/add-coupon')
   }
   const handleCloseDialog = () => {
+    setDeleteCouponData({})
     setOpenDialog(false);
   };
 
