@@ -1,7 +1,7 @@
 
 import {
+  DialogTitle,
     Dialog,
-    DialogTitle,
     DialogContent,
     DialogActions,
     Button,
@@ -10,7 +10,7 @@ import {
     Typography,
   } from '@material-ui/core';
   import React from 'react';
-  import { Close } from '@material-ui/icons';
+  import { Close} from '@material-ui/icons';
   
   const ConfirmDialog = ({isOpen, onClose,onConfirm}) => {
 
@@ -24,21 +24,29 @@ import {
     return (
       <Dialog open={isOpen} 
       maxWidth="sm" fullWidth>
-        <DialogTitle>Confirm the action</DialogTitle>
-        <Box position="absolute" top={0} right={0}>
+        
+        <DialogTitle></DialogTitle>
+        <Box
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+          }}
+        >
           <IconButton>
             <Close onClick={handleClose}/>
           </IconButton>
         </Box>
         <DialogContent>
-          <Typography>some message here</Typography>
+          <Typography>
+            <h4>Are you sure you want to delete this coupon?</h4></Typography>
         </DialogContent>
         <DialogActions>
           <Button color="primary" variant="contained" onClick={handleClose}>
-            Cancel
+            No
           </Button>
           <Button color="secondary" variant="contained" onClick={handleConfirm}>
-            Confirm
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
