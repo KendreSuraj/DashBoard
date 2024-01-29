@@ -85,11 +85,10 @@ const TableComponent = ({
                             </Link>
                           ) : (
                             row[key]
-                          )}
+                          )} 
 
-                        
-                        </TableCell>
-
+                     
+                         </TableCell>              
                       );
                     }
                     return null;
