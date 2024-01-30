@@ -15,12 +15,16 @@ const CheckedIncentive = () => {
   );
   const today = new Date();
   const tomorrow = new Date();
+  const pageCount = checkedIncentiveList?.totalPages;
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(tomorrow.toISOString().split('T')[0]);
-  const [page, setPage] = useState('1');
-  const pageCount = checkedIncentiveList?.totalPages;
+  const storedStartDate = sessionStorage.getItem('checkedStartDate') || today.toISOString().split('T')[0];
+  const storedEndDate = sessionStorage.getItem('checkedEndDate') || tomorrow.toISOString().split('T')[0];
+  const storedPage = sessionStorage.getItem('checkedpage') || '1';
+
+  const [startDate, setStartDate] = useState(storedStartDate);
+  const [endDate, setEndDate] = useState(storedEndDate);
+  const [page, setPage] = useState(storedPage);
 
   const handleViewDetails = (details) => {
     navigate('/viewcheckedincentive', { state: { details } });
@@ -38,7 +42,23 @@ const CheckedIncentive = () => {
     setPage(value.toString());
   };
 
+  const clearSpecificSessionData = () => {
+    sessionStorage.removeItem('checkedStartDate');
+    sessionStorage.removeItem('checkedEndDate');
+    sessionStorage.removeItem('checkedPage');
+  };
+
   useEffect(() => {
+    window.addEventListener('beforeunload', clearSpecificSessionData);
+    return () => {
+      window.removeEventListener('beforeunload', clearSpecificSessionData);
+    };
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('checkedStartDate', startDate);
+    sessionStorage.setItem('checkedEndDate', endDate);
+    sessionStorage.setItem('checkedPage', page);
     dispatch(
       fetchIncentive({
         startDate: startDate,
