@@ -10,9 +10,9 @@ import {
   FormControl,
   InputLabel,
 } from '@material-ui/core';
-
 import { addCoupon } from '../../store/actions/couponsAction';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +34,8 @@ const AddCoupon = () => {
     type: 'SINGLE_USER',
     startDate: '',
     expiryDate: '',
+    startTime: '',
+    expiryTime: '',
     phone: '',
     maxCartDiscount: '',
     minCartDiscount: '',
@@ -52,6 +54,16 @@ const AddCoupon = () => {
     });
   };
 
+  const replaceTimeInDate = (originalDateTime, newTime) => {
+    const parsedOriginalDateTime = moment(originalDateTime);
+
+    const datePart = parsedOriginalDateTime.format('YYYY-MM-DD');
+
+    const newDateTime = moment(`${datePart} ${newTime}`, 'YYYY-MM-DD HH:mm:ss');
+
+    return newDateTime.format();
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -65,7 +77,29 @@ const AddCoupon = () => {
           }
         }
       }
-      const response = await addCoupon(values);
+      const formattedStartDate = replaceTimeInDate(
+        values.startDate,
+        values.startTime,
+      );
+      const formattedExpiryDate = replaceTimeInDate(
+        values.expiryDate,
+        values.expiryTime,
+      );
+      console.log(formattedStartDate, formattedExpiryDate);
+
+      const response = await addCoupon({
+        code: values.code,
+        description: values.description,
+        type: 'SINGLE_USER',
+        startDate: formattedStartDate,
+        expiryDate: formattedExpiryDate,
+        phone: values.phone,
+        maxCartDiscount: values.maxCartDiscount,
+        minCartDiscount: values.minCartDiscount,
+        discountType: values.discountType,
+        discount: values.discount,
+        isPublic: true,
+      });
       if (response?.status?.code === 201 || response?.status?.code === 200) {
         navigate('/coupons');
       } else {
@@ -103,6 +137,15 @@ const AddCoupon = () => {
                 labelWidth={100}
                 InputLabelProps={{ shrink: true }}
                 placeholder=""
+              />
+              <TextField
+                variant="outlined"
+                type="time"
+                label="Start Time"
+                name="startTime"
+                value={values.startTime}
+                onChange={handleInputChange}
+                required
               />
 
               <TextField
@@ -169,6 +212,16 @@ const AddCoupon = () => {
 
               <TextField
                 variant="outlined"
+                type="time"
+                label="Expiry Time"
+                name="expiryTime"
+                value={values.expiryTime}
+                onChange={handleInputChange}
+                required
+              />
+
+              <TextField
+                variant="outlined"
                 type="number"
                 label="Max Cart Discount"
                 name="maxCartDiscount"
@@ -176,8 +229,7 @@ const AddCoupon = () => {
                 onChange={handleInputChange}
                 required
               />
-              
-              
+
               <TextField
                 variant="outlined"
                 label="Description"
@@ -201,7 +253,7 @@ const AddCoupon = () => {
               variant="contained"
               color="primary"
               onClick={handleSubmit}
-              style={{width:'20%', marginTop:'30px'}}
+              style={{ width: '20%', marginTop: '30px' }}
             >
               Submit
             </Button>
