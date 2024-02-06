@@ -1,9 +1,9 @@
 // UpdateStatusComponent.js
-import React, { useState } from 'react';
-import {  Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-const UpdateStatusComponent = ({ updateStatusHandler }) => {
-    const [selectedStatus, setSelectedStatus] = useState('');
+const UpdateStatusComponent = (props) => {
+    const [selectedStatus, setSelectedStatus] = useState("");
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     };
@@ -15,10 +15,14 @@ const UpdateStatusComponent = ({ updateStatusHandler }) => {
             return
         }
 
-        updateStatusHandler(selectedStatus)
+        props.updateStatusHandler(selectedStatus)
 
 
     };
+
+    useEffect(() => {
+        setSelectedStatus(props.selectedStatus)
+    }, [props.selectedStatus])
     return (
         <div>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
