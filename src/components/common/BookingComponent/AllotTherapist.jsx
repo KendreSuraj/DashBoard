@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {  Paper, TextField, Button, MenuItem } from '@mui/material';
+import { Paper, TextField, Button, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
@@ -9,14 +9,18 @@ const AllotTherapistBox = (props) => {
 
     const [partners, setPartners] = useState([]);
     const [selectedTherapist, setSelectedTherapist] = useState('');
-    const [selectedDate, setSelectedDate] = useState('');
-    const [startTime, setStartTime] = useState({ hour: '', minute: '', ampm: '' });
-    const [endTime, setEndTime] = useState({ hour: '', minute: '', ampm: '' });
+    const [selectedDate, setSelectedDate] = useState(props.startDate);
+    const [startTime, setStartTime] = useState({ hour: "", minute: "", ampm: "" });
+    const [endTime, setEndTime] = useState({ hour: "", minute: "", ampm: "" });
     const { handleAllotTherapist } = props
     const hours = getHoursList()
     const minutes = getMinutesList()
 
     useEffect(() => {
+        setSelectedDate(props.startDate);
+        setStartTime(props.startTime)
+        setEndTime(props.endTime)
+        setSelectedTherapist(props.partnerNameStr)
         axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/partner/list`,
             {
                 headers: {
@@ -28,7 +32,7 @@ const AllotTherapistBox = (props) => {
                 const partnerList = response.data && response.data.partnerList ? response.data.partnerList : [];
                 setPartners(partnerList);
             });
-    }, []);
+    }, [props.startDate, props.endTime, props.startTime]);
 
     const handleTherapistChange = (event) => {
         setSelectedTherapist(event.target.value);
@@ -61,9 +65,10 @@ const AllotTherapistBox = (props) => {
             alert("please fill all the fields.")
             return;
         }
+        const id = selectedTherapist.split("-")[0].trim();
 
         handleAllotTherapist({
-            selectedTherapist, selectedDate, startTime, endTime
+            selectedTherapist: id, selectedDate, startTime, endTime
         });
     };
 
@@ -85,7 +90,7 @@ const AllotTherapistBox = (props) => {
                     >
                         {
                             partners && partners.length > 0 ? partners.map(partner => (
-                                <MenuItem value={partner.partner_id} key={partner.partner_id}>{partner.partner_id} - {partner.name}</MenuItem>
+                                <MenuItem value={`${partner.partner_id} - ${partner.name}`} key={partner.partner_id}>{partner.partner_id} - {partner.name}</MenuItem>
                             )) : <MenuItem value="value" >Enter</MenuItem>
                         }
                     </TextField>
