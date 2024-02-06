@@ -11,6 +11,11 @@ import moment from 'moment';
 const BookingDetails = () => {
   // const navigate = useNavigate()
   const [userDataObject, setUserDataObject] = useState({});
+  const [startDate, setStartDate] = useState(null)
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
+  const [partnerNameStr, setPartnerNameStr] = useState("")
+  const [selectedStatus, setSelectedStatus] = useState("")
 
   const params = useParams();
   const { sessionId } = params;
@@ -118,6 +123,35 @@ const BookingDetails = () => {
           'Therapist Email':
             partnerDetail && partnerDetail.email ? partnerDetail.email : '-',
         };
+        const extractedStartDate = partnerDetail && partnerDetail.date ? partnerDetail.date.split('T')[0] : "";
+        let parsedStartTime = "";
+        if (partnerDetail && partnerDetail.startTime) {
+          parsedStartTime = moment(partnerDetail.startTime, "HH:mm:ss");
+        }
+        let parsedEndTime = ""
+        if (partnerDetail && partnerDetail.endTime) {
+          parsedEndTime = moment(partnerDetail.endTime, "HH:mm:ss");
+        }
+        const extractedStartHour = parsedStartTime ? parsedStartTime.format("hh") : ""
+        const extractedStartMinutes = parsedStartTime ? parsedStartTime.format("mm") : ""
+        const startAmPm = parsedStartTime ? parsedStartTime.format("A") : ""
+        const extractedEndHour = parsedEndTime ? parsedEndTime.format("hh") : ""
+        const extractedEndMinutes = parsedEndTime ? parsedEndTime.format("mm") : ""
+        const endAmPm = parsedEndTime ? parsedEndTime.format("A") : ""
+        setStartDate(extractedStartDate)
+        setStartTime({
+          hour: extractedStartHour, minute: extractedStartMinutes, ampm: startAmPm
+        })
+        setEndTime({
+          hour: extractedEndHour,
+          minute: extractedEndMinutes,
+          ampm: endAmPm
+        })
+        const partnerName = partnerDetail && partnerDetail.name ? partnerDetail.name : ''
+        const partnerId = partnerDetail && partnerDetail.id ? partnerDetail.id : ""
+        setPartnerNameStr(`${partnerId} - ${partnerName}`)
+        setSelectedStatus(detailObj.Status)
+
         setUserDataObject(detailObj);
       })
       .catch((err) => console.log(err));
@@ -132,16 +166,20 @@ const BookingDetails = () => {
         ''
       )}
 
-      
+
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
+              partnerNameStr={partnerNameStr ? partnerNameStr : ""}
+              startDate={startDate ? startDate : ""}
+              startTime={startTime ? startTime : ""}
+              endTime={endTime ? endTime : ""}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <UpdateStatusComponent updateStatusHandler={handleStatusUpdate} />
+            <UpdateStatusComponent updateStatusHandler={handleStatusUpdate} selectedStatus={selectedStatus} />
           </Grid>
         </Grid>
       </Grid>
