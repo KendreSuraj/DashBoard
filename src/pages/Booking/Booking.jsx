@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBookings } from '../../store/actions/booking.action';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
+import { splitDateTime } from '../../utils';
 
 const Booking = () => {
   const navigate = useNavigate();
@@ -15,14 +15,15 @@ const Booking = () => {
   let bookingList = useSelector((state) => state.booking.bookingList);
 
   bookingList = bookingList?.map((data) => {
-    const newDate = moment(data.appointmentAt);
+    const formattedDate = splitDateTime(data.appointmentAt);
+
     return {
       Name: data.name ? data.name : '',
       'Phone Number': data.phoneNumber,
       City: data.addressCity ? data.addressCity : '',
       'Service Name': data.productName ? data.productName : '',
-      'Booking Date': newDate.format('YYYY-MM-DD'),
-      'Booking Time': newDate.format('hh:mm A'),
+      'Booking Date': formattedDate.date,
+      'Booking Time': formattedDate.time,
       Building: data.building ? data.building : '',
       'Formatted Address': data.formattedAddress ? data.formattedAddress : '',
       'Product Price': data.productPrice ? data.productPrice : '',
