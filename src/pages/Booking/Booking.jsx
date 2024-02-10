@@ -23,20 +23,20 @@ const Booking = () => {
     const formattedDate = splitDateTime(data.appointmentAt);
 
     return {
-      Id: data?.sessionSchedulesId,
+      'Service Id': data?.sessionSchedulesId,
       sessionId: data.sessionId ? data.sessionId : null,
-      Name: data.name ? data.name : '',
-      'client Id': data?.clientId,
+      'Client Name': data.name ? data.name : '',
+      'Client Id': data?.clientId,
       Gender: data?.gender,
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
       'Service Name': data.productName ? data.productName : '',
-      'Booking Date': formattedDate.date,
-      'Booking Time': formattedDate.time,
-      'Formatted Address': data.formattedAddress ? data.formattedAddress : '',
+      'Service Date': formattedDate.date,
+      'Service Time': formattedDate.time,
+      Address: data.formattedAddress ? data.formattedAddress : '',
       'Total (Rs.)': data.total ? `Rs. ${data.total}` : '',
       Count: data.count ? data.count : '',
-      Status: data.status ? data.status : '',
+      'Service Status': data.status ? data.status : '',
       'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
       map: data.Map ? data.Map : '',
     };
