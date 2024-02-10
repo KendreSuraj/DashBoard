@@ -21,7 +21,11 @@ const Booking = () => {
     const formattedDate = splitDateTime(data.appointmentAt);
 
     return {
+      'Id': data?.sessionSchedulesId,
+      sessionId: data.sessionId ? data.sessionId : null,
       Name: data.name ? data.name : '',
+      'client Id': data?.clientId,
+      'Gender': data?.gender,
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
       'Service Name': data.productName ? data.productName : '',
@@ -31,7 +35,7 @@ const Booking = () => {
       Total: data.total ? data.total : '',
       Count: data.count ? data.count : '',
       Status: data.status ? data.status : '',
-      sessionId: data.sessionId ? data.sessionId : null,
+      'Partner Name': data.partnerName ? data.partnerName : "Not Assigned",
       map: data.Map ? data.Map : '',
     };
   });
@@ -127,7 +131,6 @@ const Booking = () => {
               'productSessionId',
               'isConsent',
               'productImage',
-              'sessionScheduleId',
               'sessionId',
               'orderDetailId',
               'productId',
