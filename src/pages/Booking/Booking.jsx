@@ -7,31 +7,29 @@ import { fetchBookings } from '../../store/actions/booking.action';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import { useNavigate } from 'react-router-dom';
 import { splitDateTime } from '../../utils';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Booking = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  let bookingList = useSelector((state) => state.booking.bookingList);
-
+  let bookingList = useSelector((state) => state.booking.bookingList.bookings);
+  let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
+  let totalBooking = useSelector((state) => state.booking.bookingList?.totalRecords)
   bookingList = bookingList?.map((data) => {
     const formattedDate = splitDateTime(data.appointmentAt);
 
     return {
       Name: data.name ? data.name : '',
       'Phone Number': data.phoneNumber,
-      City: data.addressCity ? data.addressCity : '',
+      City: data.city ? data.city : '',
       'Service Name': data.productName ? data.productName : '',
       'Booking Date': formattedDate.date,
       'Booking Time': formattedDate.time,
-      Building: data.building ? data.building : '',
       'Formatted Address': data.formattedAddress ? data.formattedAddress : '',
-      'Product Price': data.productPrice ? data.productPrice : '',
-      Discount: data.discount ? data.discount : '',
-      'Coupon Discount': data.couponDiscount ? data.couponDiscount : '',
       Total: data.total ? data.total : '',
       Count: data.count ? data.count : '',
-      'Pin Code': data.addressPostalCode ? data.addressPostalCode : '',
       Status: data.status ? data.status : '',
       sessionId: data.sessionId ? data.sessionId : null,
       map: data.Map ? data.Map : '',
@@ -42,8 +40,16 @@ const Booking = () => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(tomorrow.toISOString().split('T')[0]);
+  const storedStartDate = sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
+  const storedEndDate = sessionStorage.getItem('bookingEndDate') || tomorrow.toISOString().split('T')[0];
+  const storedPage = sessionStorage.getItem('bookingPage') || '1';
+  const [page, setPage] = useState(storedPage);
+  const handlePageChange = (event, value) => {
+    setPage(value.toString());
+  };
+
+  const [startDate, setStartDate] = useState(storedStartDate);
+  const [endDate, setEndDate] = useState(storedEndDate);
 
   const handleDateChange = (event) => {
     if (event.target.name === 'startDate') {
@@ -63,9 +69,26 @@ const Booking = () => {
     userData && userData.user && userData.user.concentrixUser
       ? userData.user.concentrixUser
       : false;
+
+  const clearSpecificSessionData = () => {
+    sessionStorage.removeItem('bookingStartDate');
+    sessionStorage.removeItem('bookingEndDate');
+    sessionStorage.removeItem('bookingPage');
+  };
+
   useEffect(() => {
-    dispatch(fetchBookings({ startDate: startDate, endDate: endDate }));
-  }, [dispatch, startDate, endDate]);
+    window.addEventListener('beforeunload', clearSpecificSessionData);
+    return () => {
+      window.removeEventListener('beforeunload', clearSpecificSessionData);
+    };
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('bookingStartDate', startDate);
+    sessionStorage.setItem('bookingEndDate', endDate);
+    sessionStorage.setItem('bookingPage', page);
+    dispatch(fetchBookings({ startDate: startDate, endDate: endDate, page: page, }));
+  }, [dispatch, startDate, endDate, page]);
 
   return concentrixUser ? (
     <h1>You do not have access for this section</h1>
@@ -93,27 +116,39 @@ const Booking = () => {
         </div>
       </div>
       {bookingList?.length > 0 ? (
-        <TableComponent
-          data={bookingList}
-          hiddenFields={[
-            'orderId',
-            'addressType',
-            'addressPlaceId',
-            'productSessionId',
-            'isConsent',
-            'productImage',
-            'sessionScheduleId',
-            'sessionId',
-            'orderDetailId',
-            'productId',
-            'addressCompoundCode',
-            'addressArea',
-            'userId',
-            'appointmentAt',
-          ]}
-          viewBookingButton={'view'}
-          bookingDetails={handleBookingDetail}
-        />
+        <>
+          <h4 style={{ textAlign: 'right', marginBottom: '7px', padding: '5px' }}>Total bookings on the selected date:{totalBooking}</h4>
+          <TableComponent
+            data={bookingList}
+            hiddenFields={[
+              'orderId',
+              'addressType',
+              'addressPlaceId',
+              'productSessionId',
+              'isConsent',
+              'productImage',
+              'sessionScheduleId',
+              'sessionId',
+              'orderDetailId',
+              'productId',
+              'addressCompoundCode',
+              'addressArea',
+              'userId',
+              'appointmentAt',
+            ]}
+            viewBookingButton={'view'}
+            bookingDetails={handleBookingDetail}
+          />
+          <div className="incentiv-pagination" style={{ marginTop: "1rem" }}>
+            <Stack spacing={3}>
+              <Pagination
+                count={pageCount}
+                color="primary"
+                onChange={handlePageChange}
+              />
+            </Stack>
+          </div>
+        </>
       ) : (
         <LoaderComponent />
       )}
