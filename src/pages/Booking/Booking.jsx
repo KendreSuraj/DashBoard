@@ -16,26 +16,28 @@ const Booking = () => {
 
   let bookingList = useSelector((state) => state.booking.bookingList.bookings);
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
-  let totalBooking = useSelector((state) => state.booking.bookingList?.totalRecords)
+  let totalBooking = useSelector(
+    (state) => state.booking.bookingList?.totalRecords,
+  );
   bookingList = bookingList?.map((data) => {
     const formattedDate = splitDateTime(data.appointmentAt);
 
     return {
-      'Id': data?.sessionSchedulesId,
+      Id: data?.sessionSchedulesId,
       sessionId: data.sessionId ? data.sessionId : null,
       Name: data.name ? data.name : '',
       'client Id': data?.clientId,
-      'Gender': data?.gender,
+      Gender: data?.gender,
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
       'Service Name': data.productName ? data.productName : '',
       'Booking Date': formattedDate.date,
       'Booking Time': formattedDate.time,
       'Formatted Address': data.formattedAddress ? data.formattedAddress : '',
-      Total: data.total ? data.total : '',
+      'Total (Rs.)': data.total ? `Rs. ${data.total}` : '',
       Count: data.count ? data.count : '',
       Status: data.status ? data.status : '',
-      'Partner Name': data.partnerName ? data.partnerName : "Not Assigned",
+      'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
       map: data.Map ? data.Map : '',
     };
   });
@@ -44,8 +46,12 @@ const Booking = () => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const storedStartDate = sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
-  const storedEndDate = sessionStorage.getItem('bookingEndDate') || tomorrow.toISOString().split('T')[0];
+  const storedStartDate =
+    sessionStorage.getItem('bookingStartDate') ||
+    today.toISOString().split('T')[0];
+  const storedEndDate =
+    sessionStorage.getItem('bookingEndDate') ||
+    tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('bookingPage') || '1';
   const [page, setPage] = useState(storedPage);
   const handlePageChange = (event, value) => {
@@ -91,7 +97,9 @@ const Booking = () => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
     sessionStorage.setItem('bookingPage', page);
-    dispatch(fetchBookings({ startDate: startDate, endDate: endDate, page: page, }));
+    dispatch(
+      fetchBookings({ startDate: startDate, endDate: endDate, page: page }),
+    );
   }, [dispatch, startDate, endDate, page]);
 
   return concentrixUser ? (
@@ -121,7 +129,11 @@ const Booking = () => {
       </div>
       {bookingList?.length > 0 ? (
         <>
-          <h4 style={{ textAlign: 'right', marginBottom: '7px', padding: '5px' }}>Total bookings on the selected date:{totalBooking}</h4>
+          <h4
+            style={{ textAlign: 'right', marginBottom: '7px', padding: '5px' }}
+          >
+            Total no. of bookings for the selected date: {totalBooking}
+          </h4>
           <TableComponent
             data={bookingList}
             hiddenFields={[
@@ -142,7 +154,7 @@ const Booking = () => {
             viewBookingButton={'view'}
             bookingDetails={handleBookingDetail}
           />
-          <div className="incentiv-pagination" style={{ marginTop: "1rem" }}>
+          <div className="incentiv-pagination" style={{ marginTop: '1rem' }}>
             <Stack spacing={3}>
               <Pagination
                 count={pageCount}
