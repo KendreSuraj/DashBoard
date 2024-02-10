@@ -9,7 +9,7 @@ export const fetchBookings = createAsyncThunk(
   async (params) => {
     try {
       const res = await axios.get(
-        `${apiUrl}/api/v1/admin/booking/bookings?startDate=${params.startDate}&endDate=${params.endDate}`,
+        `${apiUrl}/api/v1/admin/booking/bookings?startDate=${params.startDate}&endDate=${params.endDate}&page=${params.page}`,
         {
           headers: {
             Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
@@ -17,7 +17,7 @@ export const fetchBookings = createAsyncThunk(
           },
         },
       );
-      const data = res.data.bookings;
+      const data = res.data;
       return data;
     } catch (error) {
       console.error('Error in fetchBookings:', error);
