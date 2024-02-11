@@ -40,7 +40,7 @@ const UnCheckedIncentive = () => {
 
   const handleDateChange = (event) => {
     setFilteredList([]);
-    document.getElementById('filterBookingsDropdown').value = '';
+    // document.getElementById('filterBookingsDropdown').value = '';
     setSelected(false);
     if (event.target.name === 'startDate') {
       setStartDate(event.target.value);
@@ -53,7 +53,7 @@ const UnCheckedIncentive = () => {
     setPage(value.toString());
     setSelected(false);
     setFilteredList([]);
-    document.getElementById('filterBookingsDropdown').value = '';
+    // document.getElementById('filterBookingsDropdown').value = '';
   };
 
   // const handleSelectChanges = (e) => {
