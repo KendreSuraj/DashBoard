@@ -148,6 +148,7 @@ const Booking = () => {
                 count={pageCount}
                 color="primary"
                 onChange={handlePageChange}
+                defaultPage={parseInt(page)}
               />
             </Stack>
           </div>
