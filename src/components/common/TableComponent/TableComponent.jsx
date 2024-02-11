@@ -37,6 +37,13 @@ const TableComponent = ({
     bookingDetails(details);
   };
 
+  const stringifiedUser = localStorage.getItem('userData');
+  const userData = stringifiedUser ? JSON.parse(stringifiedUser) : null;
+  const concentrixUser =
+    userData && userData.user && userData.user.concentrixUser
+      ? userData.user.concentrixUser
+      : false;
+
   return (
     <div className="table-container">
       {data && data.length > 0 ? (
@@ -63,7 +70,7 @@ const TableComponent = ({
                 {showUpdateButton && (
                   <TableCell className="table-cell">Actions</TableCell>
                 )}
-                {viewBookingButton && (
+                {!concentrixUser && viewBookingButton && (
                   <TableCell className="table-cell">View</TableCell>
                 )}
                 {deleteCouponButton && (
@@ -85,10 +92,8 @@ const TableComponent = ({
                             </Link>
                           ) : (
                             row[key]
-                          )} 
-
-                     
-                         </TableCell>              
+                          )}
+                        </TableCell>
                       );
                     }
                     return null;
@@ -124,26 +129,28 @@ const TableComponent = ({
                       </Button>
                     </TableCell>
                   )}
-                  {viewBookingButton && (
-                    <TableCell className="table-cell">
-                      {viewBookingButton === 'img' ? (
-                        <img
-                          className="view-unchecked-img"
-                          src={`${row.image}?w=100&h=100&fit=crop`}
-                          onClick={() => window.open(row.image, '_blank')}
-                          alt="img"
-                        />
-                      ) : (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => handleViewBookingDetails(row)}
-                        >
-                          {viewBookingButton}
-                        </Button>
-                      )}
-                    </TableCell>
-                  )}
+                  {!concentrixUser
+                    ? viewBookingButton && (
+                        <TableCell className="table-cell">
+                          {viewBookingButton === 'img' ? (
+                            <img
+                              className="view-unchecked-img"
+                              src={`${row.image}?w=100&h=100&fit=crop`}
+                              onClick={() => window.open(row.image, '_blank')}
+                              alt="img"
+                            />
+                          ) : (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleViewBookingDetails(row)}
+                            >
+                              {viewBookingButton}
+                            </Button>
+                          )}
+                        </TableCell>
+                      )
+                    : ''}
                   {deleteCouponButton && (
                     <TableCell className="table-cell">
                       {deleteCouponButton === 'img' ? (

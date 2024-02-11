@@ -189,9 +189,7 @@ const Booking = () => {
     setFilterString(demoFilterString);
   }, [selectedCities, selectedServices, selectedStatus]);
 
-  return concentrixUser ? (
-    <h1>You do not have access for this section</h1>
-  ) : (
+  return (
     <div>
       <h3>All Bookings</h3>
       <div className="container">
