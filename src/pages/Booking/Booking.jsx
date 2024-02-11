@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { splitDateTime } from '../../utils';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import FilterModal from '../../components/common/FilterModal/FilterModal';
 
 const Booking = () => {
   const [searchText, setSearchText] = useState('');
@@ -146,6 +147,9 @@ const Booking = () => {
             setSearchBtnPressed={setSearchBtnPressed}
             searchBtnPressed={searchBtnPressed}
           />
+        </div>
+        <div>
+          <FilterModal />
         </div>
 
         <div className="date-rage">
