@@ -1,10 +1,15 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DropdownWithCheckBox from '../DropdownWithCheckBox/DropdownWithCheckBox';
 import './FilterModal.style.css';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchCityList,
+  fetchProductList,
+} from '../../../store/actions/booking.action';
 
 const style = {
   position: 'absolute',
@@ -17,10 +22,35 @@ const style = {
   p: 4,
 };
 
-export default function FilterModal() {
+const serviceStatusData = [
+  { title: 'PENDING' },
+  { title: 'SCHEDULED' },
+  { title: 'POSTPONED' },
+  { title: 'COMPLETED' },
+  { title: 'PAID' },
+  { title: 'SESSION_START' },
+  { title: 'SESSION_END' },
+  { title: 'CANCELLED' },
+];
+
+export default function FilterModal({
+  setSelectedCities,
+  setSelectedServices,
+  setSelectedStatus,
+}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCityList());
+    dispatch(fetchProductList());
+  }, [dispatch]);
+
+  const cityList = useSelector((state) => state.booking.cityList);
+  const productList = useSelector((state) => state.booking.productList);
 
   return (
     <div>
@@ -41,25 +71,37 @@ export default function FilterModal() {
             <Typography id="modal-modal-description" sx={{ mt: 2, mb: 1 }}>
               Select service status
             </Typography>
-            <DropdownWithCheckBox />
+            <DropdownWithCheckBox
+              dropdownLabel={'Select status'}
+              data={serviceStatusData}
+              setSelectedValues={setSelectedStatus}
+            />
           </div>
 
           <div>
             <Typography id="modal-modal-description" sx={{ mt: 4, mb: 1 }}>
               Select cities
             </Typography>
-            <DropdownWithCheckBox />
+            <DropdownWithCheckBox
+              dropdownLabel={'Select cities'}
+              data={cityList}
+              setSelectedValues={setSelectedCities}
+            />
           </div>
 
           <div>
             <Typography id="modal-modal-description" sx={{ mt: 4, mb: 1 }}>
               Select services
             </Typography>
-            <DropdownWithCheckBox />
+            <DropdownWithCheckBox
+              dropdownLabel={'Select services'}
+              data={productList}
+              setSelectedValues={setSelectedServices}
+            />
           </div>
 
           <div className="btnCenter">
-            <Button variant="contained" sx={{ mt: 4 }}>
+            <Button variant="contained" sx={{ mt: 4 }} onClick={handleClose}>
               Apply Filters
             </Button>
           </div>

@@ -10,11 +10,16 @@ import { splitDateTime } from '../../utils';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import FilterModal from '../../components/common/FilterModal/FilterModal';
+import { Button } from '@mui/material';
 
 const Booking = () => {
   const [searchText, setSearchText] = useState('');
   const [searchType, setSearchType] = useState('phoneNumber');
   const [searchBtnPressed, setSearchBtnPressed] = useState(false);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [filterString, setFilterString] = useState('');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -103,25 +108,57 @@ const Booking = () => {
     sessionStorage.setItem('bookingEndDate', endDate);
     sessionStorage.setItem('bookingPage', page);
 
+    const obj = {
+      startDate: startDate,
+      endDate: endDate,
+      page: page,
+    };
+
     if (searchText.length > 0) {
-      dispatch(
-        fetchBookings({
-          startDate: startDate,
-          endDate: endDate,
-          page: page,
-          searchType,
-          searchText,
-        }),
-      );
-    } else {
-      dispatch(
-        fetchBookings({
-          startDate: startDate,
-          endDate: endDate,
-          page: page,
-        }),
-      );
+      obj.searchText = searchText;
+      obj.searchType = searchType;
     }
+
+    if (selectedCities.length > 0) {
+      let cityFilter = '';
+      for (let i = 0; i < selectedCities.length; i++) {
+        if (i == selectedCities.length - 1) {
+          cityFilter += `'${selectedCities[i].title}'`;
+        } else {
+          cityFilter += `'${selectedCities[i].title}',`;
+        }
+      }
+
+      obj.cityFilter = cityFilter;
+    }
+
+    if (selectedServices.length > 0) {
+      let serviceFilter = '';
+      for (let i = 0; i < selectedServices.length; i++) {
+        if (i == selectedServices.length - 1) {
+          serviceFilter += `'${selectedServices[i].title}'`;
+        } else {
+          serviceFilter += `'${selectedServices[i].title}',`;
+        }
+      }
+
+      obj.serviceFilter = serviceFilter;
+    }
+
+    if (selectedStatus.length > 0) {
+      let statusFilter = '';
+      for (let i = 0; i < selectedStatus.length; i++) {
+        if (i == selectedStatus.length - 1) {
+          statusFilter += `'${selectedStatus[i].title}'`;
+        } else {
+          statusFilter += `'${selectedStatus[i].title}',`;
+        }
+      }
+
+      obj.statusFilter = statusFilter;
+    }
+
+    dispatch(fetchBookings(obj));
   }, [
     dispatch,
     startDate,
@@ -130,7 +167,27 @@ const Booking = () => {
     searchBtnPressed,
     searchText,
     searchType,
+    selectedCities,
+    selectedServices,
+    selectedStatus,
   ]);
+
+  useEffect(() => {
+    let demoFilterString = '';
+    for (let i = 0; i < selectedCities.length; i++) {
+      demoFilterString += `${selectedCities[i].title},`;
+    }
+
+    for (let i = 0; i < selectedServices.length; i++) {
+      demoFilterString += `${selectedServices[i].title},`;
+    }
+
+    for (let i = 0; i < selectedStatus.length; i++) {
+      demoFilterString += `${selectedStatus[i].title},`;
+    }
+
+    setFilterString(demoFilterString);
+  }, [selectedCities, selectedServices, selectedStatus]);
 
   return concentrixUser ? (
     <h1>You do not have access for this section</h1>
@@ -149,7 +206,11 @@ const Booking = () => {
           />
         </div>
         <div>
-          <FilterModal />
+          <FilterModal
+            setSelectedCities={setSelectedCities}
+            setSelectedServices={setSelectedServices}
+            setSelectedStatus={setSelectedStatus}
+          />
         </div>
 
         <div className="date-rage">
@@ -169,11 +230,37 @@ const Booking = () => {
       </div>
       {bookingList?.length > 0 ? (
         <>
-          <h4
-            style={{ textAlign: 'right', marginBottom: '7px', padding: '5px' }}
-          >
-            Total no. of bookings for the selected date: {totalBooking}
-          </h4>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>
+              {filterString.length > 0 ? (
+                <>
+                  <p style={{ fontSize: '12px', color: 'blue' }}>
+                    {filterString.length > 0 ? (
+                      `Filters: ${filterString}`
+                    ) : (
+                      <></>
+                    )}
+                  </p>
+                  <Button onClick={() => window.location.reload()}>
+                    Remove Filters
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            <h4
+              style={{
+                textAlign: 'right',
+                marginBottom: '7px',
+                padding: '5px',
+              }}
+            >
+              Total no. of bookings for the selected date: {totalBooking}
+            </h4>
+          </div>
+
           <TableComponent
             data={bookingList}
             hiddenFields={[
