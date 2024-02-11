@@ -8,15 +8,16 @@ export const fetchIncentive = createAsyncThunk(
   'incentive/fetchIncentive',
   async (params) => {
     try {
-      const res = await axios.get(
-        `${apiUrl}/api/v1/admin/partner/checked-list?startDate=${params.startDate}&endDate=${params.endDate}&type=${params.type}&page=${params.page}`,
-        {
-          headers: {
-            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-            token: getToken(),
-          },
+      let incentiveApiUrl = `${apiUrl}/api/v1/admin/partner/checked-list?startDate=${params.startDate}&endDate=${params.endDate}&type=${params.type}&page=${params.page}`;
+      if (params.searchType && params.searchText) {
+        incentiveApiUrl += `&${params.searchType}=${params.searchText}`;
+      }
+      const res = await axios.get(incentiveApiUrl, {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
         },
-      );
+      });
       const data = res?.data;
       return data;
     } catch (error) {
@@ -30,20 +31,23 @@ export const fetchIncentiveSteps = createAsyncThunk(
   'incentive/fetchIncentiveSteps',
   async (params) => {
     try {
-      const res = await axios.get(`${apiUrl}/api/v1/admin/partner/incentive?sessionId=${params.sessionId}&sessionSchedulesId=${params.sessionSchedulesId}&partnerId=${params.partnerId}&productId=${params.productId}`, {
-        headers: {
-          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-          token: getToken(),
+      const res = await axios.get(
+        `${apiUrl}/api/v1/admin/partner/incentive?sessionId=${params.sessionId}&sessionSchedulesId=${params.sessionSchedulesId}&partnerId=${params.partnerId}&productId=${params.productId}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
         },
-      },);
-      const data = res?.data?.result
+      );
+      const data = res?.data?.result;
       return data;
     } catch (error) {
-      console.error("Error in fetchIncentiveSteps")
+      console.error('Error in fetchIncentiveSteps');
       throw error;
     }
-  }
-)
+  },
+);
 
 export const submitIncentive = createAsyncThunk(
   'incentive/submitincentive',
@@ -62,15 +66,16 @@ export const submitIncentive = createAsyncThunk(
 
       const data = res.data;
       if (data.status.code === 200) {
-        alert(data.status.message)
-        window.location.reload(0, 0)
+        alert(data.status.message);
+        window.location.reload(0, 0);
         return data;
       }
     } catch (error) {
       console.error('Error in submit incentive', error);
       throw error;
     }
-  })
+  },
+);
 
 export const finalIncentiveSubmit = createAsyncThunk(
   'incentive/finalincentivesubmit',
@@ -89,12 +94,12 @@ export const finalIncentiveSubmit = createAsyncThunk(
 
       const data = res.data;
       if (data.status.code === 200) {
-        alert(data.status.message)
+        alert(data.status.message);
       }
       return data;
     } catch (error) {
       console.error('Error in Final Submit', error);
       throw error;
     }
-  });
-
+  },
+);

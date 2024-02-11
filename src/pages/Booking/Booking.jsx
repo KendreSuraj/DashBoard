@@ -11,6 +11,10 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 const Booking = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchType, setSearchType] = useState('phoneNumber');
+  const [searchBtnPressed, setSearchBtnPressed] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -97,10 +101,35 @@ const Booking = () => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
     sessionStorage.setItem('bookingPage', page);
-    dispatch(
-      fetchBookings({ startDate: startDate, endDate: endDate, page: page }),
-    );
-  }, [dispatch, startDate, endDate, page]);
+
+    if (searchText.length > 0) {
+      dispatch(
+        fetchBookings({
+          startDate: startDate,
+          endDate: endDate,
+          page: page,
+          searchType,
+          searchText,
+        }),
+      );
+    } else {
+      dispatch(
+        fetchBookings({
+          startDate: startDate,
+          endDate: endDate,
+          page: page,
+        }),
+      );
+    }
+  }, [
+    dispatch,
+    startDate,
+    endDate,
+    page,
+    searchBtnPressed,
+    searchText,
+    searchType,
+  ]);
 
   return concentrixUser ? (
     <h1>You do not have access for this section</h1>
@@ -109,7 +138,14 @@ const Booking = () => {
       <h3>All Bookings</h3>
       <div className="container">
         <div>
-          <SearchComponent />
+          <SearchComponent
+            searchText={searchText}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            setSearchType={setSearchType}
+            setSearchBtnPressed={setSearchBtnPressed}
+            searchBtnPressed={searchBtnPressed}
+          />
         </div>
 
         <div className="date-rage">
