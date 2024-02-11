@@ -6,8 +6,13 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router-dom';
 import './Incentive.style.css';
+import SearchComponent from '../../components/common/SearchComponent/SearchComponent';
 
 const CheckedIncentive = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchType, setSearchType] = useState('phoneNumber');
+  const [searchBtnPressed, setSearchBtnPressed] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const checkedIncentiveList = useSelector(
@@ -18,8 +23,12 @@ const CheckedIncentive = () => {
   const pageCount = checkedIncentiveList?.totalPages;
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const storedStartDate = sessionStorage.getItem('checkedStartDate') || today.toISOString().split('T')[0];
-  const storedEndDate = sessionStorage.getItem('checkedEndDate') || tomorrow.toISOString().split('T')[0];
+  const storedStartDate =
+    sessionStorage.getItem('checkedStartDate') ||
+    today.toISOString().split('T')[0];
+  const storedEndDate =
+    sessionStorage.getItem('checkedEndDate') ||
+    tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('checkedpage') || '1';
 
   const [startDate, setStartDate] = useState(storedStartDate);
@@ -65,26 +74,49 @@ const CheckedIncentive = () => {
         endDate: endDate,
         type: 'checked',
         page: page,
+        searchType,
+        searchText,
       }),
     );
-  }, [dispatch, startDate, endDate, page]);
+  }, [
+    dispatch,
+    startDate,
+    endDate,
+    page,
+    searchBtnPressed,
+    searchText,
+    searchType,
+  ]);
 
   return (
     <div>
       <h3 className="incentive-heading">Checked Incentive</h3>
-      <div className="incentive-date-range">
-        <input
-          type="date"
-          name="startDate"
-          value={startDate}
-          onChange={handleDateChange}
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={endDate}
-          onChange={handleDateChange}
-        />
+      <div className="container">
+        <div>
+          <SearchComponent
+            searchText={searchText}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            setSearchType={setSearchType}
+            setSearchBtnPressed={setSearchBtnPressed}
+            searchBtnPressed={searchBtnPressed}
+          />
+        </div>
+
+        <div className="incentive-date-range">
+          <input
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={handleDateChange}
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={handleDateChange}
+          />
+        </div>
       </div>
 
       <TableComponent

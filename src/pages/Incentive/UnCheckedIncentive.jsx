@@ -5,8 +5,13 @@ import TableComponent from '../../components/common/TableComponent/TableComponen
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router-dom';
+import SearchComponent from '../../components/common/SearchComponent/SearchComponent';
 
 const UnCheckedIncentive = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchType, setSearchType] = useState('phoneNumber');
+  const [searchBtnPressed, setSearchBtnPressed] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const uncheckedIncentiveList = useSelector(
@@ -17,24 +22,26 @@ const UnCheckedIncentive = () => {
   const pageCount = uncheckedIncentiveList?.totalPages;
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const storedStartDate = sessionStorage.getItem('startDate') || today.toISOString().split('T')[0];
-  const storedEndDate = sessionStorage.getItem('endDate') || tomorrow.toISOString().split('T')[0];
+  const storedStartDate =
+    sessionStorage.getItem('startDate') || today.toISOString().split('T')[0];
+  const storedEndDate =
+    sessionStorage.getItem('endDate') || tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('page') || '1';
 
   const [startDate, setStartDate] = useState(storedStartDate);
   const [endDate, setEndDate] = useState(storedEndDate);
   const [page, setPage] = useState(storedPage);
-  const [filteredList, setFilteredList] = useState([])
-  const [selected, setSelected] = useState(false)
+  const [filteredList, setFilteredList] = useState([]);
+  const [selected, setSelected] = useState(false);
 
   const handleViewDetails = (details) => {
     navigate('/viewuncheckedincentive', { state: { details } });
   };
 
   const handleDateChange = (event) => {
-    setFilteredList([])
-    document.getElementById('filterBookingsDropdown').value = "";
-    setSelected(false)
+    setFilteredList([]);
+    document.getElementById('filterBookingsDropdown').value = '';
+    setSelected(false);
     if (event.target.name === 'startDate') {
       setStartDate(event.target.value);
     } else if (event.target.name === 'endDate') {
@@ -44,23 +51,25 @@ const UnCheckedIncentive = () => {
 
   const handlePageChange = (event, value) => {
     setPage(value.toString());
-    setSelected(false)
-    setFilteredList([])
-    document.getElementById('filterBookingsDropdown').value = "";
+    setSelected(false);
+    setFilteredList([]);
+    document.getElementById('filterBookingsDropdown').value = '';
   };
 
-  const handleSelectChanges = (e) => {
-    setSelected(e.target.value === "" ? false : true)
-    let selectedList = uncheckedIncentiveList?.bookings.filter(x => x.status === e.target.value)
-    setFilteredList([...selectedList])
-  }
+  // const handleSelectChanges = (e) => {
+  //   setSelected(e.target.value === '' ? false : true);
+  //   let selectedList = uncheckedIncentiveList?.bookings.filter(
+  //     (x) => x.status === e.target.value,
+  //   );
+  //   setFilteredList([...selectedList]);
+  // };
 
   const clearSpecificSessionData = () => {
     sessionStorage.removeItem('startDate');
     sessionStorage.removeItem('endDate');
     sessionStorage.removeItem('page');
   };
-  
+
   useEffect(() => {
     window.addEventListener('beforeunload', clearSpecificSessionData);
     return () => {
@@ -78,14 +87,24 @@ const UnCheckedIncentive = () => {
         endDate: endDate,
         type: 'unchecked',
         page: page,
+        searchType,
+        searchText,
       }),
     );
-  }, [dispatch, startDate, endDate, page]);
+  }, [
+    dispatch,
+    startDate,
+    endDate,
+    page,
+    searchBtnPressed,
+    searchText,
+    searchType,
+  ]);
 
   return (
     <div>
       <h3 className="incentive-heading">Unchecked Incentive</h3>
-      <div className='filter-bookings'>
+      {/* <div className='filter-bookings'>
         <select id="filterBookingsDropdown" onChange={handleSelectChanges}>
           <option value="">Filter Bookings</option>
           <option value="COMPLETED">COMPLETED</option>
@@ -93,24 +112,41 @@ const UnCheckedIncentive = () => {
           <option value="SESSION_START">SESSION START</option>
           <option value="POSTPONED">POSTPONED</option>
         </select>
-      </div>
-      <div className="incentive-date-range">
-        <input
-          type="date"
-          name="startDate"
-          value={startDate}
-          onChange={handleDateChange}
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={endDate}
-          onChange={handleDateChange}
-        />
+      </div> */}
+      <div className="container">
+        <div>
+          <SearchComponent
+            searchText={searchText}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            setSearchType={setSearchType}
+            setSearchBtnPressed={setSearchBtnPressed}
+            searchBtnPressed={searchBtnPressed}
+          />
+        </div>
+
+        <div className="incentive-date-range">
+          <input
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={handleDateChange}
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={handleDateChange}
+          />
+        </div>
       </div>
 
       <TableComponent
-        data={selected || filteredList.length > 0 ? filteredList : uncheckedIncentiveList?.bookings}
+        data={
+          selected || filteredList.length > 0
+            ? filteredList
+            : uncheckedIncentiveList?.bookings
+        }
         hiddenFields={[
           'order_id',
           'order_detail_id',
