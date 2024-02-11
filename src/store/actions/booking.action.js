@@ -12,6 +12,18 @@ export const fetchBookings = createAsyncThunk(
       if (params.searchType && params.searchText) {
         bookingApiUrl += `&${params.searchType}=${params.searchText}`;
       }
+
+      if (params.serviceFilter) {
+        bookingApiUrl += `&serviceFilter=${params.serviceFilter}`;
+      }
+
+      if (params.cityFilter) {
+        bookingApiUrl += `&cityFilter=${params.cityFilter}`;
+      }
+
+      if (params.statusFilter) {
+        bookingApiUrl += `&statusFilter=${params.statusFilter}`;
+      }
       const res = await axios.get(bookingApiUrl, {
         headers: {
           Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
@@ -22,6 +34,47 @@ export const fetchBookings = createAsyncThunk(
       return data;
     } catch (error) {
       console.error('Error in fetchBookings:', error);
+      throw error;
+    }
+  },
+);
+
+export const fetchCityList = createAsyncThunk(
+  'booking/fetchCityList',
+  async () => {
+    try {
+      const res = await axios.get(`${apiUrl}/api/v1/admin/booking/city-list`, {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      });
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error('Error in fetchCityList:', error);
+      throw error;
+    }
+  },
+);
+
+export const fetchProductList = createAsyncThunk(
+  'booking/fetchProductList',
+  async () => {
+    try {
+      const res = await axios.get(
+        `${apiUrl}/api/v1/admin/booking/product-list`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error('Error in fetchProductList:', error);
       throw error;
     }
   },
