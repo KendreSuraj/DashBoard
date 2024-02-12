@@ -15,7 +15,7 @@ const UserDetailsComponent = ({ data }) => {
                     <h3>Client Details</h3>
                         <Table>
                             <TableBody>
-                                {keys.slice(0, middleIndex).map((key) => (
+                                {keys.slice(0, middleIndex+1).map((key) => (
                                     <TableRow key={key}>
                                         <TableCell>
                                             <strong>{key}:</strong>
@@ -34,7 +34,7 @@ const UserDetailsComponent = ({ data }) => {
                         <h3>Therapist Details</h3>
                         <Table>
                             <TableBody>
-                                {keys.slice(middleIndex).map((key) => (
+                                {keys.slice(middleIndex+1).map((key) => (
                                     <TableRow key={key}>
                                         <TableCell>
                                             <strong>{key}:</strong>

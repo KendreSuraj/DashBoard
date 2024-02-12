@@ -7,6 +7,7 @@ import { getToken } from '../../components/common/userLocalStorageUtils';
 import AllotTherapistComponent from '../../components/common/BookingComponent/AllotTherapist';
 import UpdateStatusComponent from '../../components/common/BookingComponent/UpdateStatusComponent';
 import moment from 'moment';
+import { splitDateTime } from '../../utils';
 
 const BookingDetails = () => {
   // const navigate = useNavigate()
@@ -100,6 +101,7 @@ const BookingDetails = () => {
           response.data && response.data.partnerDetail
             ? response.data.partnerDetail
             : null;
+        const formattedDateAndTime= bookingDetail && bookingDetail.appointmentAt ?splitDateTime(bookingDetail.appointmentAt) : '-'
         const detailObj = {
           Name: bookingDetail && bookingDetail.name ? bookingDetail.name : '-',
           Phone:
@@ -114,6 +116,8 @@ const BookingDetails = () => {
             bookingDetail && bookingDetail.productName
               ? bookingDetail.productName
               : '-',
+           "Booking Date":formattedDateAndTime?.date,
+           "Booking Time":formattedDateAndTime?.time,
           Status:
             bookingDetail && bookingDetail.status ? bookingDetail.status : '-',
           Therapist:
