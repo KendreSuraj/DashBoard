@@ -44,7 +44,7 @@ const Booking = () => {
       'Service Date': formattedDate.date,
       'Service Time': formattedDate.time,
       Address: data.formattedAddress ? data.formattedAddress : '',
-      'Total (Rs.)': data.total ? `Rs. ${data.total}` : '',
+      'Total (Rs.)': data.total ? `${data.total}` : '',
       Count: data.count ? data.count : '',
       'Service Status': data.status ? data.status : '',
       'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
