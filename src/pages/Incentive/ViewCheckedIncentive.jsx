@@ -11,7 +11,7 @@ export const ViewCheckedIncentive = () => {
   const { sessionId, sessionSchedulesId, partnerId, productId } =
     incentiveDetails || {};
   const incentiveSteps = useSelector((state) => state.incentive.incentiveSteps);
-
+  const totalAllottedIncentiveAmount = incentiveSteps?.reduce((total, step) => total + (step?.allottedIncentive || 0), 0);
   useEffect(() => {
     dispatch(
       fetchIncentiveSteps({
@@ -28,6 +28,9 @@ export const ViewCheckedIncentive = () => {
       <h3>Incentive Details</h3>
       <TableComponent data={[incentiveDetails]} hiddenFields={['addressId', 'orderid', 'placeId',]} />
       <h3>All Steps with Incentive</h3>
+      <p className='checked-incentive-amount'>
+        Total Allotted Incentive Amount:{totalAllottedIncentiveAmount}
+      </p>
       <TableComponent data={incentiveSteps}
         hiddenFields={['image', 'lat', 'long', 'videoUrl', 'isIncentive']}
         viewButton={'img'}
