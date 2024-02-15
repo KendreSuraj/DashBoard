@@ -16,3 +16,10 @@
   float: left;
   height: 51px;
 }
+.checked-incentive-amount{
+text-align: right;
+margin-bottom: 10px;
+padding: 5px;
+font-weight: bold;
+margin-right: 25px;
+}
