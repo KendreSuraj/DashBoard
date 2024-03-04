@@ -12,11 +12,11 @@ import { splitDateTime } from '../../utils';
 const BookingDetails = () => {
   // const navigate = useNavigate()
   const [userDataObject, setUserDataObject] = useState({});
-  const [startDate, setStartDate] = useState(null)
-  const [startTime, setStartTime] = useState(null)
+  const [startDate, setStartDate] = useState(null);
+  const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null)
-  const [partnerNameStr, setPartnerNameStr] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("")
+  const [partnerNameStr, setPartnerNameStr] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   const params = useParams();
   const { sessionId } = params;
@@ -155,8 +155,8 @@ const BookingDetails = () => {
         const partnerId = partnerDetail && partnerDetail.id ? partnerDetail.id : ""
         setPartnerNameStr(`${partnerId} - ${partnerName}`)
         setSelectedStatus(detailObj.Status)
-
         setUserDataObject(detailObj);
+        
       })
       .catch((err) => console.log(err));
   }, []);
@@ -180,6 +180,8 @@ const BookingDetails = () => {
               startDate={startDate ? startDate : ""}
               startTime={startTime ? startTime : ""}
               endTime={endTime ? endTime : ""}
+              isDisabled= {userDataObject.Status === "COMPLETED" || userDataObject.Status === "PAID"}
+
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -188,7 +190,6 @@ const BookingDetails = () => {
         </Grid>
       </Grid>
 
-      {/* </Grid> */}
     </div>
   );
 };
