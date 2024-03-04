@@ -12,6 +12,7 @@ import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
 import ViewUncheckedIncentive from './pages/Incentive/ViewUncheckedIncentive';
 import BookingDetails from './pages/BookingDetails/BookingDetails';
 import AddCoupon from './pages/Coupons/AddCoupon';
+import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultations';
 
 function App() {
   return (
@@ -26,12 +27,13 @@ function App() {
               path="/viewproductdetails"
               element={<ViewProductDetails />}
             />
-           <Route path="/coupons" element={<Coupons/>} />
+            <Route path="/coupons" element={<Coupons />} />
             <Route path="/addproductstep" element={<AddProductStepForm />} />
             <Route path="/viewcheckedincentive" element={<ViewCheckedIncentive />} />
             <Route path="/viewuncheckedincentive" element={<ViewUncheckedIncentive />} />
             <Route path="/booking-details/:sessionId" element={<BookingDetails />} />
             <Route path="/add-coupon" element={<AddCoupon />} />
+            <Route path="/virtual-consultations" element={<VirtualConsultations />} />
           </Route>
         </Routes>
       </Router>
