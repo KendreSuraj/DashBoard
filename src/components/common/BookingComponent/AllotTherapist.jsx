@@ -85,7 +85,8 @@ const AllotTherapistBox = (props) => {
                         fullWidth
                         margin="normal"
                         value={selectedTherapist}
-                        onChange={handleTherapistChange}
+                        onChange={handleTherapistChange}    
+                        disabled={props.isDisabled}
                         required
                     >
                         {
@@ -104,6 +105,7 @@ const AllotTherapistBox = (props) => {
                         margin="normal"
                         value={selectedDate}
                         onChange={handleDateChange}
+                        disabled={props.isDisabled}
                         required
                     />
 
@@ -118,6 +120,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={startTime.hour}
                                 onChange={(e) => handleStartTimeChange('hour', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 {
@@ -134,6 +137,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={startTime.minute}
                                 onChange={(e) => handleStartTimeChange('minute', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 {
@@ -149,6 +153,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={startTime.ampm}
                                 onChange={(e) => handleStartTimeChange('ampm', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 <MenuItem value="AM">AM</MenuItem>
@@ -168,6 +173,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={endTime.hour}
                                 onChange={(e) => handleEndTimeChange('hour', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 {
@@ -183,6 +189,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={endTime.minute}
                                 onChange={(e) => handleEndTimeChange('minute', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 {
@@ -198,6 +205,7 @@ const AllotTherapistBox = (props) => {
                                 margin="normal"
                                 value={endTime.ampm}
                                 onChange={(e) => handleEndTimeChange('ampm', e.target.value)}
+                                disabled={props.isDisabled}
                                 required
                             >
                                 <MenuItem value="AM">AM</MenuItem>
@@ -206,7 +214,7 @@ const AllotTherapistBox = (props) => {
                         </div>
                     </div>
 
-                    <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+                    <Button variant="contained" color="primary" type="submit" onClick={handleSubmit} disabled={props.isDisabled}>
                         Submit
                     </Button>
                 </form>
