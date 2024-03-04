@@ -14,6 +14,8 @@ import { Report } from '../pages/Report/Report';
 import CategoryIcon from '@mui/icons-material/Category';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import Coupons from '../pages/Coupons/Coupons';
+import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
+import FeedIcon from '@mui/icons-material/Feed';
 const appRoutes = [
   // {
   //   index: true,
@@ -95,6 +97,15 @@ const appRoutes = [
     sidebarProps: {
       displayText: 'Coupons',
       icon: <LocalActivityIcon />,
+    },
+  },
+  {
+    path: '/virtual-consultations',
+    element: <VirtualConsulations />,
+    state: 'Virtual',
+    sidebarProps: {
+      displayText: 'Virtual Consultations',
+      icon: <FeedIcon />,
     },
   },
 
