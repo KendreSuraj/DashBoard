@@ -29,11 +29,23 @@ function App() {
             />
             <Route path="/coupons" element={<Coupons />} />
             <Route path="/addproductstep" element={<AddProductStepForm />} />
-            <Route path="/viewcheckedincentive" element={<ViewCheckedIncentive />} />
-            <Route path="/viewuncheckedincentive" element={<ViewUncheckedIncentive />} />
-            <Route path="/booking-details/:sessionId" element={<BookingDetails />} />
+            <Route
+              path="/viewcheckedincentive"
+              element={<ViewCheckedIncentive />}
+            />
+            <Route
+              path="/viewuncheckedincentive"
+              element={<ViewUncheckedIncentive />}
+            />
+            <Route
+              path="/booking-details/:sessionScheduleId"
+              element={<BookingDetails />}
+            />
             <Route path="/add-coupon" element={<AddCoupon />} />
-            <Route path="/virtual-consultations" element={<VirtualConsultations />} />
+            <Route
+              path="/virtual-consultations"
+              element={<VirtualConsultations />}
+            />
           </Route>
         </Routes>
       </Router>
