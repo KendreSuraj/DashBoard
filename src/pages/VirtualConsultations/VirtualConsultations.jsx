@@ -5,13 +5,13 @@ import * as XLSX from 'xlsx';
 import { Button, Box } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { getVirtualconsultations } from '../../store/actions/Virtualconsultations.action';
+import VirtualConsultationTable from './VirtualConsultationTable';
 
 const VirtualConsultations = () => {
   const dispatch = useDispatch();
   const virtualConsultations = useSelector(
     (state) => state?.VirtualConsultation?.VirtualConsulationList
   );
-
   useEffect(() => {
     const fetchVirtualConsultations = async () => {
       await dispatch(getVirtualconsultations());
@@ -49,9 +49,9 @@ const VirtualConsultations = () => {
   return (
     <div>
       <h5 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: "20px", fontSize: "1.5rem" }}>Virtual consultation list</h5>
-      <Box mb={10} >
-        <Button
-          style={{ display: 'flex', justifyContent: 'flex-end', float: 'right' }}
+      {/* <TableComponent data={virtualConsultations} /> */}
+      <Button
+          style={{ display: 'flex', justifyContent: 'flex-end', float: 'right',marginBottom:'20px' }}
           variant="contained"
           color="primary"
           endIcon={<DownloadIcon />}
@@ -59,8 +59,7 @@ const VirtualConsultations = () => {
         >
           Virtual consultation
         </Button>
-      </Box>
-      <TableComponent data={virtualConsultations} />
+      <VirtualConsultationTable data={virtualConsultations}/>
     </div>
   );
 };
