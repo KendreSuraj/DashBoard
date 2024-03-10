@@ -8,6 +8,9 @@ import AllotTherapistComponent from '../../components/common/BookingComponent/Al
 import UpdateStatusComponent from '../../components/common/BookingComponent/UpdateStatusComponent';
 import moment from 'moment';
 import { splitDateTime } from '../../utils';
+import AllotDate from '../../components/common/BookingComponent/AllotDate';
+
+
 
 const BookingDetails = () => {
   // const navigate = useNavigate()
@@ -16,6 +19,7 @@ const BookingDetails = () => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [partnerNameStr, setPartnerNameStr] = useState('');
+  const [secondPartnerStr, setSecondPartnerStr] = useState("")
   const [selectedStatus, setSelectedStatus] = useState('');
 
   const params = useParams();
@@ -43,6 +47,7 @@ const BookingDetails = () => {
         {
           sessionScheduleId: params.sessionScheduleId,
           partnerId: data.selectedTherapist,
+          partner1: data.secondSelectedTherapist ? data.secondSelectedTherapist : null
         },
         {
           headers: {
@@ -61,7 +66,7 @@ const BookingDetails = () => {
   const handleStatusUpdate = (data) => {
     const reqBody = {
       status: data,
-      sessionId,
+      sessionScheduleId: params.sessionScheduleId,
     };
     axios
       .post(
@@ -102,6 +107,10 @@ const BookingDetails = () => {
           response.data && response.data.partnerDetail
             ? response.data.partnerDetail
             : null;
+
+        const secondPartnerDetail = response.data && response.data.secondPartnerDetail
+          ? response.data.secondPartnerDetail
+          : null;
         const formattedDateAndTime =
           bookingDetail && bookingDetail.appointmentAt
             ? splitDateTime(bookingDetail.appointmentAt)
@@ -172,12 +181,91 @@ const BookingDetails = () => {
           partnerDetail && partnerDetail.name ? partnerDetail.name : '';
         const partnerId =
           partnerDetail && partnerDetail.id ? partnerDetail.id : '';
+        const secondPartnerName = secondPartnerDetail && secondPartnerDetail.name ? secondPartnerDetail.name : '';
+        const secondPartnerId = secondPartnerDetail && secondPartnerDetail.id ? secondPartnerDetail.id : '';
         setPartnerNameStr(`${partnerId} - ${partnerName}`);
         setSelectedStatus(detailObj.Status);
         setUserDataObject(detailObj);
+        setSecondPartnerStr(`${secondPartnerId} - ${secondPartnerName}`)
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const handleAllotDate = (date) => {
+    const reqBody = {
+      id: params.sessionScheduleId,
+      date
+    }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/allocate-date`,
+        reqBody,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      )
+      .then((response) => {
+        console.log(response.data);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+
+  }
+
+  const deleteFirstTherapistHandler = (data) => {
+    const body = {
+      sessionScheduleId: params.sessionScheduleId,
+      partnerId: Number(data),
+      partnerCount: 1
+    }
+
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/deallocate-therapist`,
+        body,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      )
+      .then((response) => {
+        console.log(response.data);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+
+  }
+
+
+  const deleteSecondTherapistHandler = (data) => {
+    const body = {
+      sessionScheduleId: params.sessionScheduleId,
+      partnerId: Number(data),
+      partnerCount: 2
+    }
+
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/deallocate-therapist`,
+        body,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      )
+      .then((response) => {
+        console.log(response.data);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <div>
@@ -194,6 +282,7 @@ const BookingDetails = () => {
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
+              secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
               startDate={startDate ? startDate : ''}
               startTime={startTime ? startTime : ''}
               endTime={endTime ? endTime : ''}
@@ -201,6 +290,11 @@ const BookingDetails = () => {
                 userDataObject.Status === 'COMPLETED' ||
                 userDataObject.Status === 'PAID'
               }
+              deleteFirstTherapistHandler={deleteFirstTherapistHandler}
+              deleteSecondTherapistHandler={deleteSecondTherapistHandler}
+
+
+
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -209,6 +303,12 @@ const BookingDetails = () => {
               selectedStatus={selectedStatus}
             />
           </Grid>
+        </Grid>
+        <Grid container spacing={2} mt={4}>
+          <Grid item xs={6}>
+            <AllotDate handleAllotDate={handleAllotDate} />
+          </Grid>
+
         </Grid>
       </Grid>
     </div>
