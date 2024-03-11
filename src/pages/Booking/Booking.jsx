@@ -80,7 +80,8 @@ const Booking = () => {
   };
 
   const handleBookingDetail = (details) => {
-    navigate(`/booking-details/${details.sessionId}`);
+    console.log(details);
+    navigate(`/booking-details/${details['Service Id']}`);
   };
 
   const stringifiedUser = localStorage.getItem('userData');
