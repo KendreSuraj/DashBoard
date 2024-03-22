@@ -15,6 +15,7 @@ const LogIn = () => {
   const [user, setUser] = useState({
     email: '',
     password: '',
+    role: ''
   });
 
   const handleChange = (e) => {
@@ -49,6 +50,7 @@ const LogIn = () => {
       fetchLogin({
         email: user.email,
         password: user.password,
+        role: user.role
       }),
     );
   };
@@ -93,6 +95,21 @@ const LogIn = () => {
                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </button>
             </div>
+          </div>
+
+          <div className="input-container">
+            <label htmlFor="role">Role</label>
+
+            <select
+              name="role"
+              value={user.role}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Role</option>
+              <option value="SUPER ADMIN">SUPER ADMIN</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
           </div>
 
           <button type="submit" className="login-button">

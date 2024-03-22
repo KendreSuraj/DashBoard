@@ -7,6 +7,7 @@ import productSlice from './slices/productSlice';
 import incentiveSlice from './slices/IncentiveSlice';
 import couponSlice from './slices/couponSlice'
 import VirtualConsultationsSlice from './slices/VirtualConsulationsSlice';
+import usersSlice from './slices/usersSlice';
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ const store = configureStore({
     product: productSlice,
     incentive: incentiveSlice,
     coupons: couponSlice,
+    users: usersSlice,
     VirtualConsultation: VirtualConsultationsSlice
   },
 });
