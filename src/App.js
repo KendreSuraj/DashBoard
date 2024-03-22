@@ -13,6 +13,7 @@ import ViewUncheckedIncentive from './pages/Incentive/ViewUncheckedIncentive';
 import BookingDetails from './pages/BookingDetails/BookingDetails';
 import AddCoupon from './pages/Coupons/AddCoupon';
 import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultations';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<LogIn />} />
-          <Route element={<Layout />}>
+          <Route element={<PrivateRoute  Component={Layout}/>}>
             {routes}
             <Route path="/profile" element={<Profile />} />
             <Route
