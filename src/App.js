@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
+import UserList from "./pages/Users/UserList"
 import ViewProductDetails from './pages/Product/ViewProductDetails';
 import AddProductStepForm from './pages/Product/AddProductStepForm';
 import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
@@ -29,6 +30,7 @@ function App() {
               element={<ViewProductDetails />}
             />
             <Route path="/coupons" element={<Coupons />} />
+            <Route path='/users' element={<UserList />} />
             <Route path="/addproductstep" element={<AddProductStepForm />} />
             <Route
               path="/viewcheckedincentive"
