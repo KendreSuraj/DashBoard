@@ -20,12 +20,17 @@ const AddUser = () => {
         setFormData({ ...formData, [name]: newValue });
     };
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const res = await addUser(formData);
-        if (res?.status?.code === 201 || res?.status?.code === 200) {
-            alert(res?.status?.message);
-            navigate("/users")
+        try {
+            e.preventDefault();
+            const res = await addUser(formData);
+            if (res?.status?.code === 201 || res?.status?.code === 200) {
+                alert(res?.status?.message);
+                navigate("/users")
+            }
+        } catch (err) {
+            alert(err?.response?.data?.status?.message || 'An error occurred while adding user in.')
         }
+
     };
     return (
         <div className="form-container">
