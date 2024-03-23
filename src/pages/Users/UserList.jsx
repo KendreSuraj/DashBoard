@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsers } from '../../store/actions/users.action';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function UserList() {
     const dispatch = useDispatch()
+    const navigate=useNavigate()
     const usersList = useSelector((state) => state.users.usersList);
     useEffect(() => {
         dispatch(getUsers());
@@ -32,6 +34,7 @@ function UserList() {
                         onMouseOut={(e) =>
                             (e.currentTarget.style.transform = 'scale(1)')
                         }
+                        onClick={()=>navigate("/user/add-user")}
                     >
                         Add Users
                     </Button>

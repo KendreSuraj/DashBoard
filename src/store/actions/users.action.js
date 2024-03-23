@@ -20,3 +20,23 @@ export const getUsers = createAsyncThunk('coupons', async () => {
         throw error;
     }
 });
+
+export const addUser = async (formData) => {
+    try {
+        const res = await axios.post(
+            `${apiUrl}/api/v1/admin/user/add-user`,
+            formData,
+            {
+                headers: {
+                    Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+                    token: getToken(),
+                },
+            },
+        );
+        const data = res.data;
+        return data;
+    } catch (error) {
+        console.error('Error in Adding user', error);
+        throw error;
+    }
+};
