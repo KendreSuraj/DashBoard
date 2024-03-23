@@ -15,6 +15,7 @@ import BookingDetails from './pages/BookingDetails/BookingDetails';
 import AddCoupon from './pages/Coupons/AddCoupon';
 import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultations';
 import PrivateRoute from './PrivateRoute';
+import AddUser from './pages/Users/AddUser';
 
 function App() {
   return (
@@ -49,6 +50,8 @@ function App() {
               path="/virtual-consultations"
               element={<VirtualConsultations />}
             />
+            <Route 
+            path="/user/add-user" element={<AddUser/>}/>
           </Route>
         </Routes>
       </Router>
