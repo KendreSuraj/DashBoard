@@ -34,7 +34,8 @@ export const fetchBookings = createAsyncThunk(
       return data;
     } catch (error) {
       console.error('Error in fetchBookings:', error);
-      throw error;
+      // throw error;
+      return null;
     }
   },
 );

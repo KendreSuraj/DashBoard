@@ -23,8 +23,8 @@ const Booking = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  let bookingList = useSelector((state) => state.booking.bookingList.bookings);
+  let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+  const isLoading=useSelector((state) => state.booking?.isLoading)
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
   let totalBooking = useSelector(
     (state) => state.booking.bookingList?.totalRecords,
@@ -48,7 +48,7 @@ const Booking = () => {
       Count: data.count ? data.count : '',
       'Service Status': data.status ? data.status : '',
       'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
-      map: data.Map ? data.Map : '',
+      map: data.placeId ? `https://www.google.com/maps/place/?q=place_id:${data.placeId}` : ""
     };
   });
 
@@ -224,6 +224,8 @@ const Booking = () => {
             name="endDate"
             value={endDate}
             onChange={handleDateChange}
+            // min={new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+            min={new Date(new Date(startDate).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
           />
         </div>
       </div>
@@ -292,8 +294,10 @@ const Booking = () => {
           </div>
         </>
       ) : (
-        <LoaderComponent />
+       (!isLoading&&<p className='centered-text'>Data Not Found</p>)
+        // <LoaderComponent />
       )}
+       {isLoading&&<LoaderComponent />}
     </div>
   );
 };
