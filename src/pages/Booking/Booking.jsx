@@ -294,7 +294,7 @@ const Booking = () => {
           </div>
         </>
       ) : (
-       (!isLoading&&<p className='centered-text'>Data Not Found</p>)
+       (!isLoading&&<p className='centered-text'>No Data found</p>)
         // <LoaderComponent />
       )}
        {isLoading&&<LoaderComponent />}
