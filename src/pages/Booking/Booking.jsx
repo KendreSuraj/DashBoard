@@ -24,7 +24,7 @@ const Booking = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
-  const isLoading=useSelector((state) => state.booking?.isLoading)
+  const isLoading = useSelector((state) => state.booking?.isLoading)
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
   let totalBooking = useSelector(
     (state) => state.booking.bookingList?.totalRecords,
@@ -48,20 +48,27 @@ const Booking = () => {
       Count: data.count ? data.count : '',
       'Service Status': data.status ? data.status : '',
       'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
-      map: data.placeId ? `https://www.google.com/maps/place/?q=place_id:${data.placeId}` : ""
+      map: data.map ? data.map : "",
+      "Start Time": data.startTime ? data.startTime : "",
+      "End Time": data.endTime ? data.endTime : "",
+      "Comment": data.comment ? data.comment : "",
     };
   });
 
   const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  // const tomorrow = new Date();
+  // tomorrow.setDate(tomorrow.getDate() + 1);
+  const oneMonthBefore = new Date(today);
+  oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+  const oneMonthAfter = new Date(today);
+  oneMonthAfter.setMonth(oneMonthAfter.getMonth() + 1);
 
   const storedStartDate =
-    sessionStorage.getItem('bookingStartDate') ||
-    today.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingStartDate') || oneMonthBefore.toISOString().split('T')[0];
+  // today.toISOString().split('T')[0];
   const storedEndDate =
-    sessionStorage.getItem('bookingEndDate') ||
-    tomorrow.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingEndDate') || oneMonthAfter.toISOString().split('T')[0];
+  // tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('bookingPage') || '1';
   const [page, setPage] = useState(storedPage);
   const handlePageChange = (event, value) => {
@@ -294,10 +301,10 @@ const Booking = () => {
           </div>
         </>
       ) : (
-       (!isLoading&&<p className='centered-text'>No Data found</p>)
+        (!isLoading && <p className='centered-text'>No Data found, please try reducing the filters and try again!</p>)
         // <LoaderComponent />
       )}
-       {isLoading&&<LoaderComponent />}
+      {isLoading && <LoaderComponent />}
     </div>
   );
 };

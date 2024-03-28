@@ -9,6 +9,7 @@ import UpdateStatusComponent from '../../components/common/BookingComponent/Upda
 import moment from 'moment';
 import { splitDateTime } from '../../utils';
 import AllotDate from '../../components/common/BookingComponent/AllotDate';
+import CommentBox from '../../components/common/BookingComponent/CommentBox';
 
 
 
@@ -308,7 +309,9 @@ const BookingDetails = () => {
           <Grid item xs={6}>
             <AllotDate handleAllotDate={handleAllotDate} />
           </Grid>
-
+          <Grid item xs={12} md={6}>
+          <CommentBox/>
+        </Grid>
         </Grid>
       </Grid>
     </div>
