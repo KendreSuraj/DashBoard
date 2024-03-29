@@ -58,12 +58,7 @@ const Booking = () => {
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  // const oneMonthBefore = new Date(today);
-  // oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
-  // const oneMonthAfter = new Date(today);
-  // oneMonthAfter.setMonth(oneMonthAfter.getMonth() + 1);
-  // oneMonthAfter.toISOString().split('T')[0];
-  // oneMonthBefore.toISOString().split('T')[0]
+  
   const storedStartDate =
     sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
   const storedEndDate =
@@ -114,6 +109,19 @@ const Booking = () => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
     sessionStorage.setItem('bookingPage', page);
+
+    //URLSearchParams start 
+    const params = new URLSearchParams();
+    if (startDate) {
+      params.set('startDate', startDate);
+    }
+    if (endDate) {
+      params.set('endDate', endDate);
+    }
+    const queryString = params.toString();
+    const url = window.location.origin + window.location.pathname + '?' + queryString;
+    window.history.replaceState({}, '', url);
+   //URLSearchParams end
 
     const obj = {
       startDate: startDate,
@@ -208,6 +216,8 @@ const Booking = () => {
             setSearchType={setSearchType}
             setSearchBtnPressed={setSearchBtnPressed}
             searchBtnPressed={searchBtnPressed}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
           />
         </div>
         <div>

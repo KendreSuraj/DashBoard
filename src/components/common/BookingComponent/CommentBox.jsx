@@ -15,7 +15,8 @@ const CommentBox = () => {
         event.preventDefault();
         const reqBody = {
             id: params.sessionScheduleId,
-            comment: comment
+            // comment: comment
+             comment: comment.replace(/'/g, "\\'")
         }
         axios
             .post(
