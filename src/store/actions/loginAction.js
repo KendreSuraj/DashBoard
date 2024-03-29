@@ -5,14 +5,14 @@ import { getToken } from '../../components/common/userLocalStorageUtils';
 const apiUrl = process.env.REACT_APP_API_URL;
 export const fetchLogin = createAsyncThunk(
   'user/login',
-  async ({ email, password }) => {
+  async ({ email, password, role }) => {
     try {
       const res = await axios.post(
         `${apiUrl}/api/v1/auth/login`,
         {
           email,
           password,
-          role: 'ADMIN',
+          role
         },
         {
           headers: {

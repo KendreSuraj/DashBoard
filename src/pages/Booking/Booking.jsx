@@ -23,8 +23,8 @@ const Booking = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  let bookingList = useSelector((state) => state.booking.bookingList.bookings);
+  let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+  const isLoading = useSelector((state) => state.booking?.isLoading)
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
   let totalBooking = useSelector(
     (state) => state.booking.bookingList?.totalRecords,
@@ -48,20 +48,21 @@ const Booking = () => {
       Count: data.count ? data.count : '',
       'Service Status': data.status ? data.status : '',
       'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
-      map: data.Map ? data.Map : '',
+      map: data.map ? data.map : "",
+      "Start Time": data.startTime ? data.startTime : "",
+      "End Time": data.endTime ? data.endTime : "",
+      "Comment": data.comment ? data.comment : "",
     };
   });
 
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-
+  
   const storedStartDate =
-    sessionStorage.getItem('bookingStartDate') ||
-    today.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
   const storedEndDate =
-    sessionStorage.getItem('bookingEndDate') ||
-    tomorrow.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingEndDate') || tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('bookingPage') || '1';
   const [page, setPage] = useState(storedPage);
   const handlePageChange = (event, value) => {
@@ -108,6 +109,19 @@ const Booking = () => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
     sessionStorage.setItem('bookingPage', page);
+
+    //URLSearchParams start 
+    const params = new URLSearchParams();
+    if (startDate) {
+      params.set('startDate', startDate);
+    }
+    if (endDate) {
+      params.set('endDate', endDate);
+    }
+    const queryString = params.toString();
+    const url = window.location.origin + window.location.pathname + '?' + queryString;
+    window.history.replaceState({}, '', url);
+   //URLSearchParams end
 
     const obj = {
       startDate: startDate,
@@ -202,6 +216,8 @@ const Booking = () => {
             setSearchType={setSearchType}
             setSearchBtnPressed={setSearchBtnPressed}
             searchBtnPressed={searchBtnPressed}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
           />
         </div>
         <div>
@@ -224,6 +240,8 @@ const Booking = () => {
             name="endDate"
             value={endDate}
             onChange={handleDateChange}
+            // min={new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+            min={new Date(new Date(startDate).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
           />
         </div>
       </div>
@@ -292,8 +310,10 @@ const Booking = () => {
           </div>
         </>
       ) : (
-        <LoaderComponent />
+        (!isLoading && <p className='centered-text'>No Data found, please try reducing the filters and try again!</p>)
+        // <LoaderComponent />
       )}
+      {isLoading && <LoaderComponent />}
     </div>
   );
 };

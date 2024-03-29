@@ -16,6 +16,9 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import Coupons from '../pages/Coupons/Coupons';
 import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
 import FeedIcon from '@mui/icons-material/Feed';
+import UserList from '../pages/Users/UserList';
+
+const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
   // {
   //   index: true,
@@ -96,6 +99,15 @@ const appRoutes = [
     state: 'coupons',
     sidebarProps: {
       displayText: 'Coupons',
+      icon: <LocalActivityIcon />,
+    },
+  },
+  role==="SUPER ADMIN"&&{  
+    path: '/users',
+    element: <UserList />,
+    state: 'userList',
+    sidebarProps: {
+      displayText: 'Users',
       icon: <LocalActivityIcon />,
     },
   },

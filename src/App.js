@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
+import UserList from "./pages/Users/UserList"
 import ViewProductDetails from './pages/Product/ViewProductDetails';
 import AddProductStepForm from './pages/Product/AddProductStepForm';
 import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
@@ -13,6 +14,8 @@ import ViewUncheckedIncentive from './pages/Incentive/ViewUncheckedIncentive';
 import BookingDetails from './pages/BookingDetails/BookingDetails';
 import AddCoupon from './pages/Coupons/AddCoupon';
 import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultations';
+import PrivateRoute from './PrivateRoute';
+import AddUser from './pages/Users/AddUser';
 
 function App() {
   return (
@@ -20,7 +23,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<LogIn />} />
-          <Route element={<Layout />}>
+          <Route element={<PrivateRoute  Component={Layout}/>}>
             {routes}
             <Route path="/profile" element={<Profile />} />
             <Route
@@ -28,6 +31,7 @@ function App() {
               element={<ViewProductDetails />}
             />
             <Route path="/coupons" element={<Coupons />} />
+            <Route path='/users' element={<UserList />} />
             <Route path="/addproductstep" element={<AddProductStepForm />} />
             <Route
               path="/viewcheckedincentive"
@@ -46,6 +50,8 @@ function App() {
               path="/virtual-consultations"
               element={<VirtualConsultations />}
             />
+            <Route 
+            path="/user/add-user" element={<AddUser/>}/>
           </Route>
         </Routes>
       </Router>
