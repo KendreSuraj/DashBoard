@@ -15,6 +15,8 @@ const SearchComponent = ({
   setSearchText,
   setSearchType,
   setSearchBtnPressed,
+  setStartDate,
+  setEndDate
 }) => {
   const handleChange = (event) => {
     setSearchType(event.target.value);
@@ -24,6 +26,16 @@ const SearchComponent = ({
     setSearchBtnPressed(!searchBtnPressed);
   };
 
+  const handleTextChange=(e)=>{
+    setSearchText(e.target.value)
+    const today = new Date();
+    const oneMonthBefore = new Date(today);
+    oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+    const oneMonthAfter = new Date(today);
+    oneMonthAfter.setMonth(oneMonthAfter.getMonth() + 1);
+    setStartDate(oneMonthBefore.toISOString().split('T')[0]);
+    setEndDate(oneMonthAfter.toISOString().split('T')[0]);
+  }
   return (
     <>
       <FormControl sx={{ minWidth: 120 }} size="small">
@@ -48,7 +60,8 @@ const SearchComponent = ({
         variant="outlined"
         size="small"
         value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        onChange={handleTextChange}
+        // onChange={(e) => setSearchText(e.target.value)}
         InputProps={{
           endAdornment: (
             <IconButton color="primary" onClick={handleSearch}>
