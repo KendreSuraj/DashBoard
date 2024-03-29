@@ -56,19 +56,18 @@ const Booking = () => {
   });
 
   const today = new Date();
-  // const tomorrow = new Date();
-  // tomorrow.setDate(tomorrow.getDate() + 1);
-  const oneMonthBefore = new Date(today);
-  oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
-  const oneMonthAfter = new Date(today);
-  oneMonthAfter.setMonth(oneMonthAfter.getMonth() + 1);
-
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  // const oneMonthBefore = new Date(today);
+  // oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+  // const oneMonthAfter = new Date(today);
+  // oneMonthAfter.setMonth(oneMonthAfter.getMonth() + 1);
+  // oneMonthAfter.toISOString().split('T')[0];
+  // oneMonthBefore.toISOString().split('T')[0]
   const storedStartDate =
-    sessionStorage.getItem('bookingStartDate') || oneMonthBefore.toISOString().split('T')[0];
-  // today.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
   const storedEndDate =
-    sessionStorage.getItem('bookingEndDate') || oneMonthAfter.toISOString().split('T')[0];
-  // tomorrow.toISOString().split('T')[0];
+    sessionStorage.getItem('bookingEndDate') || tomorrow.toISOString().split('T')[0];
   const storedPage = sessionStorage.getItem('bookingPage') || '1';
   const [page, setPage] = useState(storedPage);
   const handlePageChange = (event, value) => {
