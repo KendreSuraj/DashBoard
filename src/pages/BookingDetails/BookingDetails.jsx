@@ -10,6 +10,7 @@ import moment from 'moment';
 import { splitDateTime } from '../../utils';
 import AllotDate from '../../components/common/BookingComponent/AllotDate';
 import CommentBox from '../../components/common/BookingComponent/CommentBox';
+import CallerBox from '../../components/common/BookingComponent/CallerBox';
 
 
 
@@ -22,6 +23,10 @@ const BookingDetails = () => {
   const [partnerNameStr, setPartnerNameStr] = useState('');
   const [secondPartnerStr, setSecondPartnerStr] = useState("")
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [callerDetails, setCallerDetails] = useState({
+    callerName: "",
+    callerPhone: ""
+  })
 
   const params = useParams();
 
@@ -188,6 +193,13 @@ const BookingDetails = () => {
         setSelectedStatus(detailObj.Status);
         setUserDataObject(detailObj);
         setSecondPartnerStr(`${secondPartnerId} - ${secondPartnerName}`)
+        const callerName =
+          bookingDetail && bookingDetail.callerName ? bookingDetail.callerName : ''
+        const callerPhone = bookingDetail && bookingDetail.callerPhone ? bookingDetail.callerPhone : ''
+        setCallerDetails({
+          callerName,
+          callerPhone
+        })
       })
       .catch((err) => console.log(err));
   }, []);
@@ -310,9 +322,20 @@ const BookingDetails = () => {
             <AllotDate handleAllotDate={handleAllotDate} />
           </Grid>
           <Grid item xs={12} md={6}>
-          <CommentBox/>
+            <CommentBox />
+          </Grid>
         </Grid>
+
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Grid container spacing={2} mt={4}>
+          <Grid item xs={6}>
+            <CallerBox callerDetails={callerDetails} />
+          </Grid>
+
         </Grid>
+
+
       </Grid>
     </div>
   );

@@ -52,13 +52,15 @@ const Booking = () => {
       "Start Time": data.startTime ? data.startTime : "",
       "End Time": data.endTime ? data.endTime : "",
       "Comment": data.comment ? data.comment : "",
+      "Caller Name": data.callerName ? data.callerName : "-",
+      "Caller Phone": data.callerPhone ? data.callerPhone : "-"
     };
   });
 
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   const storedStartDate =
     sessionStorage.getItem('bookingStartDate') || today.toISOString().split('T')[0];
   const storedEndDate =
@@ -121,7 +123,7 @@ const Booking = () => {
     const queryString = params.toString();
     const url = window.location.origin + window.location.pathname + '?' + queryString;
     window.history.replaceState({}, '', url);
-   //URLSearchParams end
+    //URLSearchParams end
 
     const obj = {
       startDate: startDate,
