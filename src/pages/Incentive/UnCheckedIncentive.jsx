@@ -158,7 +158,6 @@ const UnCheckedIncentive = () => {
           'state',
           'place_id',
           'addressId',
-          'sessionSchedulesId',
           'sessionId',
           'clientId',
           'orderid',
