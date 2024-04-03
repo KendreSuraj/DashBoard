@@ -24,6 +24,8 @@ const TableComponent = ({
   bookingDetails,
   deleteCoupon,
   deleteCouponButton,
+  deleteFAQ,
+  deleteFAQButton,
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -82,6 +84,9 @@ const TableComponent = ({
                   <TableCell className="table-cell">View</TableCell>
                 )}
                 {deleteCouponButton && (
+                  <TableCell className="table-cell">Delete</TableCell>
+                )}
+                {deleteFAQButton && (
                   <TableCell className="table-cell">Delete</TableCell>
                 )}
               </TableRow>
@@ -176,6 +181,28 @@ const TableComponent = ({
                           onClick={() => deleteCoupon(row)}
                         >
                           {deleteCouponButton}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
+
+{deleteFAQButton && (
+                    <TableCell className="table-cell">
+                      {deleteFAQButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ backgroundColor: '#D70040', color: 'white' }}
+                          onClick={() => deleteFAQ(row)}
+                        >
+                          {deleteFAQButton}
                         </Button>
                       )}
                     </TableCell>

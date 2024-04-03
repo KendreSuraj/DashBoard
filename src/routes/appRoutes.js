@@ -14,6 +14,8 @@ import { Report } from '../pages/Report/Report';
 import CategoryIcon from '@mui/icons-material/Category';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import Coupons from '../pages/Coupons/Coupons';
+import FAQ from '../pages/FAQ/FAQ';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
 import FeedIcon from '@mui/icons-material/Feed';
 import UserList from '../pages/Users/UserList';
@@ -118,6 +120,15 @@ const appRoutes = [
     sidebarProps: {
       displayText: 'Virtual Consultations',
       icon: <FeedIcon />,
+    },
+  },
+  {
+    path: '/faq',
+    element: <FAQ />,
+    state: 'faq',
+    sidebarProps: {
+      displayText: 'FAQs',
+      icon: <QuestionAnswerIcon />,
     },
   },
 

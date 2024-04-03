@@ -7,6 +7,7 @@ import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
 import UserList from "./pages/Users/UserList"
+import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
 import AddProductStepForm from './pages/Product/AddProductStepForm';
 import { ViewCheckedIncentive } from './pages/Incentive/ViewCheckedIncentive';
@@ -16,6 +17,7 @@ import AddCoupon from './pages/Coupons/AddCoupon';
 import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultations';
 import PrivateRoute from './PrivateRoute';
 import AddUser from './pages/Users/AddUser';
+import AddFAQ from './pages/FAQ/AddFAQ';
 
 function App() {
   return (
@@ -46,13 +48,23 @@ function App() {
               element={<BookingDetails />}
             />
             <Route path="/add-coupon" element={<AddCoupon />} />
+     
             <Route
               path="/virtual-consultations"
               element={<VirtualConsultations />}
             />
             <Route 
             path="/user/add-user" element={<AddUser/>}/>
+            <Route
+              path="/faq"
+              element={<FAQ/>}
+            />
+            <Route path="/add-faq" 
+          element={<AddFAQ />} />
           </Route>
+          
+
+          
         </Routes>
       </Router>
     </div>
