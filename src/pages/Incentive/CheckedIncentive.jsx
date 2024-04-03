@@ -132,7 +132,6 @@ const CheckedIncentive = () => {
           'state',
           'place_id',
           'addressId',
-          'sessionSchedulesId',
           'sessionId',
           'clientId',
           'orderid',

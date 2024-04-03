@@ -86,7 +86,8 @@ export default function ViewUncheckedIncentive() {
   return (
     <div>
       <h3>View Unchecked Incentive</h3>
-      <TableComponent data={[incentiveDetails]}
+      <TableComponent
+        data={[incentiveDetails]}
         hiddenFields={[
           'order_id',
           'order_detail_id',
@@ -98,7 +99,6 @@ export default function ViewUncheckedIncentive() {
           'state',
           'place_id',
           'addressId',
-          'sessionSchedulesId',
           'sessionId',
           'clientId',
           'orderid',
@@ -106,7 +106,8 @@ export default function ViewUncheckedIncentive() {
           'placeId',
           'productId',
           'partnerId',
-        ]} />
+        ]}
+      />
       <h3>All Incentive Steps</h3>
       <div className="table-container">
         <table className="custom-table">
@@ -137,7 +138,9 @@ export default function ViewUncheckedIncentive() {
                   <td>{item.sessionSchedulesId}</td>
                   <td>{item.partnerStepIncentiveId}</td>
                   <td>{item.partnerStepId}</td>
-                  <td>{moment(item.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</td>
+                  <td>
+                    {moment(item.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                  </td>
                   <td>{item.title}</td>
                   <td>{item.description}</td>
                   <td>

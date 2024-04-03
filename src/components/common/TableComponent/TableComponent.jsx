@@ -53,14 +53,22 @@ const TableComponent = ({
               <TableRow className="table-header">
                 {Object.keys(data[0]).map((key, index) => {
                   if (!hiddenFields || !hiddenFields.includes(key)) {
-                    return (
-                      <TableCell key={index} className="table-cell">
-                        {key
-                          .replace(/_/g, ' ')
-                          .replace(/([a-z])([A-Z])/g, '$1 $2')
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </TableCell>
-                    );
+                    if (key == 'sessionSchedulesId') {
+                      return (
+                        <TableCell key={index} className="table-cell">
+                          Service ID
+                        </TableCell>
+                      );
+                    } else {
+                      return (
+                        <TableCell key={index} className="table-cell">
+                          {key
+                            .replace(/_/g, ' ')
+                            .replace(/([a-z])([A-Z])/g, '$1 $2')
+                            .replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </TableCell>
+                      );
+                    }
                   }
                   return null;
                 })}
