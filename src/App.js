@@ -18,6 +18,7 @@ import VirtualConsultations from './pages/VirtualConsultations/VirtualConsultati
 import PrivateRoute from './PrivateRoute';
 import AddUser from './pages/Users/AddUser';
 import AddFAQ from './pages/FAQ/AddFAQ';
+import AddPayment from './components/common/BookingComponent/AddPayment';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<LogIn />} />
-          <Route element={<PrivateRoute  Component={Layout}/>}>
+          <Route element={<PrivateRoute Component={Layout} />}>
             {routes}
             <Route path="/profile" element={<Profile />} />
             <Route
@@ -48,23 +49,21 @@ function App() {
               element={<BookingDetails />}
             />
             <Route path="/add-coupon" element={<AddCoupon />} />
-     
+
             <Route
               path="/virtual-consultations"
               element={<VirtualConsultations />}
             />
-            <Route 
-            path="/user/add-user" element={<AddUser/>}/>
+            <Route
+              path="/user/add-user" element={<AddUser />} />
             <Route
               path="/faq"
-              element={<FAQ/>}
+              element={<FAQ />}
             />
-            <Route path="/add-faq" 
-          element={<AddFAQ />} />
+            <Route path="/add-faq"
+              element={<AddFAQ />} />
           </Route>
-          
-
-          
+          <Route path="/add-booking-payment" element={<AddPayment />} />
         </Routes>
       </Router>
     </div>
