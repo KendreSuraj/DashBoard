@@ -80,3 +80,47 @@ export const fetchProductList = createAsyncThunk(
     }
   },
 );
+
+
+export const fetchPaymentHistory = createAsyncThunk(
+  'booking/fetchpaymenthistory',
+  async (sessionScheduleId) => {
+    try {
+      const res = await axios.get(
+        `${apiUrl}/api/v1/admin/booking/session-payment-history/${sessionScheduleId}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+      const data = res?.data?.data;
+      return data;
+    } catch (error) {
+      console.error('Error in fetchpaymenthistory:', error);
+      throw error;
+    }
+  },
+);
+
+
+export const addBookingPayment = async (formData) => {
+  try {
+    const res = await axios.post(
+      `${apiUrl}/api/v1/admin/booking/make-session-payment`,
+      formData,
+      {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      },
+    );
+    const data = res.data;
+    return data;
+  } catch (error) {
+    console.error('Error in Adding bookig payment', error);
+    throw error;
+  }
+};

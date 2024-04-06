@@ -12,6 +12,7 @@ import AllotDate from '../../components/common/BookingComponent/AllotDate';
 import CommentBox from '../../components/common/BookingComponent/CommentBox';
 import CallerBox from '../../components/common/BookingComponent/CallerBox';
 
+import PaymentHistory from '../../components/common/BookingComponent/PaymentHistory';
 
 
 const BookingDetails = () => {
@@ -336,6 +337,9 @@ const BookingDetails = () => {
         </Grid>
 
 
+        <Grid item xs={12} md={6} mt={4}>
+        <PaymentHistory sessionScheduleId={params.sessionScheduleId}/>
+      </Grid>
       </Grid>
     </div>
   );
