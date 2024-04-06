@@ -11,8 +11,8 @@ const AddPayment = () => {
     const remainingAmount=location?.state?.remainingAmount
     const userData = JSON.parse(localStorage.getItem('userData')).user;
     const [formData, setFormData] = useState({
-        addedBy:userData?.name,
-        addedByUserId:parseInt(userData?.id),
+        // addedBy:userData?.name,
+        // addedByUserId:parseInt(userData?.id),
         sessionScheduleId: parseInt(sessionScheduleId),
         paidAmount: '',
         modeOfPayment: '',
