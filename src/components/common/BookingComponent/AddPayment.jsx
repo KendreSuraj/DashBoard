@@ -11,9 +11,6 @@ const AddPayment = () => {
     const remainingAmount=location?.state?.remainingAmount
     const userData = JSON.parse(localStorage.getItem('userData')).user;
     const [formData, setFormData] = useState({
-        // addedBy:userData?.name,
-        // addedByUserId:parseInt(userData?.id),
-        sessionScheduleId: parseInt(sessionScheduleId),
         paidAmount: '',
         modeOfPayment: '',
         image: '',
@@ -57,16 +54,25 @@ const AddPayment = () => {
             };
             reader.readAsDataURL(file);
         } else {
-            const parsedValue = name === 'paidAmount' ? +value : value;
-            setFormData({ ...formData, [name]: parsedValue });
+            // const parsedValue = name === 'paidAmount' ? +value : value;
+            setFormData({ ...formData, [name]: value });
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        const reqBody =
+          {
+            // addedBy:userData?.name,
+            // addedByUserId:parseInt(userData?.id),
+            sessionScheduleId: parseInt(sessionScheduleId),
+            paidAmount: parseInt(formData.paidAmount),
+            modeOfPayment: formData.modeOfPayment,
+            image: formData.image
+          }
         try {
-            const response = await addBookingPayment(formData);
+            const response = await addBookingPayment(reqBody);
             if (response?.status?.code === 200) {
                 alert(response?.status?.message);
                 navigate(`/booking-details/${sessionScheduleId}`);
@@ -90,6 +96,7 @@ const AddPayment = () => {
                         name="paidAmount"
                         placeholder='Enter Paid Amount'
                         max={remainingAmount}
+                        min={1}
                         value={formData.paidAmount}
                         onChange={handleChange}
                         required
