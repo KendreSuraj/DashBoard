@@ -8,7 +8,11 @@ const AddPayment = () => {
     const navigate = useNavigate()
     const [isSubmitting, setIsSubmitting] = useState(false);
     const sessionScheduleId = location?.state?.sessionScheduleId
+    const remainingAmount=location?.state?.remainingAmount
+    const userData = JSON.parse(localStorage.getItem('userData')).user;
     const [formData, setFormData] = useState({
+        addedBy:userData?.name,
+        addedByUserId:parseInt(userData?.id),
         sessionScheduleId: parseInt(sessionScheduleId),
         paidAmount: '',
         modeOfPayment: '',
@@ -21,10 +25,35 @@ const AddPayment = () => {
             const reader = new FileReader();
             const file = files[0];
             reader.onloadend = () => {
-                setFormData({
-                    ...formData,
-                    image: reader.result,
-                });
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxDimension = 1024; 
+                    let width = img.width;
+                    let height = img.height;
+    
+                    if (width > height) {
+                        if (width > maxDimension) {
+                            height *= maxDimension / width;
+                            width = maxDimension;
+                        }
+                    } else {
+                        if (height > maxDimension) {
+                            width *= maxDimension / height;
+                            height = maxDimension;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataURL = canvas.toDataURL(file.type);
+                    setFormData({
+                        ...formData,
+                        image: compressedDataURL,
+                    });
+                };
             };
             reader.readAsDataURL(file);
         } else {
@@ -32,7 +61,6 @@ const AddPayment = () => {
             setFormData({ ...formData, [name]: parsedValue });
         }
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -61,6 +89,7 @@ const AddPayment = () => {
                         type="number"
                         name="paidAmount"
                         placeholder='Enter Paid Amount'
+                        max={remainingAmount}
                         value={formData.paidAmount}
                         onChange={handleChange}
                         required
@@ -95,12 +124,10 @@ const AddPayment = () => {
                         required
                     />
                 </div>
-                {/* <button className="add-payment-button" type="submit" disabled={isSubmitting} style={{background:`${isSubmitting}?"white":"blue"`}}>Submit</button> */}
                 <button
                     className="add-payment-button"
                     type="submit"
                     disabled={isSubmitting}
-                    onClick={handleSubmit}
                     style={{
                         background: isSubmitting ? 'gray' : '#007bff',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer'

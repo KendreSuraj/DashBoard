@@ -11,12 +11,12 @@ const PaymentHistory = ({ sessionScheduleId }) => {
     useEffect(() => {
         dispatch(fetchPaymentHistory(sessionScheduleId))
     }, [sessionScheduleId]);
-
+  const remainingAmount= paymentHistory.remainingAmount
     return (
         <div>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button onClick={() => navigate("/add-booking-payment", { state: { sessionScheduleId } })} style={{ color: '#FFFFFF', background: '#0C2294', borderRadius: '8px', textTransform: 'capitalize' }}>Add Payment</Button>
+                    <Button onClick={() => navigate("/add-booking-payment", { state: { sessionScheduleId,remainingAmount } })} style={{ color: '#FFFFFF', background: '#0C2294', borderRadius: '8px', textTransform: 'capitalize' }}>Add Payment</Button>
                 </div> <h3>Payment History</h3>
                 <div style={{ display: 'flex' }}>
                     <h4 style={{ borderBottom: '1px solid black', marginRight: '50px', paddingBottom: '5px' }}>Total Amount: {paymentHistory.totalAmount}</h4>
@@ -30,7 +30,8 @@ const PaymentHistory = ({ sessionScheduleId }) => {
                                 <th>Service Id</th>
                                 <th>Paid Amount</th>
                                 <th>Mode of Payment</th>
-                                <th>Created Date</th>
+                                <th>Added Date</th>
+                                <th>Added By</th>
                                 <th>Image</th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@ const PaymentHistory = ({ sessionScheduleId }) => {
                                         <td>{data.paidAmount}</td>
                                         <td>{data.modeOfPayment}</td>
                                         <td>{new Date(data.createdAt).toLocaleDateString('en-GB')}</td>
+                                        <td>{data.addedBy}</td>
                                         <td>
                                             <img
                                                 className="view-unchecked-img"
