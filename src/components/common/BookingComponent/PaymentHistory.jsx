@@ -31,7 +31,7 @@ const PaymentHistory = ({ sessionScheduleId }) => {
                                 <th>Paid Amount</th>
                                 <th>Mode of Payment</th>
                                 <th>Added Date</th>
-                                {/* <th>Added By</th> */}
+                                <th>Added By</th>
                                 <th>Image</th>
                             </tr>
                         </thead>
@@ -44,7 +44,7 @@ const PaymentHistory = ({ sessionScheduleId }) => {
                                         <td>{data.paidAmount}</td>
                                         <td>{data.modeOfPayment}</td>
                                         <td>{new Date(data.createdAt).toLocaleDateString('en-GB')}</td>
-                                        {/* <td>{data.addedBy}</td> */}
+                                        <td>{data.addedBy}</td>
                                         <td>
                                             <img
                                                 className="view-unchecked-img"
