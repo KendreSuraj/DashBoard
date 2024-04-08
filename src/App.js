@@ -62,8 +62,8 @@ function App() {
             />
             <Route path="/add-faq"
               element={<AddFAQ />} />
+            <Route path="/add-booking-payment" element={<AddPayment />} />
           </Route>
-          <Route path="/add-booking-payment" element={<AddPayment />} />
         </Routes>
       </Router>
     </div>
