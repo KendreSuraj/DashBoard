@@ -8,6 +8,7 @@ import incentiveSlice from './slices/IncentiveSlice';
 import couponSlice from './slices/couponSlice'
 import VirtualConsultationsSlice from './slices/VirtualConsulationsSlice';
 import usersSlice from './slices/usersSlice';
+import faqSlice from './slices/faqSlice';
 
 const store = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
     incentive: incentiveSlice,
     coupons: couponSlice,
     users: usersSlice,
-    VirtualConsultation: VirtualConsultationsSlice
+    VirtualConsultation: VirtualConsultationsSlice,
+    faq: faqSlice,
   },
 });
 export default store;
