@@ -19,6 +19,9 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
 import FeedIcon from '@mui/icons-material/Feed';
 import UserList from '../pages/Users/UserList';
+import HubIcon from '@mui/icons-material/Hub';
+import CenterListing from '../pages/Center/CenterListing';
+import MachineListing from '../pages/Machine/MachineListing';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
@@ -129,6 +132,24 @@ const appRoutes = [
     sidebarProps: {
       displayText: 'FAQs',
       icon: <QuestionAnswerIcon />,
+    },
+  },
+  {
+    path: '/centerlist',
+    element: <CenterListing />,
+    state: 'centerList',
+    sidebarProps: {
+      displayText: 'Center',
+      icon: <HubIcon />,
+    },
+  },
+  {
+    path: '/machinelist',
+    element: <MachineListing />,
+    state: 'MachineList',
+    sidebarProps: {
+      displayText: 'Machine',
+      icon: <FeedIcon />,
     },
   },
 

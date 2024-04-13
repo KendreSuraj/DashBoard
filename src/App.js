@@ -19,6 +19,9 @@ import PrivateRoute from './PrivateRoute';
 import AddUser from './pages/Users/AddUser';
 import AddFAQ from './pages/FAQ/AddFAQ';
 import AddPayment from './components/common/BookingComponent/AddPayment';
+import AddEditMachineForm from './pages/Machine/AddEditMachineForm';
+import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
+import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 
 function App() {
   return (
@@ -63,6 +66,9 @@ function App() {
             <Route path="/add-faq"
               element={<AddFAQ />} />
             <Route path="/add-booking-payment" element={<AddPayment />} />
+            <Route path="/addedit-center" element={<AddEditCenterForm/>}/>
+            <Route path="/addedit-machine" element={<AddEditMachineForm/>}/>
+            <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
           </Route>
         </Routes>
       </Router>

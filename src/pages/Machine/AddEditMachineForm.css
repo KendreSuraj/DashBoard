@@ -1,0 +1,28 @@
+.add-edit-machine-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .machineAvailability-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .machineAvailability-table th,
+  .machineAvailability-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .machineAvailability-table th {
+    text-align: left;
+  }
+  
+  .machineAvailability-table td {
+    text-align: center;
+  }
+  
