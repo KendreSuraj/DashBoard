@@ -1,87 +1,177 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddCenterForm.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UpdateCenter, addCenter, fetchAdmin, fetchCity } from '../../store/actions/center.action';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AddEditCenterForm = () => {
-    const location = useLocation()
-    const data = location?.state?.data;
-    console.log('Testing location ---- ', data)
+    const navigate = useNavigate()
+    const location = useLocation();
+    const dispatch = useDispatch()
+    const cityList = useSelector(state => state.center?.cityList?.cities)
+    const  adminList = useSelector(state => state.center?.adminList?.adminList[0])
+    console.log("see here amin lsit---->>", adminList)
+    const data = location?.state?.data?.data;
+    const id = data?.Id;
+    console.log('Testing location data for center ---- ', data);
+    useEffect(() => {
+        dispatch(fetchCity())
+        dispatch(fetchAdmin())
+    }, [dispatch])
     const [formData, setFormData] = useState({
-        centerName: '',
-        centerLocation: '',
-        city: '',
-        centerPhone: '',
-        centerStartTime: '',
-        centerEndTime: '',
-        centerAdmin: ''
+        name: '',
+        cityId: '',
+        phone: '',
+        timings: {
+            startTime: '',
+            endTime: ''
+        },
+        adminUserId: 2,
+        adminName: '',
+        adminPhone: '',
     });
+    console.log("Hii----->>>>>", formData)
+
+    useEffect(() => {
+        if (data) {
+            setFormData(prevData => ({
+                ...prevData,
+                name: data?.['center Name'],
+                phone: data?.['Center Phone'],
+                timings: {
+                    startTime: data?.['Start Time'],
+                    endTime: data?.['End Time']
+                },
+                adminUserId: data?.['Admin User Id'],
+                adminName: data?.['Admin Name'],
+                adminPhone: data?.['Admin Phone']
+            }));
+        }
+    }, [data]);
+
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        let adminId = name === "adminUserId" ? parseInt(value) : value;
+        if (name === 'startTime' || name === 'endTime') {
+            setFormData(prevData => ({
+                ...prevData,
+                timings: {
+                    ...prevData.timings,
+                    [name]: value
+                }
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value
+            }));
+        }
     };
 
-    console.log("see form data", formData)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        console.log(formData);
+        try {
+            const res = data ? await UpdateCenter(id, formData) : await addCenter(formData);
+            if (res?.status === 200) {
+                alert(res?.data?.status?.message);
+                navigate("/centerlist");
+            } else if (res?.response?.data?.status?.code === 400) {
+                alert(res?.response?.data?.status?.message);
+            } else {
+                alert("Unhandled response:", res);
+            }
+        } catch (error) {
+            alert("An error occurred. Please try again later.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
         <div className="add-center-form">
-               <h3>{data?"Update Center":"Add Center"}</h3>
+            <h3>{data ? "Update Center" : "Add Center"}</h3>
             <form onSubmit={handleSubmit}>
-            {/* <h3>{data?"Update Center":"Add Enter"}</h3> */}
-               <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="centerName">Center Name</label>
-                    <input type="text" id="centerName" name="centerName" value={formData.centerName} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="centerLocation">Center Location</label>
-                    <input type="text" id="centerLocation" name="centerLocation" value={formData.centerLocation} onChange={handleChange} required />
-                </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="name">Center Name</label>
+                        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="phone">Center Phone</label>
+                        <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
+                            pattern="[0-9]{10}"
+                            title="Please enter a 10-digit phone number"
+                            required />
+                    </div>
                 </div>
                 <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="city">City</label>
-                    <select id="city" name="city" value={formData.city} onChange={handleChange} required>
-                        <option value="">Select City</option>
-                        <option value="city1">City 1</option>
-                        <option value="city2">City 2</option>
-                        <option value="city3">City 3</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="centerPhone">Center Phone</label>
-                    <input type="tel" id="centerPhone" name="centerPhone" value={formData.centerPhone} onChange={handleChange}
-                        pattern="[0-9]{10}"
-                        title="Please enter a 10-digit phone number"
-                        required />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="adminName">Admin Name</label>
+                        <input type="text" id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="adminPhone">Admin Phone</label>
+                        <input type="tel" id="adminPhone" name="adminPhone" value={formData.adminPhone} onChange={handleChange}
+                            pattern="[0-9]{10}"
+                            title="Please enter a 10-digit phone number"
+                            required />
+                    </div>
                 </div>
                 <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="centerStartTime">Center Start Time</label>
-                    <input type="time" id="centerStartTime" name="centerStartTime" value={formData.centerStartTime} onChange={handleChange} required />
+                    <div className="form-group">
+                        <label htmlFor="startTime">Center Start Time</label>
+                        <input type="time" step="3600" id="startTime" name="startTime" value={formData.timings.startTime} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="endTime">Center End Time</label>
+                        <input type="time" step="3600" id="endTime" name="endTime" value={formData.timings.endTime} onChange={handleChange}
+
+                            required />
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="centerEndTime">Center End Time</label>
-                    <input type="time" id="centerEndTime" name="centerEndTime" value={formData.centerEndTime} onChange={handleChange} required />
-                </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="centerAdmin">Center Admin</label>
-                    <select id="centerAdmin" name="centerAdmin" value={formData.centerAdmin} onChange={handleChange} required>
-                        <option value="">Select Admin</option>
-                        <option value="admin1">Admin 1</option>
-                        <option value="admin2">Admin 2</option>
-                        <option value="admin3">Admin 3</option>
-                    </select>
+                <div className="form-row">
+                    {/* <div className="form-group">
+                        <label htmlFor="cityId">City</label>
+                        <select id="cityId" name="cityId" value={formData.cityId} onChange={handleChange} required>
+                            <option value="">Select CityId</option>
+                            <option value="1">City 1</option>
+                            <option value="2">City 2</option>
+                            <option value="3">City 3</option>
+                        </select>
+                    </div> */}
+
+                    <div className="form-group">
+                        <label htmlFor="cityId">City</label>
+                        <select id="cityId" name="cityId" value={formData.cityId} onChange={handleChange} required>
+                            <option value="">Select City</option>
+                            {cityList?.map(city => (
+                                <option key={city.id} value={city.id}>{city.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* <div className="form-group">
+                        <label htmlFor="adminUserId">Center Admin</label>
+                        <select id="adminUserId" name="adminUserId" value={formData.adminUserId} onChange={handleChange} required>
+                            <option value="">Select Admin</option>
+                            <option value="1">Admin 1</option>
+                            <option value="2">Admin 2</option>
+                            <option value="3">Admin 3</option>
+                        </select>
+                    </div> */}
+                    <div className="form-group">
+                        <label htmlFor="adminUserId">Center Admin</label>
+                        <select id="adminUserId" name="adminUserId" value={formData.adminUserId} onChange={handleChange} required>
+                            <option value="">Select Admin</option>
+                            {adminList?.map(admin => (
+                                <option key={admin.id} value={admin.id}>{admin.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
                 </div>
                 <button
                     className="add-edit-button"

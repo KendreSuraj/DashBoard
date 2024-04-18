@@ -22,6 +22,7 @@ import UserList from '../pages/Users/UserList';
 import HubIcon from '@mui/icons-material/Hub';
 import CenterListing from '../pages/Center/CenterListing';
 import MachineListing from '../pages/Machine/MachineListing';
+import TherapistList from '../pages/Therapist/TherapistList';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
@@ -149,6 +150,15 @@ const appRoutes = [
     state: 'MachineList',
     sidebarProps: {
       displayText: 'Machine',
+      icon: <FeedIcon />,
+    },
+  },
+  {
+    path: '/therapistlist',
+    element: <TherapistList />,
+    state: 'TherapistList',
+    sidebarProps: {
+      displayText: 'Therapist',
       icon: <FeedIcon />,
     },
   },

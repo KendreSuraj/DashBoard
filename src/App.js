@@ -22,6 +22,7 @@ import AddPayment from './components/common/BookingComponent/AddPayment';
 import AddEditMachineForm from './pages/Machine/AddEditMachineForm';
 import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
 import AddEditCenterForm from './pages/Center/AddEditCenterForm';
+import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
             <Route path="/addedit-center" element={<AddEditCenterForm/>}/>
             <Route path="/addedit-machine" element={<AddEditMachineForm/>}/>
             <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
+            <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
           </Route>
         </Routes>
       </Router>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddEditMachineForm.css';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
@@ -6,106 +6,225 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
+import { UpdateMachine, addMachine } from '../../store/actions/machine.action';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCenter } from '../../store/actions/center.action';
+import { fetchProductList } from '../../store/actions/booking.action';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const AddEditMachineForm = () => {
-    const location = useLocation()
+    const dispatch = useDispatch()
+    let centerList = useSelector(state => state.center?.centerList?.centers)
+    const productList = useSelector((state) => state.booking.productList);
+    console.log("see product list---->>>",productList)
+    console.log("Hij testing for ity----->>>>>", centerList)
+    useEffect(() => {
+        dispatch(fetchCenter())
+        dispatch(fetchProductList());
+    }, [dispatch])
+
+    const navigate = useNavigate()
+    const location = useLocation();
     const data = location?.state?.data;
-    console.log('Testing location ---- ', data)
+    console.log("Hii data---->>>>", data)
     const [formData, setFormData] = useState({
-        machineName: '',
-        centerLocation: '',
-        centerName: '',
-        machineAvailability: [
-            { day: 'Monday', startTime: '', endTime: '' },
-            { day: 'Tuesday', startTime: '', endTime: '' },
-            { day: 'Wednesday', startTime: '', endTime: '' },
-            { day: 'Thursday', startTime: '', endTime: '' },
-            { day: 'Friday', startTime: '', endTime: '' },
-            { day: 'Saturday', startTime: '', endTime: '' },
-            { day: 'Sunday', startTime: '', endTime: '' },
-        ],
-        productServiceable: []
+        name: '',
+        centerId: '3',
+        uniqueMachineCode: '',
+        machineAvailability: {
+            Monday: { startTime: '', endTime: '' },
+            Tuesday: { startTime: '', endTime: '' },
+            Wednesday: { startTime: '', endTime: '' },
+            Thursday: { startTime: '', endTime: '' },
+            Friday: { startTime: '', endTime: '' },
+            Saturday: { startTime: '', endTime: '' },
+            Sunday: { startTime: '', endTime: '' },
+        },
+        products: [],
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const handleChange = (e, index) => {
+
+    const handleChange = (e, day) => {
         const { name, value } = e.target;
-        const updatedAvailability = [...formData.machineAvailability];
-        updatedAvailability[index][name] = value;
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
             ...prevData,
-            machineAvailability: updatedAvailability,
+            machineAvailability: {
+                ...prevData.machineAvailability,
+                [day]: {
+                    ...prevData.machineAvailability[day],
+                    [name]: value
+                }
+            }
         }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        const addBody = {
+            name: formData.name,
+            centerId: formData.centerId || 1,
+            uniqueMachineCode: formData.uniqueMachineCode,
+            products: JSON.stringify(formData.products),
+            // machineAvailability: formData.machineAvailability,
+            mondayAvailability: {
+                startTime: formData?.machineAvailability?.Monday?.startTime,
+                endTime: formData?.machineAvailability?.Monday?.endTime
+            },
+            tuesdayAvailability: {
+                startTime: formData?.machineAvailability?.Tuesday?.startTime,
+                endTime: formData?.machineAvailability?.Tuesday?.endTime
+            },
+            wednesdayAvailability: {
+                startTime: formData?.machineAvailability?.Wednesday?.startTime,
+                endTime: formData?.machineAvailability?.Wednesday?.endTime
+            },
+            thursdayAvailability: {
+                startTime: formData?.machineAvailability?.Thursday?.startTime,
+                endTime: formData?.machineAvailability?.Thursday?.endTime
+            },
+            fridayAvailability: {
+                startTime: formData?.machineAvailability?.Friday?.startTime,
+                endTime: formData?.machineAvailability?.Friday?.endTime
+            },
+            saturdayAvailability: {
+                startTime: formData?.machineAvailability?.Saturday?.startTime,
+                endTime: formData?.machineAvailability?.Saturday?.endTime
+            },
+            sundayAvailability: {
+                startTime: formData?.machineAvailability?.Sunday?.startTime,
+                endTime: formData?.machineAvailability?.Sunday?.endTime
+            },
+        };
+        // console.log(formData);
+        const res = data ? await UpdateMachine(data?.id, addBody) : await addMachine(addBody);
+        if (res?.status === 200) {
+            alert(res.data.status?.message)
+            navigate("/machinelist")
+        }
     };
 
     const handleAutocompleteChange = (event, value) => {
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
             ...prevData,
-            productServiceable: value.map(option => option.title),
+            products: value.map(option => option.title),
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        console.log(formData);
-    };
+    useEffect(() => {
+        if (!data) return;
+
+        const mapAvailability = dayAvailability =>
+            dayAvailability.map(slot => ({
+                startTime: slot.startTime,
+                endTime: slot.endTime
+            }));
+
+        const {
+            name,
+            centerId = 1,
+            uniqueMachineCode,
+            mondayAvailability,
+            tuesdayAvailability,
+            wednesdayAvailability,
+            thursdayAvailability,
+            fridayAvailability,
+            saturdayAvailability,
+            sundayAvailability
+        } = data;
+
+        setFormData(prevData => ({
+            ...prevData,
+            name,
+            centerId,
+            uniqueMachineCode,
+            machineAvailability: mapAvailability(mondayAvailability),
+            mondayAvailability: mapAvailability(mondayAvailability),
+            tuesdayAvailability: mapAvailability(tuesdayAvailability),
+            wednesdayAvailability: mapAvailability(wednesdayAvailability),
+            thursdayAvailability: mapAvailability(thursdayAvailability),
+            fridayAvailability: mapAvailability(fridayAvailability),
+            saturdayAvailability: mapAvailability(saturdayAvailability),
+            sundayAvailability: mapAvailability(sundayAvailability)
+        }));
+    }, [data]);
+
+    console.log("check formm data for update---->>>", formData)
 
     const handleCopyTime = (e) => {
         const isChecked = e.target.checked;
         if (isChecked) {
-            const updatedmachineAvailability = formData.machineAvailability.map((item) => ({
-                ...item,
-                startTime: formData.machineAvailability[0].startTime,
-                endTime: formData.machineAvailability[0].endTime,
-            }));
-            setFormData((prevData) => ({
+            const startTime = formData.machineAvailability.Monday.startTime;
+            const endTime = formData.machineAvailability.Monday.endTime;
+            const updatedMachineAvailability = Object.keys(formData.machineAvailability).reduce((acc, day) => {
+                acc[day] = { startTime, endTime };
+                return acc;
+            }, {});
+            setFormData(prevData => ({
                 ...prevData,
-                machineAvailability: updatedmachineAvailability,
+                machineAvailability: updatedMachineAvailability,
             }));
         } else {
-            const updatedmachineAvailability = formData.machineAvailability.map((item) => ({
-                ...item,
-                startTime: '',
-                endTime: '',
-            }));
-            setFormData((prevData) => ({
+            const updatedMachineAvailability = Object.keys(formData.machineAvailability).reduce((acc, day) => {
+                acc[day] = { startTime: '', endTime: '' };
+                return acc;
+            }, {});
+            setFormData(prevData => ({
                 ...prevData,
-                machineAvailability: updatedmachineAvailability,
+                machineAvailability: updatedMachineAvailability,
             }));
         }
     };
+
     const data1 = [
-        { title: "Anurag" },
-        { title: "Praduman" },
-        { title: "Vaibhav" },
-        { title: "Ankit" }
+        { title: "Product 1" },
+        { title: "Product 2" },
+        { title: "Product 3" },
+        { title: "Product 4" }
     ];
-    console.log("See this", formData)
+
+
     return (
         <div className="add-edit-machine-form">
-            <h3>{data?"Update Machine":"Add Machine"}</h3>
+            <h3>{data ? "Update Machine" : "Add Machine"}</h3>
             <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="name">Machine Name</label>
+                    <input type="text" id="name" name="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required />
+                </div>
                 <div className="form-row">
+
                     <div className="form-group">
-                        <label htmlFor="machineName">Machine Name</label>
-                        <input type="text" id="machineName" name="machineName" value={formData.machineName} onChange={(e) => setFormData({ ...formData, machineName: e.target.value })}
+                        <label htmlFor="uniqueMachineCode">Machine Code</label>
+                        <input type="text" id="uniqueMachineCode" uniqueMachineCode="uniqueMachineCode" value={formData.uniqueMachineCode} onChange={(e) => setFormData({ ...formData, uniqueMachineCode: e.target.value })}
                             required />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="centerName">Center</label>
+                    {/* <div className="form-group">
+                        <label htmlFor="centerName">Choose Center</label>
                         <select id="centerName" name="centerName" value={formData.centerName} onChange={(e) => setFormData({ ...formData, centerName: e.target.value })} required>
                             <option value="">Select Admin</option>
                             <option value="admin1">Admin 1</option>
                             <option value="admin2">Admin 2</option>
                             <option value="admin3">Admin 3</option>
                         </select>
+                    </div> */}
+
+                    <div className="form-group">
+                        <label htmlFor="centerName">Choose Center</label>
+                        <select id="centerName" name="centerName" value={formData.centerName} onChange={(e) => setFormData({ ...formData, centerName: e.target.value })} required>
+                            <option value="">Select Center</option>
+                            {centerList?.map(center => (
+                                <option key={center.id} value={center.id}>{center.name}</option>
+                            ))}
+                        </select>
                     </div>
+
                 </div>
                 <div>
                     <Typography id="modal-modal-description" sx={{ mt: 4, mb: 1 }}>
@@ -116,7 +235,7 @@ const AddEditMachineForm = () => {
                         onChange={handleAutocompleteChange}
                         multiple
                         id="checkboxes-tags-demo"
-                        options={data1}
+                        options={productList}
                         disableCloseOnSelect
                         getOptionLabel={(option) => option.title}
                         renderOption={(props, option, { selected }) => (
@@ -135,10 +254,10 @@ const AddEditMachineForm = () => {
                 </div>
 
                 <h3>Machine Availability</h3>
-                <div style={{ display: 'flex', float: "right", width: "150px" }}>
+                {!data && <div style={{ display: 'flex', float: "right", width: "150px" }}>
                     <label>Copy&nbsp;Time</label>
                     <input type='checkbox' onChange={handleCopyTime} />
-                </div>
+                </div>}
                 <br />
                 <table className="machineAvailability-table">
                     <thead>
@@ -149,16 +268,16 @@ const AddEditMachineForm = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {formData.machineAvailability.map((item, index) => (
+                        {Object.entries(formData.machineAvailability).map(([day, availability], index) => (
                             <tr key={index}>
-                                <td>{item.day}</td>
+                                <td>{day}</td>
                                 <td>
                                     <input
                                         type="time"
                                         step="3600"
                                         name="startTime"
-                                        value={item.startTime}
-                                        onChange={(e) => handleChange(e, index)}
+                                        value={availability.startTime}
+                                        onChange={(e) => handleChange(e, day)}
                                         required
                                     />
                                 </td>
@@ -167,8 +286,8 @@ const AddEditMachineForm = () => {
                                         type="time"
                                         step="3600"
                                         name="endTime"
-                                        value={item.endTime}
-                                        onChange={(e) => handleChange(e, index)}
+                                        value={availability.endTime}
+                                        onChange={(e) => handleChange(e, day)}
                                         required
                                     />
                                 </td>
@@ -179,18 +298,18 @@ const AddEditMachineForm = () => {
                 <button
                     className="add-edit-button"
                     type="submit"
-                    disabled={isSubmitting}
+                    // disabled={isSubmitting}
                     style={{
                         background: isSubmitting ? 'gray' : '#007bff',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer',
                     }}
                 >
-                {isSubmitting ? (data ? 'Updating...' : 'Submitting...') : (data ? 'Update' : 'Submit')}
+                    {isSubmitting ? (data ? 'Updating...' : 'Submitting...') : (data ? 'Update' : 'Submit')}
                 </button>
             </form>
-            {data&&<div>
+            {data && <div>
                 <h3>Machine Previous Record</h3>
-                <TableComponent data={data1}/>
+                <TableComponent data={data1} />
             </div>}
         </div>
     );
