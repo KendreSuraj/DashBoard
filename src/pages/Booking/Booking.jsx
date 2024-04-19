@@ -32,6 +32,18 @@ const Booking = () => {
   bookingList = bookingList?.map((data) => {
     const formattedDate = splitDateTime(data.appointmentAt);
 
+    let mappedCity = data.city;
+    if (['Ghaziabad', 'Greater Noida'].includes(data.city)) {
+      mappedCity = 'Noida';
+    } else if (['Panchkula', 'Mohali'].includes(data.city)) {
+      mappedCity = 'Chandigarh';
+    } else if (data.city === 'Faridabad') {
+      mappedCity = 'Gurgaon';
+    }
+    else if (['Delhi', "New Delhi"].includes(data.city)){
+      mappedCity = "Delhi";
+      }
+
     return {
       'Service Id': data?.sessionSchedulesId,
       sessionId: data.sessionId ? data.sessionId : null,
@@ -40,6 +52,7 @@ const Booking = () => {
       Gender: data?.gender,
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
+      MappedCity: mappedCity,
       'Service Name': data.productName ? data.productName : '',
       'Service Date': formattedDate.date,
       'Service Time': formattedDate.time,
