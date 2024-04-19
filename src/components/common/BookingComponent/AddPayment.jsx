@@ -19,8 +19,16 @@ const AddPayment = () => {
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === 'image') {
-            const reader = new FileReader();
             const file = files[0];
+            const acceptedTypes = ["image/jpeg", "image/jpg", "image/png"];
+            if (!acceptedTypes.includes(file.type)) {
+                alert("Please select only image files (JPEG, JPG, PNG).");
+                window.location.reload()
+                return;
+            }
+            const reader = new FileReader();
+            // const file = files[0];
+            console.log("see file type ",file.type)
             reader.onloadend = () => {
                 const img = new Image();
                 img.src = reader.result;

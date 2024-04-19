@@ -13,6 +13,7 @@ import CommentBox from '../../components/common/BookingComponent/CommentBox';
 import CallerBox from '../../components/common/BookingComponent/CallerBox';
 
 import PaymentHistory from '../../components/common/BookingComponent/PaymentHistory';
+import UserLogs from '../../components/common/BookingComponent/UserLogs';
 
 
 const BookingDetails = () => {
@@ -28,6 +29,8 @@ const BookingDetails = () => {
     callerName: "",
     callerPhone: ""
   })
+
+  const [userLogs, setUserLogs] = useState([])
 
   const params = useParams();
 
@@ -201,6 +204,9 @@ const BookingDetails = () => {
           callerName,
           callerPhone
         })
+
+        const logs = response.data.userLogs && response.data.userLogs.length > 0 ? response.data.userLogs : []
+        setUserLogs(logs)
       })
       .catch((err) => console.log(err));
   }, []);
@@ -338,8 +344,11 @@ const BookingDetails = () => {
 
 
         <Grid item xs={12} md={6} mt={4}>
-        <PaymentHistory sessionScheduleId={params.sessionScheduleId}/>
-      </Grid>
+          <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
+        </Grid>
+        <Grid item xs={12} md={6} mt={4}>
+          <UserLogs userLogs={userLogs} />
+        </Grid>
       </Grid>
     </div>
   );
