@@ -33,6 +33,19 @@ const serviceStatusData = [
   { title: 'CANCELLED' },
 ];
 
+const newCityList=[
+  { "title": "Delhi" },
+  { "title": "Mumbai" },
+  { "title": "Pune" },
+  { "title": "Gurgaon" },
+  { "title": "Noida" },
+  { "title": "Chandigarh" },
+  { "title": "Bangalore" },
+  { "title": "Hyderabad" },
+  { "title": "Ahmedabad" },
+  { "title": "Indore" }
+]
+
 export default function FilterModal({
   setSelectedCities,
   setSelectedServices,
@@ -50,6 +63,7 @@ export default function FilterModal({
   }, [dispatch]);
 
   const cityList = useSelector((state) => state.booking.cityList);
+  console.log("see list ,,",cityList)
   const productList = useSelector((state) => state.booking.productList);
 
   return (
@@ -84,7 +98,7 @@ export default function FilterModal({
             </Typography>
             <DropdownWithCheckBox
               dropdownLabel={'Select cities'}
-              data={cityList}
+              data={newCityList}
               setSelectedValues={setSelectedCities}
             />
           </div>

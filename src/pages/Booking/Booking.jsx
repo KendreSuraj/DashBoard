@@ -31,6 +31,7 @@ const Booking = () => {
   );
   bookingList = bookingList?.map((data) => {
     const formattedDate = splitDateTime(data.appointmentAt);
+    const bookingDate=splitDateTime(data?.bookingAt)
 
     let mappedCity = data.city;
     if (['Ghaziabad', 'Greater Noida'].includes(data.city)) {
@@ -51,7 +52,7 @@ const Booking = () => {
       'Client Id': data?.clientId,
       Gender: data?.gender,
       'Phone Number': data.phoneNumber,
-      City: data.city ? data.city : '',
+      // City: data.city ? data.city : '',
       MappedCity: mappedCity,
       'Service Name': data.productName ? data.productName : '',
       'Service Date': formattedDate.date,
@@ -66,7 +67,9 @@ const Booking = () => {
       "End Time": data.endTime ? data.endTime : "",
       "Comment": data.comment ? data.comment : "",
       "Caller Name": data.callerName ? data.callerName : "-",
-      "Caller Phone": data.callerPhone ? data.callerPhone : "-"
+      "Caller Phone": data.callerPhone ? data.callerPhone : "-",
+      "Booking Date":bookingDate?.date,
+      "Booking Time":data?.bookingTime
     };
   });
 
