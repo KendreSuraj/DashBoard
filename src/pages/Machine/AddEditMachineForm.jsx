@@ -98,8 +98,42 @@ const AddEditMachineForm = () => {
                 endTime: formData?.machineAvailability?.Sunday?.endTime
             },
         };
+        const updateBody = {
+            name: formData.name,
+            centerId: formData.centerId,
+            products: JSON.stringify(formData.products),
+            // machineAvailability: formData.machineAvailability,
+            mondayAvailability: {
+                startTime: formData?.machineAvailability?.Monday?.startTime,
+                endTime: formData?.machineAvailability?.Monday?.endTime
+            },
+            tuesdayAvailability: {
+                startTime: formData?.machineAvailability?.Tuesday?.startTime,
+                endTime: formData?.machineAvailability?.Tuesday?.endTime
+            },
+            wednesdayAvailability: {
+                startTime: formData?.machineAvailability?.Wednesday?.startTime,
+                endTime: formData?.machineAvailability?.Wednesday?.endTime
+            },
+            thursdayAvailability: {
+                startTime: formData?.machineAvailability?.Thursday?.startTime,
+                endTime: formData?.machineAvailability?.Thursday?.endTime
+            },
+            fridayAvailability: {
+                startTime: formData?.machineAvailability?.Friday?.startTime,
+                endTime: formData?.machineAvailability?.Friday?.endTime
+            },
+            saturdayAvailability: {
+                startTime: formData?.machineAvailability?.Saturday?.startTime,
+                endTime: formData?.machineAvailability?.Saturday?.endTime
+            },
+            sundayAvailability: {
+                startTime: formData?.machineAvailability?.Sunday?.startTime,
+                endTime: formData?.machineAvailability?.Sunday?.endTime
+            },
+        };
         // console.log(formData);
-        const res = data ? await UpdateMachine(data?.id, addBody) : await addMachine(addBody);
+        const res = data ? await UpdateMachine(data?.id,updateBody) : await addMachine(addBody);
         if (res?.status === 200) {
             alert(res.data.status?.message)
             navigate("/machinelist")

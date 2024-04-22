@@ -31,8 +31,8 @@ const AddEditTherapistForm = () => {
     const [formData, setFormData] = useState({
         employeeId: '',
         name: '',
-        centerId: '5',
-        // phone: '',
+        centerId: '',
+        phone: '',
         center: '',
         location: 'hhhh',
         products: [1, 3, 5],
@@ -106,10 +106,9 @@ const AddEditTherapistForm = () => {
         setIsSubmitting(true);
         const addBody = {
             name: formData?.name,
-            centerId: formData.centerId || 2,
-            employeeId: '112',
-            centerId: '5',
-            // phone:formData?.phone,
+            employeeId:formData.employeeId,
+            centerId:parseInt(1),
+            phone:formData?.phone,
             location: formData.location,
             products: [1, 3, 5],
             email: formData.email,
@@ -146,8 +145,48 @@ const AddEditTherapistForm = () => {
                 endTime: formData?.schedule?.Sunday?.endTime
             },
         }
+
+        const upadteBody = {
+            name: formData?.name,
+            employeeId:formData.employeeId,
+            centerId:parseInt(1),
+            location: formData.location,
+            products: [1, 3, 5],
+            isRockstar: true,
+            gender: formData.gender,
+            // weekendOff: formData.weekendOff,
+            products: JSON.stringify([1, 2, 4]),
+            mondayAvailability: {
+                startTime: formData?.schedule?.Monday?.startTime,
+                endTime: formData?.schedule?.Monday?.endTime
+            },
+            tuesdayAvailability: {
+                startTime: formData?.schedule?.Tuesday?.startTime,
+                endTime: formData?.schedule?.Tuesday?.endTime
+            },
+            wednesdayAvailability: {
+                startTime: formData?.schedule?.Wednesday?.startTime,
+                endTime: formData?.schedule?.Wednesday?.endTime
+            },
+            thursdayAvailability: {
+                startTime: formData?.schedule?.Thursday?.startTime,
+                endTime: formData?.schedule?.Thursday?.endTime
+            },
+            fridayAvailability: {
+                startTime: formData?.schedule?.Friday?.startTime,
+                endTime: formData?.schedule?.Friday?.endTime
+            },
+            saturdayAvailability: {
+                startTime: formData?.schedule?.Saturday?.startTime,
+                endTime: formData?.schedule?.Saturday?.endTime
+            },
+            sundayAvailability: {
+                startTime: formData?.schedule?.Sunday?.startTime,
+                endTime: formData?.schedule?.Sunday?.endTime
+            },
+        }
         console.log("see add body data  body--->>>>", addBody)
-        const res = data ? await UpdateTherapist(data?.id, addBody) : await addTherapist(addBody)
+        const res = data ? await UpdateTherapist(data?.id, upadteBody) : await addTherapist(addBody)
         if (res?.status === 200) {
             alert(res.data.status?.message)
             navigate("/therapistlist")
@@ -280,8 +319,8 @@ const AddEditTherapistForm = () => {
                     </select>
                 </div> */}
                     <div className="form-group">
-                        <label htmlFor="center">Center</label>
-                        <select id="center" name="center" value={formData.center} onChange={handleFieldChange} required>
+                        <label htmlFor="centerId">Center</label>
+                        <select id="centerId" name="centerId" value={formData.centerId} onChange={handleFieldChange} required>
                             <option value="">Select Center</option>
                             {centerList?.map(center => (
                                 <option key={center.id} value={center.name}>{center.name}</option>

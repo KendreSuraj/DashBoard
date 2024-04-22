@@ -1,16 +1,29 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchTherapistCustomslots } from '../../store/actions/therapist.action'
-import { Button } from '@material-ui/core'
-import TableComponent from '../../components/common/TableComponent/TableComponent'
+import { fetchTherapistCustomslots, updateCustomTherapistSlot } from '../../store/actions/therapist.action'
+
 import './RequestList.css'
 const RequestList = () => {
     const dispatch = useDispatch()
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
-
+    console.log("see slot", therapistCustomSlot)
     useEffect(() => {
         dispatch(fetchTherapistCustomslots())
     }, [dispatch])
+
+    const localToken = JSON.parse(localStorage.getItem("userData"))
+    const updateTherapistRequest = async (id, isApproved) => {
+        try {
+            const res = await updateCustomTherapistSlot(id, { adminId: parseInt(localToken?.user?.id), isApproved: isApproved });
+            if (res.data?.status.code == 200) {
+                window.location.reload()
+                alert(res?.data.status?.message)
+            }
+        } catch (error) {
+            return error;
+        }
+    };
+
 
     return (
         <div>
@@ -40,8 +53,12 @@ const RequestList = () => {
                                 <td>{schedule.endTime}</td>
                                 <td>{schedule.type}</td>
                                 <td>
-                                    <button className="action-btn" onClick={() => onAccept(schedule.id)}>Accept</button>
-                                    <button className="action-btn" onClick={() => onApprove(schedule.id)}>Approve</button>
+
+                                    {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
+                                    {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
+                                     {schedule?.isApproved&&"Approve"}
+                                     {schedule?.isApproved===false &&"Reject"}
+                                    {/* {schedule?.isApproved === true ? 'Approved' : 'Rejected'} */}
                                 </td>
                             </tr>
                         ))}

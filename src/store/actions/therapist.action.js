@@ -50,3 +50,17 @@ export const addTherapist = async (data) => {
       console.error("Error adding center:", error);
     }
   }
+
+
+
+
+  export const updateCustomTherapistSlot  = async (id, data) => {
+    console.log("see daata-------->>>>>>", id)
+    try {
+      const res = await axios.put(`${apiUrl}/api/v1/custom-therapist-slot/update-therapist-custom-slot/${id}`,data);
+      console.log("Center added successfully!---->>>>", res);
+      return res;
+    } catch (error) {
+      console.error("Error adding center:", error);
+    }
+  }
