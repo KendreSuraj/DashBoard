@@ -20,8 +20,6 @@ const AddEditMachineForm = () => {
     const dispatch = useDispatch()
     let centerList = useSelector(state => state.center?.centerList?.centers)
     const productList = useSelector((state) => state.booking.productList);
-    console.log("see product list---->>>",productList)
-    console.log("Hij testing for ity----->>>>>", centerList)
     useEffect(() => {
         dispatch(fetchCenter())
         dispatch(fetchProductList());
@@ -33,7 +31,7 @@ const AddEditMachineForm = () => {
     console.log("Hii data---->>>>", data)
     const [formData, setFormData] = useState({
         name: '',
-        centerId: '3',
+        centerId: '',
         uniqueMachineCode: '',
         machineAvailability: {
             Monday: { startTime: '', endTime: '' },
@@ -67,7 +65,7 @@ const AddEditMachineForm = () => {
         setIsSubmitting(true);
         const addBody = {
             name: formData.name,
-            centerId: formData.centerId || 1,
+            centerId: formData.centerId,
             uniqueMachineCode: formData.uniqueMachineCode,
             products: JSON.stringify(formData.products),
             // machineAvailability: formData.machineAvailability,
@@ -109,21 +107,61 @@ const AddEditMachineForm = () => {
     };
 
     const handleAutocompleteChange = (event, value) => {
+        console.log("see value---???",value)
         setFormData(prevData => ({
             ...prevData,
             products: value.map(option => option.title),
         }));
     };
 
+    // useEffect(() => {
+    //     if (!data) return;
+
+    //     const mapAvailability = dayAvailability =>
+    //         dayAvailability.map(slot => ({
+    //             startTime: slot.startTime,
+    //             endTime: slot.endTime
+    //         }));
+
+    //     const {
+    //         name,
+    //         centerId = 1,
+    //         uniqueMachineCode,
+    //         mondayAvailability,
+    //         tuesdayAvailability,
+    //         wednesdayAvailability,
+    //         thursdayAvailability,
+    //         fridayAvailability,
+    //         saturdayAvailability,
+    //         sundayAvailability
+    //     } = data;
+
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         name,
+    //         centerId,
+    //         uniqueMachineCode,
+    //         machineAvailability: mapAvailability(mondayAvailability),
+    //         mondayAvailability: mapAvailability(mondayAvailability),
+    //         tuesdayAvailability: mapAvailability(tuesdayAvailability),
+    //         wednesdayAvailability: mapAvailability(wednesdayAvailability),
+    //         thursdayAvailability: mapAvailability(thursdayAvailability),
+    //         fridayAvailability: mapAvailability(fridayAvailability),
+    //         saturdayAvailability: mapAvailability(saturdayAvailability),
+    //         sundayAvailability: mapAvailability(sundayAvailability)
+    //     }));
+    // }, [data]);
+
+
     useEffect(() => {
         if (!data) return;
-
+    
         const mapAvailability = dayAvailability =>
             dayAvailability.map(slot => ({
                 startTime: slot.startTime,
                 endTime: slot.endTime
             }));
-
+    
         const {
             name,
             centerId = 1,
@@ -136,24 +174,54 @@ const AddEditMachineForm = () => {
             saturdayAvailability,
             sundayAvailability
         } = data;
-
+    
         setFormData(prevData => ({
             ...prevData,
             name,
             centerId,
             uniqueMachineCode,
-            machineAvailability: mapAvailability(mondayAvailability),
-            mondayAvailability: mapAvailability(mondayAvailability),
-            tuesdayAvailability: mapAvailability(tuesdayAvailability),
-            wednesdayAvailability: mapAvailability(wednesdayAvailability),
-            thursdayAvailability: mapAvailability(thursdayAvailability),
-            fridayAvailability: mapAvailability(fridayAvailability),
-            saturdayAvailability: mapAvailability(saturdayAvailability),
-            sundayAvailability: mapAvailability(sundayAvailability)
+            machineAvailability: {
+                Monday: {
+                    startTime: mondayAvailability[0].startTime,
+                    endTime: mondayAvailability[mondayAvailability.length - 1].endTime
+                },
+                Tuesday: {
+                    startTime: tuesdayAvailability[0].startTime,
+                    endTime: tuesdayAvailability[tuesdayAvailability.length - 1].endTime
+                },
+                Wednesday: {
+                    startTime: wednesdayAvailability[0].startTime,
+                    endTime: wednesdayAvailability[wednesdayAvailability.length - 1].endTime
+                },
+                Thursday: {
+                    startTime: thursdayAvailability[0].startTime,
+                    endTime: thursdayAvailability[thursdayAvailability.length - 1].endTime
+                },
+                Friday: {
+                    startTime: fridayAvailability[0].startTime,
+                    endTime: fridayAvailability[fridayAvailability.length - 1].endTime
+                },
+                Saturday: {
+                    startTime: saturdayAvailability[0].startTime,
+                    endTime: saturdayAvailability[saturdayAvailability.length - 1].endTime
+                },
+                Sunday: {
+                    startTime: sundayAvailability[0].startTime,
+                    endTime: sundayAvailability[sundayAvailability.length - 1].endTime
+                }
+            },
+            // mondayAvailability: mapAvailability(mondayAvailability),
+            // tuesdayAvailability: mapAvailability(tuesdayAvailability),
+            // wednesdayAvailability: mapAvailability(wednesdayAvailability),
+            // thursdayAvailability: mapAvailability(thursdayAvailability),
+            // fridayAvailability: mapAvailability(fridayAvailability),
+            // saturdayAvailability: mapAvailability(saturdayAvailability),
+            // sundayAvailability: mapAvailability(sundayAvailability)
         }));
     }, [data]);
 
-    console.log("check formm data for update---->>>", formData)
+    
+    console.log("check formm data---->>>", formData)
 
     const handleCopyTime = (e) => {
         const isChecked = e.target.checked;
@@ -179,15 +247,6 @@ const AddEditMachineForm = () => {
             }));
         }
     };
-
-    const data1 = [
-        { title: "Product 1" },
-        { title: "Product 2" },
-        { title: "Product 3" },
-        { title: "Product 4" }
-    ];
-
-
     return (
         <div className="add-edit-machine-form">
             <h3>{data ? "Update Machine" : "Add Machine"}</h3>
@@ -206,8 +265,8 @@ const AddEditMachineForm = () => {
                     </div>
 
                     {/* <div className="form-group">
-                        <label htmlFor="centerName">Choose Center</label>
-                        <select id="centerName" name="centerName" value={formData.centerName} onChange={(e) => setFormData({ ...formData, centerName: e.target.value })} required>
+                        <label htmlFor="centerId">Choose Center</label>
+                        <select id="centerId" name="centerId" value={formData.centerId} onChange={(e) => setFormData({ ...formData, centerId: e.target.value })} required>
                             <option value="">Select Admin</option>
                             <option value="admin1">Admin 1</option>
                             <option value="admin2">Admin 2</option>
@@ -216,8 +275,8 @@ const AddEditMachineForm = () => {
                     </div> */}
 
                     <div className="form-group">
-                        <label htmlFor="centerName">Choose Center</label>
-                        <select id="centerName" name="centerName" value={formData.centerName} onChange={(e) => setFormData({ ...formData, centerName: e.target.value })} required>
+                        <label htmlFor="centerId">Choose Center</label>
+                        <select id="centerId" name="centerId" value={formData.centerId} onChange={(e) => setFormData({ ...formData, centerId: e.target.value })} required>
                             <option value="">Select Center</option>
                             {centerList?.map(center => (
                                 <option key={center.id} value={center.id}>{center.name}</option>
@@ -309,7 +368,7 @@ const AddEditMachineForm = () => {
             </form>
             {data && <div>
                 <h3>Machine Previous Record</h3>
-                <TableComponent data={data1} />
+                <TableComponent data={productList.slice(0,5)} />
             </div>}
         </div>
     );

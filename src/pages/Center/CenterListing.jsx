@@ -10,7 +10,6 @@ const CenterListing = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   let centerList = useSelector(state => state.center?.centerList?.centers)
-  console.log("see center list ------->>>>>>>>", centerList)
      
   centerList = centerList?.map((data) => {
     return {

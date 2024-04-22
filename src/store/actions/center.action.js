@@ -55,8 +55,8 @@ export const fetchCity = createAsyncThunk('city', async (_, { rejectWithValue })
 export const fetchAdmin = createAsyncThunk('adminlist', async (_, { rejectWithValue }) => {
   try {
     const res = await axios.get(`${apiUrl}/api/v1/misc/get-admins`);
-    console.log("see res------->>>", res)
-    return res?.data;
+    console.log("see res-- for----->>>", res?.data?.adminList[0])
+    return res?.data?.adminList[0];
   } catch (error) {
     console.error('Error in fetchCenter:', error);
     return rejectWithValue('Failed to fetch Centers. Please try again later.');

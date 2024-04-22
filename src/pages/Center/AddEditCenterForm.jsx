@@ -9,11 +9,10 @@ const AddEditCenterForm = () => {
     const location = useLocation();
     const dispatch = useDispatch()
     const cityList = useSelector(state => state.center?.cityList?.cities)
-    const  adminList = useSelector(state => state.center?.adminList?.adminList[0])
-    console.log("see here amin lsit---->>", adminList)
+    const  adminList = useSelector(state => state.center?.adminList)
     const data = location?.state?.data?.data;
     const id = data?.Id;
-    console.log('Testing location data for center ---- ', data);
+    console.log('Testing center---data ---- ', data);
     useEffect(() => {
         dispatch(fetchCity())
         dispatch(fetchAdmin())
@@ -26,7 +25,7 @@ const AddEditCenterForm = () => {
             startTime: '',
             endTime: ''
         },
-        adminUserId: 2,
+        adminUserId: '',
         adminName: '',
         adminPhone: '',
     });
@@ -51,10 +50,45 @@ const AddEditCenterForm = () => {
 
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     let adminId = name === "adminUserId" ? parseInt(value) : value;
+    //     if (name === 'startTime' || name === 'endTime') {
+    //         setFormData(prevData => ({
+    //             ...prevData,
+    //             timings: {
+    //                 ...prevData.timings,
+    //                 [name]: value
+    //             }
+    //         }));
+    //     } else {
+    //         setFormData((prevData) => ({
+    //             ...prevData,
+    //             [name]: value
+    //         }));
+    //     }
+    // };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        let adminId = name === "adminUserId" ? parseInt(value) : value;
-        if (name === 'startTime' || name === 'endTime') {
+        if (name === "adminUserId") {
+            const selectedAdmin = adminList.find(admin => admin.id === parseInt(value));
+            if (selectedAdmin) {
+                setFormData(prevData => ({
+                    ...prevData,
+                    adminUserId: value,
+                    adminName: selectedAdmin.name,
+                    adminPhone: selectedAdmin.phone
+                }));
+            } else {
+                setFormData(prevData => ({
+                    ...prevData,
+                    adminUserId: value,
+                    adminName: '',
+                    adminPhone: ''
+                }));
+            }
+        } else if (name === 'startTime' || name === 'endTime') {
             setFormData(prevData => ({
                 ...prevData,
                 timings: {
@@ -69,6 +103,7 @@ const AddEditCenterForm = () => {
             }));
         }
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,14 +145,14 @@ const AddEditCenterForm = () => {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="adminName">Admin Name</label>
-                        <input type="text" id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} required />
+                        <input type="text" id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} disabled />
                     </div>
                     <div className="form-group">
                         <label htmlFor="adminPhone">Admin Phone</label>
                         <input type="tel" id="adminPhone" name="adminPhone" value={formData.adminPhone} onChange={handleChange}
                             pattern="[0-9]{10}"
                             title="Please enter a 10-digit phone number"
-                            required />
+                            disabled />
                     </div>
                 </div>
                 <div className="form-row">
@@ -133,16 +168,6 @@ const AddEditCenterForm = () => {
                     </div>
                 </div>
                 <div className="form-row">
-                    {/* <div className="form-group">
-                        <label htmlFor="cityId">City</label>
-                        <select id="cityId" name="cityId" value={formData.cityId} onChange={handleChange} required>
-                            <option value="">Select CityId</option>
-                            <option value="1">City 1</option>
-                            <option value="2">City 2</option>
-                            <option value="3">City 3</option>
-                        </select>
-                    </div> */}
-
                     <div className="form-group">
                         <label htmlFor="cityId">City</label>
                         <select id="cityId" name="cityId" value={formData.cityId} onChange={handleChange} required>
@@ -152,16 +177,6 @@ const AddEditCenterForm = () => {
                             ))}
                         </select>
                     </div>
-
-                    {/* <div className="form-group">
-                        <label htmlFor="adminUserId">Center Admin</label>
-                        <select id="adminUserId" name="adminUserId" value={formData.adminUserId} onChange={handleChange} required>
-                            <option value="">Select Admin</option>
-                            <option value="1">Admin 1</option>
-                            <option value="2">Admin 2</option>
-                            <option value="3">Admin 3</option>
-                        </select>
-                    </div> */}
                     <div className="form-group">
                         <label htmlFor="adminUserId">Center Admin</label>
                         <select id="adminUserId" name="adminUserId" value={formData.adminUserId} onChange={handleChange} required>

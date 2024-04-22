@@ -10,14 +10,15 @@ const TherapistList = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   let therapistList = useSelector(state => state?.therapist?.therapistList?.therapists)
-  console.log("See therapist------->>>>",therapistList)
+  console.log("----->>>",therapistList)
   const handleEdit = (data) => {
     if (data) {
       navigate("/addedit-therapist", {
-        state: { data: { data } },
+        state: {data },
       });
     }
   };
+
   useEffect(() => {
     dispatch(fetchTherapist())
   }, [dispatch])

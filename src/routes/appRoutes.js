@@ -23,7 +23,9 @@ import HubIcon from '@mui/icons-material/Hub';
 import CenterListing from '../pages/Center/CenterListing';
 import MachineListing from '../pages/Machine/MachineListing';
 import TherapistList from '../pages/Therapist/TherapistList';
-
+import RequestList from '../pages/Request/RequestList';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
   // {
@@ -159,10 +161,18 @@ const appRoutes = [
     state: 'TherapistList',
     sidebarProps: {
       displayText: 'Therapist',
-      icon: <FeedIcon />,
+      icon: <LocalHospitalIcon />,
     },
   },
-
+  {
+    path: '/allrequestlist',
+    element: <RequestList />,
+    state: 'dashboardRequest',
+    sidebarProps: {
+      displayText: 'All Request',
+      icon: <RequestPageIcon />,
+    },
+  }
 ];
 
 export default appRoutes;

@@ -23,7 +23,7 @@ const MachineListing = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
-        <h3 style={{ margin: '0 auto' }}>All Centers</h3>
+        <h3 style={{ margin: '0 auto' }}>All Machines</h3>
         <Button variant="contained" color="primary" onClick={() => navigate("/addedit-machine")}>Add Machine</Button>
       </div>
       <TableComponent data={machineList}

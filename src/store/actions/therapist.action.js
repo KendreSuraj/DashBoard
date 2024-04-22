@@ -27,3 +27,26 @@ export const addTherapist = async (data) => {
     }
   
   };
+
+  export const fetchTherapistCustomslots = createAsyncThunk('therapist-custom-slot', async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${apiUrl}/api/v1/custom-therapist-slot/get-all-therapist-custom-slots`);
+      console.log("see res------->>> hii   ", res)
+      return res?.data;
+    } catch (error) {
+      console.error('Error in fetchCenter:', error);
+      return rejectWithValue('Failed to fetch Centers. Please try again later.');
+    }
+  });
+
+
+  export const UpdateTherapist = async (id, data) => {
+    console.log("see daata-------->>>>>>", id)
+    try {
+      const res = await axios.put(`${apiUrl}/api/v1/therapist/update-therapist/${id}`, data);
+      console.log("Center added successfully!---->>>>", res);
+      return res;
+    } catch (error) {
+      console.error("Error adding center:", error);
+    }
+  }

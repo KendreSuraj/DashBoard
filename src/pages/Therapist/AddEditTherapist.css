@@ -6,6 +6,12 @@
     padding: 20px;
     border-radius: 10px;
   }
+
+  .add-edit-partner-form form{
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
   
   .form-row {
     display: flex;
