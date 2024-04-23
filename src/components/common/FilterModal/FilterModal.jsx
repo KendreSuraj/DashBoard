@@ -43,7 +43,8 @@ const newCityList=[
   { "title": "Bangalore" },
   { "title": "Hyderabad" },
   { "title": "Ahmedabad" },
-  { "title": "Indore" }
+  { "title": "Indore" },
+  {"title":"Ludhiana"}
 ]
 
 export default function FilterModal({
@@ -94,10 +95,10 @@ export default function FilterModal({
 
           <div>
             <Typography id="modal-modal-description" sx={{ mt: 4, mb: 1 }}>
-              Select cities
+              Select Centers
             </Typography>
             <DropdownWithCheckBox
-              dropdownLabel={'Select cities'}
+              dropdownLabel={'Select Centers'}
               data={newCityList}
               setSelectedValues={setSelectedCities}
             />
