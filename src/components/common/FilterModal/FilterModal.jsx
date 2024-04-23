@@ -43,7 +43,8 @@ const newCityList=[
   { "title": "Bangalore" },
   { "title": "Hyderabad" },
   { "title": "Ahmedabad" },
-  { "title": "Indore" }
+  { "title": "Indore" },
+  {"title":"Ludhiana"}
 ]
 
 export default function FilterModal({
