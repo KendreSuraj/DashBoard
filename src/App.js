@@ -23,6 +23,7 @@ import AddEditMachineForm from './pages/Machine/AddEditMachineForm';
 import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
 import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
+import AddMachineRequest from './pages/Machine/AddMachineRequest';
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
             <Route path="/addedit-machine" element={<AddEditMachineForm/>}/>
             <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
             <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
+            <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
           </Route>
         </Routes>
       </Router>

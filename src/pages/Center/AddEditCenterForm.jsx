@@ -50,24 +50,6 @@ const AddEditCenterForm = () => {
 
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     let adminId = name === "adminUserId" ? parseInt(value) : value;
-    //     if (name === 'startTime' || name === 'endTime') {
-    //         setFormData(prevData => ({
-    //             ...prevData,
-    //             timings: {
-    //                 ...prevData.timings,
-    //                 [name]: value
-    //             }
-    //         }));
-    //     } else {
-    //         setFormData((prevData) => ({
-    //             ...prevData,
-    //             [name]: value
-    //         }));
-    //     }
-    // };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -144,19 +126,6 @@ const AddEditCenterForm = () => {
                 </div>
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="adminName">Admin Name</label>
-                        <input type="text" id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} disabled />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="adminPhone">Admin Phone</label>
-                        <input type="tel" id="adminPhone" name="adminPhone" value={formData.adminPhone} onChange={handleChange}
-                            pattern="[0-9]{10}"
-                            title="Please enter a 10-digit phone number"
-                            disabled />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group">
                         <label htmlFor="startTime">Center Start Time</label>
                         <input type="time" step="3600" id="startTime" name="startTime" value={formData.timings.startTime} onChange={handleChange} required />
                     </div>
@@ -187,6 +156,19 @@ const AddEditCenterForm = () => {
                         </select>
                     </div>
 
+                </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="adminName">Admin Name</label>
+                        <input type="text" id="adminName" name="adminName" value={formData.adminName} onChange={handleChange} disabled />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="adminPhone">Admin Phone</label>
+                        <input type="tel" id="adminPhone" name="adminPhone" value={formData.adminPhone} onChange={handleChange}
+                            pattern="[0-9]{10}"
+                            title="Please enter a 10-digit phone number"
+                            disabled />
+                    </div>
                 </div>
                 <button
                     className="add-edit-button"

@@ -269,6 +269,7 @@ const AddEditPartnerForm = () => {
             </form>
 
            {data&&<div>
+            
                 <h3>Therapist Previous Record</h3>
                 <TableComponent data={data1}/>
             </div>}

@@ -8,7 +8,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
-import { UpdateTherapist, addTherapist } from '../../store/actions/therapist.action';
+import { UpdateTherapist, addTherapist, fetchTherapistRecord } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductList } from '../../store/actions/booking.action';
 import { fetchCenter } from '../../store/actions/center.action';
@@ -20,14 +20,24 @@ const AddEditTherapistForm = () => {
     const dispatch = useDispatch()
     const location = useLocation();
     const navigate = useNavigate()
+    const data = location?.state?.data;
     const productList = useSelector((state) => state.booking.productList);
     const centerList = useSelector(state => state.center?.centerList?.centers)
+    const therapistRecord = useSelector(state => state?.therapist?.therapistRecord)
+    const formattedTherapistRecord = therapistRecord.map(({ startDate, endDate, ...rest }) => ({
+        ...rest,
+        startDate: new Date(startDate).toLocaleDateString('en-GB'),
+        endDate: new Date(endDate).toLocaleDateString('en-GB')
+    }));
+    
+    console.log(formattedTherapistRecord);
+    
     useEffect(() => {
         dispatch(fetchProductList())
         dispatch(fetchCenter())
+        dispatch(fetchTherapistRecord(data?.id))
     }, [dispatch])
-    const data = location?.state?.data;
-    console.log('Testing location data---- ', data);
+
     const [formData, setFormData] = useState({
         employeeId: '',
         name: '',
@@ -106,9 +116,9 @@ const AddEditTherapistForm = () => {
         setIsSubmitting(true);
         const addBody = {
             name: formData?.name,
-            employeeId:formData.employeeId,
-            centerId:parseInt(1),
-            phone:formData?.phone,
+            employeeId: formData.employeeId,
+            centerId: parseInt(1),
+            phone: formData?.phone,
             location: formData.location,
             products: [1, 3, 5],
             email: formData.email,
@@ -148,8 +158,8 @@ const AddEditTherapistForm = () => {
 
         const upadteBody = {
             name: formData?.name,
-            employeeId:formData.employeeId,
-            centerId:parseInt(1),
+            employeeId: formData.employeeId,
+            centerId: parseInt(1),
             location: formData.location,
             products: [1, 3, 5],
             isRockstar: true,
@@ -269,14 +279,6 @@ const AddEditTherapistForm = () => {
                     endTime: sundayAvailability[sundayAvailability.length - 1].endTime
                 }
             },
-            // schedule: mapAvailability(mondayAvailability),
-            // mondayAvailability: mapAvailability(mondayAvailability),
-            // tuesdayAvailability: mapAvailability(tuesdayAvailability),
-            // wednesdayAvailability: mapAvailability(wednesdayAvailability),
-            // thursdayAvailability: mapAvailability(thursdayAvailability),
-            // fridayAvailability: mapAvailability(fridayAvailability),
-            // saturdayAvailability: mapAvailability(saturdayAvailability),
-            // sundayAvailability: mapAvailability(sundayAvailability)
         }))
     }, [data])
 
@@ -309,15 +311,6 @@ const AddEditTherapistForm = () => {
                     </div>
                 </div>
                 <div className="form-row">
-                    {/* <div className="form-group">
-                    <label htmlFor="center">Center</label>
-                    <select id="center" name="center" value={formData.center} onChange={handleFieldChange} required>
-                        <option value="">Select Center</option>
-                        <option value="center1">Center 1</option>
-                        <option value="center2">Center 2</option>
-                        <option value="center3">Center 3</option>
-                    </select>
-                </div> */}
                     <div className="form-group">
                         <label htmlFor="centerId">Center</label>
                         <select id="centerId" name="centerId" value={formData.centerId} onChange={handleFieldChange} required>
@@ -333,15 +326,6 @@ const AddEditTherapistForm = () => {
                         <input type="email" id="email" name="email" value={formData.email} onChange={handleFieldChange} required />
                     </div>
                 </div>
-                {/* <div className="form-group">
-                    <label htmlFor="product">Product</label>
-                    <select id="product" name="product" value={formData.product} onChange={handleFieldChange} required>
-                        <option value="">Select Product</option>
-                        <option value="product1">Product 1</option>
-                        <option value="product2">Product 2</option>
-                        <option value="product3">Product 3</option>
-                    </select>
-                </div> */}
                 <div>
                     <Typography id="modal-modal-description" sx={{ mb: 1 }}>
                         Choose Product
@@ -447,7 +431,7 @@ const AddEditTherapistForm = () => {
                 <button
                     className="add-edit-button"
                     type="submit"
-                    // disabled={isSubmitting}
+                    disabled={isSubmitting}
                     style={{
                         background: isSubmitting ? 'gray' : '#007bff',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer'
@@ -459,7 +443,7 @@ const AddEditTherapistForm = () => {
 
             {data && <div>
                 <h3>Therapist Previous Record</h3>
-                <TableComponent data={productList.slice(0, 6)} />
+                <TableComponent data={formattedTherapistRecord} hiddenFields={["createdAt","updatedAt","extra","deletedAt","id"]} />
             </div>}
         </div>
     );

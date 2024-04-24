@@ -17,27 +17,13 @@ const Partner = () => {
   useEffect(() => {
     dispatch(fetchPartner());
   }, [dispatch]);
- 
-  const handleEdit = (data) => {
-    if (data) {
-      navigate('/addedit-partner', {
-        state: {data:data },
-      });
-    }
-  };
-  
+
   return (
     concentrixUser ? <h1>You do not have access for this</h1> : <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
-        <h3 style={{ margin: '0 auto' }}>All Therapist List</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addedit-partner")}>Add Parnter</Button>
-      </div>
       {partnerList?.length > 0 ? (
         <TableComponent
          data={partnerList}
          hiddenFields={['partner_id']} 
-         viewButton={<EditIcon/>}
-         viewDetails={handleEdit}
         />
       ) : (
         <LoaderComponent />

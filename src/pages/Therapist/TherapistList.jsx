@@ -10,7 +10,6 @@ const TherapistList = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   let therapistList = useSelector(state => state?.therapist?.therapistList?.therapists)
-  console.log("----->>>",therapistList)
   const handleEdit = (data) => {
     if (data) {
       navigate("/addedit-therapist", {

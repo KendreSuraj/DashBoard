@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTherapist, fetchTherapistCustomslots, } from "../actions/therapist.action";
-
+import { fetchTherapist, fetchTherapistCustomslots, fetchTherapistRecord, } from "../actions/therapist.action";
 const initialState = {
     therapistList: [],
     therapistCustomSlot:[],
+    therapistRecord:[],
     isLoading: false,
     error: null,
 };
@@ -34,6 +34,18 @@ const therapistSlice = createSlice({
             state.therapistCustomSlot = action.payload;
         });
         builder.addCase(fetchTherapistCustomslots.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
+
+        builder.addCase(fetchTherapistRecord.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(fetchTherapistRecord.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.therapistRecord = action.payload;
+        });
+        builder.addCase(fetchTherapistRecord.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
         });
