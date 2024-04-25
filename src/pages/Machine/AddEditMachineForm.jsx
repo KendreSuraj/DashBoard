@@ -8,7 +8,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
-import { UpdateMachine, addMachine, fetchMachineRecord } from '../../store/actions/machine.action';
+import { UpdateMachine, addMachine, fetchMachineRecord, fetchProducts } from '../../store/actions/machine.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchProductList } from '../../store/actions/booking.action';
@@ -20,7 +20,8 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const AddEditMachineForm = () => {
     const dispatch = useDispatch()
     let centerList = useSelector(state => state.center?.centerList?.centers)
-    const productList = useSelector((state) => state.booking.productList);
+    // const productList = useSelector((state) => state.booking.productList);
+    const productList = useSelector((state) => state.machine?.productList);
     const machineRecord=useSelector(state=>state?.machine?.machineRecord)
     const formattedMachineRecord = machineRecord.map(({ startDate, endDate, ...rest }) => ({
         ...rest,
@@ -32,6 +33,7 @@ const AddEditMachineForm = () => {
         dispatch(fetchCenter())
         dispatch(fetchProductList());
         dispatch(fetchMachineRecord(data?.id))
+        dispatch(fetchProducts())
     }, [dispatch])
 
     const navigate = useNavigate()
@@ -151,7 +153,7 @@ const AddEditMachineForm = () => {
     const handleAutocompleteChange = (event, value) => {
         setFormData(prevData => ({
             ...prevData,
-            products: value.map(option => option.title),
+            products: value.map(option => option.id),
         }));
     };
 
@@ -281,7 +283,7 @@ const AddEditMachineForm = () => {
                         id="checkboxes-tags-demo"
                         options={productList}
                         disableCloseOnSelect
-                        getOptionLabel={(option) => option.title}
+                        getOptionLabel={(option) => option.name+"-"+[option.gender]}
                         renderOption={(props, option, { selected }) => (
                             <li {...props}>
                                 <Checkbox
@@ -290,7 +292,8 @@ const AddEditMachineForm = () => {
                                     style={{ marginRight: 8 }}
                                     checked={selected}
                                 />
-                                {option.title}
+                               {option.name}-[{option['gender']}]
+                                {/* {option.name+"-"+[option.gender]} */}
                             </li>
                         )}
                         renderInput={(params) => <TextField {...params} />}

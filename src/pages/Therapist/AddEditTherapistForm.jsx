@@ -12,6 +12,7 @@ import { UpdateTherapist, addTherapist, fetchTherapistRecord } from '../../store
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductList } from '../../store/actions/booking.action';
 import { fetchCenter } from '../../store/actions/center.action';
+import { fetchProducts } from '../../store/actions/machine.action';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -21,9 +22,11 @@ const AddEditTherapistForm = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const data = location?.state?.data;
-    const productList = useSelector((state) => state.booking.productList);
+    // const productList = useSelector((state) => state.booking.productList);
     const centerList = useSelector(state => state.center?.centerList?.centers)
     const therapistRecord = useSelector(state => state?.therapist?.therapistRecord)
+    const productList = useSelector((state) => state.machine?.productList);
+    console.log("see product lsit--->>>>>>>>",productList)
     const formattedTherapistRecord = therapistRecord.map(({ startDate, endDate, ...rest }) => ({
         ...rest,
         startDate: new Date(startDate).toLocaleDateString('en-GB'),
@@ -36,6 +39,7 @@ const AddEditTherapistForm = () => {
         dispatch(fetchProductList())
         dispatch(fetchCenter())
         dispatch(fetchTherapistRecord(data?.id))
+        dispatch(fetchProducts())
     }, [dispatch])
 
     const [formData, setFormData] = useState({
@@ -44,10 +48,10 @@ const AddEditTherapistForm = () => {
         centerId: '',
         phone: '',
         center: '',
-        location: 'hhhh',
-        products: [1, 3, 5],
+        location: '',
+        products: [],
         email: '',
-        isRockStar: true,
+        isRockStar: false,
         gender: '',
         weekendOff: '',
         schedule: {
@@ -60,7 +64,7 @@ const AddEditTherapistForm = () => {
             Sunday: { startTime: '', endTime: '' },
         },
     });
-
+console.log("see form data ---->>>>>>>.",formData)
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e, day) => {
@@ -120,12 +124,12 @@ const AddEditTherapistForm = () => {
             centerId: parseInt(1),
             phone: formData?.phone,
             location: formData.location,
-            products: [1, 3, 5],
             email: formData.email,
-            isRockstar: true,
+            // isRockstar: formData.isRockStar,
+            isRockstar: false,
             gender: formData.gender,
             // weekendOff: formData.weekendOff,
-            products: JSON.stringify([1, 2, 4]),
+            products: JSON.stringify(formData.products),
             mondayAvailability: {
                 startTime: formData?.schedule?.Monday?.startTime,
                 endTime: formData?.schedule?.Monday?.endTime
@@ -161,11 +165,10 @@ const AddEditTherapistForm = () => {
             employeeId: formData.employeeId,
             centerId: parseInt(1),
             location: formData.location,
-            products: [1, 3, 5],
+            products: JSON.stringify(formData.products),
             isRockstar: true,
             gender: formData.gender,
             // weekendOff: formData.weekendOff,
-            products: JSON.stringify([1, 2, 4]),
             mondayAvailability: {
                 startTime: formData?.schedule?.Monday?.startTime,
                 endTime: formData?.schedule?.Monday?.endTime
@@ -207,7 +210,7 @@ const AddEditTherapistForm = () => {
     const handleAutocompleteChange = (event, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            products: value.map(option => option.title),
+            products: value.map(option => option.id),
         }));
     };
     console.log("see products list---->>>>", productList)
@@ -297,10 +300,10 @@ const AddEditTherapistForm = () => {
                         <input type="text" id="name" name="name" value={formData.name} onChange={handleFieldChange} required />
                     </div>
                 </div>
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="location">Location</label>
-                        <input type="text" id="location" name="location" value={formData.location} onChange={handleFieldChange} required />
+               {!data&&<div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" value={formData.email} onChange={handleFieldChange} required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="phone">Phone</label>
@@ -309,8 +312,12 @@ const AddEditTherapistForm = () => {
                             title="Please enter a 10-digit phone number"
                             required />
                     </div>
-                </div>
+                </div>}
                 <div className="form-row">
+                <div className="form-group">
+                        <label htmlFor="location">Location</label>
+                        <input type="text" id="location" name="location" value={formData.location} onChange={handleFieldChange} required />
+                    </div>
                     <div className="form-group">
                         <label htmlFor="centerId">Center</label>
                         <select id="centerId" name="centerId" value={formData.centerId} onChange={handleFieldChange} required>
@@ -320,39 +327,7 @@ const AddEditTherapistForm = () => {
                             ))}
                         </select>
                     </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleFieldChange} required />
-                    </div>
                 </div>
-                <div>
-                    <Typography id="modal-modal-description" sx={{ mb: 1 }}>
-                        Choose Product
-                    </Typography>
-                    <Autocomplete
-                        sx={{ width: '100%' }}
-                        onChange={handleAutocompleteChange}
-                        multiple
-                        id="checkboxes-tags-demo"
-                        options={productList}
-                        disableCloseOnSelect
-                        getOptionLabel={(option) => option.title}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    icon={icon}
-                                    checkedIcon={checkedIcon}
-                                    style={{ marginRight: 8 }}
-                                    checked={selected}
-                                />
-                                {option.title}
-                            </li>
-                        )}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </div>
-                <br />
                 <div class="rockstar">
                     <label for="female">Gender:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
@@ -363,6 +338,34 @@ const AddEditTherapistForm = () => {
                         <input type="radio" name="gender" required value="Female" style={{ width: "35px" }} />&nbsp;&nbsp;
                         <label for="male">Male</label>
                     </div>
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="choose-product">Choose Product</label>
+                    {/* <Typography id="modal-modal-description" sx={{ mb: 1 }}>
+                        Choose Product
+                    </Typography> */}
+                    <Autocomplete
+                        sx={{ width: '100%' }}
+                        onChange={handleAutocompleteChange}
+                        multiple
+                        id="checkboxes-tags-demo"
+                        options={productList.filter((item=>item.gender===formData.gender.toLocaleLowerCase()))}
+                        disableCloseOnSelect
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={icon}
+                                    checkedIcon={checkedIcon}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {option.name}
+                            </li>
+                        )}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
                 </div>
                 <br />
                 <div class="rockstar">
@@ -431,7 +434,7 @@ const AddEditTherapistForm = () => {
                 <button
                     className="add-edit-button"
                     type="submit"
-                    disabled={isSubmitting}
+                    // disabled={isSubmitting}
                     style={{
                         background: isSubmitting ? 'gray' : '#007bff',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer'

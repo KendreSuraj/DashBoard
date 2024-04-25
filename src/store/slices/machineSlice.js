@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchMachine,fetchMachineRecord } from "../actions/machine.action";
+import { fetchMachine,fetchMachineRecord ,fetchProducts} from "../actions/machine.action";
 
 const initialState = {
     machineList: [],
     machineRecord:[],
+    productList:[],
     isLoading: false,
     error: null,
 };
@@ -34,6 +35,18 @@ const machineSlice = createSlice({
             state.machineRecord = action.payload;
         });
         builder.addCase(fetchMachineRecord.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
+
+        builder.addCase(fetchProducts.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(fetchProducts.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.productList = action.payload;
+        });
+        builder.addCase(fetchProducts.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
         });
