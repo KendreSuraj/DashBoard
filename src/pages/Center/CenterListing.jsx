@@ -22,6 +22,9 @@ const CenterListing = () => {
       'City Id': data.cityId,
       'Start Time':data?.timings?.startTime,
       'End Time':data?.timings?.endTime,
+       'Address':data?.location,
+       'lat':data?.lat,
+       'long':data?.long
     };
   });
   

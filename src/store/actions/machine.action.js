@@ -62,7 +62,7 @@ export const fetchProducts = createAsyncThunk('machine/products', async (id, { r
   try {
     const res = await axios.get(`${apiUrl}/api/v1/misc/get-products`);
     console.log("--======", res)
-    return res?.data?.productList[0];
+    return res?.data?.productList;
   } catch (error) {
     console.error('Error in fetchMachine:', error);
     return rejectWithValue('Failed to fetch Machines. Please try again later.');

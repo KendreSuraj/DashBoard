@@ -28,6 +28,9 @@ const AddEditCenterForm = () => {
         adminUserId: '',
         adminName: '',
         adminPhone: '',
+        location:'',
+        lat:'',
+        long:''
     });
     console.log("Hii----->>>>>", formData)
 
@@ -43,7 +46,10 @@ const AddEditCenterForm = () => {
                 },
                 adminUserId: data?.['Admin User Id'],
                 adminName: data?.['Admin Name'],
-                adminPhone: data?.['Admin Phone']
+                adminPhone: data?.['Admin Phone'],
+                location:data?.["Address"],
+                lat:data?.["lat"],
+                long:data?.["long"]
             }));
         }
     }, [data]);
@@ -124,6 +130,25 @@ const AddEditCenterForm = () => {
                             required />
                     </div>
                 </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="location">Center Address</label>
+                        <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} required />
+                    </div>
+                    
+                </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="lat">Center Lat</label>
+                        <input type="text" id="lat" name="lat" value={formData.lat} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="long">Center Long</label>
+                        <input  name="long" value={formData.long} onChange={handleChange}
+                            required />
+                    </div>
+                </div>
+
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="startTime">Center Start Time</label>

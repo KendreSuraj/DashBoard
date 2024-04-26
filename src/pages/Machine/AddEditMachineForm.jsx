@@ -11,7 +11,6 @@ import TableComponent from '../../components/common/TableComponent/TableComponen
 import { UpdateMachine, addMachine, fetchMachineRecord, fetchProducts } from '../../store/actions/machine.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
-import { fetchProductList } from '../../store/actions/booking.action';
 import { Button } from 'react-bootstrap';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -20,7 +19,6 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const AddEditMachineForm = () => {
     const dispatch = useDispatch()
     let centerList = useSelector(state => state.center?.centerList?.centers)
-    // const productList = useSelector((state) => state.booking.productList);
     const productList = useSelector((state) => state.machine?.productList);
     const machineRecord=useSelector(state=>state?.machine?.machineRecord)
     const formattedMachineRecord = machineRecord.map(({ startDate, endDate, ...rest }) => ({
@@ -31,9 +29,10 @@ const AddEditMachineForm = () => {
     console.log("see machine recoerd",formattedMachineRecord)
     useEffect(() => {
         dispatch(fetchCenter())
-        dispatch(fetchProductList());
-        dispatch(fetchMachineRecord(data?.id))
         dispatch(fetchProducts())
+        if(data?.id){
+            dispatch(fetchMachineRecord(data?.id))
+        }
     }, [dispatch])
 
     const navigate = useNavigate()
@@ -334,6 +333,7 @@ const AddEditMachineForm = () => {
                                         step="3600"
                                         name="endTime"
                                         value={availability.endTime}
+                                        min={availability.startTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
                                     />
