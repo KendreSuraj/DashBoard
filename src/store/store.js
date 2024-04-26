@@ -9,6 +9,9 @@ import couponSlice from './slices/couponSlice'
 import VirtualConsultationsSlice from './slices/VirtualConsulationsSlice';
 import usersSlice from './slices/usersSlice';
 import faqSlice from './slices/faqSlice';
+import centerSlice from './slices/centerSlice';
+import machineSlice from './slices/machineSlice';
+import therapistSlice from './slices/therapistSlice';
 
 const store = configureStore({
   reducer: {
@@ -22,6 +25,9 @@ const store = configureStore({
     users: usersSlice,
     VirtualConsultation: VirtualConsultationsSlice,
     faq: faqSlice,
+    center:centerSlice,
+    machine:machineSlice,
+    therapist:therapistSlice
   },
 });
 export default store;
