@@ -49,7 +49,8 @@ const AddEditCenterForm = () => {
                 adminPhone: data?.['Admin Phone'],
                 location:data?.["Address"],
                 lat:data?.["lat"],
-                long:data?.["long"]
+                long:data?.["long"],
+                cityId:data?.["City Id"]
             }));
         }
     }, [data]);

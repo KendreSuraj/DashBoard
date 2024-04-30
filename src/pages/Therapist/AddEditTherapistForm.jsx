@@ -22,19 +22,19 @@ const AddEditTherapistForm = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const data = location?.state?.data;
-    // const productList = useSelector((state) => state.booking.productList);
+    console.log("see comming data",data)
+    const id = data?.id
     const centerList = useSelector(state => state.center?.centerList?.centers)
     const therapistRecord = useSelector(state => state?.therapist?.therapistRecord)
     const productList = useSelector((state) => state.machine?.productList);
-    console.log("see product lsit--->>>>>>>>",productList)
     const formattedTherapistRecord = therapistRecord.map(({ startDate, endDate, ...rest }) => ({
         ...rest,
         startDate: new Date(startDate).toLocaleDateString('en-GB'),
         endDate: new Date(endDate).toLocaleDateString('en-GB')
     }));
-    
+
     console.log(formattedTherapistRecord);
-    
+
     useEffect(() => {
         dispatch(fetchProductList())
         dispatch(fetchCenter())
@@ -51,8 +51,8 @@ const AddEditTherapistForm = () => {
         location: '',
         products: [],
         email: '',
-        isRockStar: false,
-        gender: '',
+        isRockstar: false,
+        gender: 'Female',
         weekendOff: '',
         schedule: {
             Monday: { startTime: '', endTime: '' },
@@ -64,7 +64,7 @@ const AddEditTherapistForm = () => {
             Sunday: { startTime: '', endTime: '' },
         },
     });
-console.log("see form data ---->>>>>>>.",formData)
+    console.log("see form data ---->>>>>>>.", formData)
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e, day) => {
@@ -81,13 +81,64 @@ console.log("see form data ---->>>>>>>.",formData)
         }));
     };
 
+    // const handleFieldChange = (e) => {
+    //     const { name, value } = e.target;
+    //     if(name==="weekendOff"){
+    //         setFormData(prevData=>({
+    //             ...prevData,
+    //               schedule[value]:[]
+    //         }))
+    //     }
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         [name]: value,
+    //     }));
+    // };
+    // const handleFieldChange = (e) => {
+    //     const { name, value } = e.target;
+    //     if (name === "weekendOff") {
+    //         setFormData(prevData => ({
+    //             ...prevData,
+    //             schedule: {
+    //                 ...prevData.schedule,
+    //                 [value]: { startTime: 'WEEK_OFF', endTime: 'WEEK_OFF' }
+    //             },
+    //             [name]: value
+    //         }));
+    //     } else {
+    //         setFormData(prevData => ({
+    //             ...prevData,
+    //             [name]: value,
+    //         }));
+    //     }
+    // };
+
     const handleFieldChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value,
-        }));
+        if (name === "weekendOff") {
+            setFormData(prevData => {
+                const updatedSchedule = { ...prevData.schedule };
+                const previousWeekendOff = Object.keys(updatedSchedule).find(day => updatedSchedule[day].startTime === 'WEEK_OFF' && updatedSchedule[day].endTime === 'WEEK_OFF');
+                if (previousWeekendOff) {
+                    updatedSchedule[previousWeekendOff] = { startTime: '', endTime: '' };
+                }
+                return {
+                    ...prevData,
+                    schedule: {
+                        ...updatedSchedule,
+                        [value]: { startTime: 'WEEK_OFF', endTime: 'WEEK_OFF' }
+                    },
+                    [name]: value
+                };
+            });
+        } else {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
+    
 
     const handleCopyTime = (e) => {
         const isChecked = e.target.checked;
@@ -118,15 +169,16 @@ console.log("see form data ---->>>>>>>.",formData)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        const isRockstarBoolean = formData.isRockstar === 'true';
         const addBody = {
             name: formData?.name,
             employeeId: formData.employeeId,
-            centerId: parseInt(1),
+            centerId: parseInt(formData?.centerId),
             phone: formData?.phone,
-            location: formData.location,
+            // location: formData.location,
             email: formData.email,
-            // isRockstar: formData.isRockStar,
-            isRockstar: false,
+            // isRockstar: formData.isRockstar,
+            isRockstar: isRockstarBoolean,
             gender: formData.gender,
             // weekendOff: formData.weekendOff,
             products: JSON.stringify(formData.products),
@@ -163,8 +215,8 @@ console.log("see form data ---->>>>>>>.",formData)
         const upadteBody = {
             name: formData?.name,
             employeeId: formData.employeeId,
-            centerId: parseInt(1),
-            location: formData.location,
+            centerId: parseInt(formData.centerId),
+            // location: formData.location,
             products: JSON.stringify(formData.products),
             isRockstar: true,
             gender: formData.gender,
@@ -198,29 +250,21 @@ console.log("see form data ---->>>>>>>.",formData)
                 endTime: formData?.schedule?.Sunday?.endTime
             },
         }
-        console.log("see add body data  body--->>>>", addBody)
         const res = data ? await UpdateTherapist(data?.id, upadteBody) : await addTherapist(addBody)
         if (res?.status === 200) {
             alert(res.data.status?.message)
             navigate("/therapistlist")
         }
     };
-    console.log("Testing form data--->>>>>", formData);
 
-    const handleAutocompleteChange = (event, value) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            products: value.map(option => option.id),
-        }));
-    };
-    console.log("see products list---->>>>", productList)
+    // const handleAutocompleteChange = (event, value) => {
+    //     setFormData((prevData) => ({
+    //         ...prevData,
+    //         products: value.map(option => option.id),
+    //     }));
+    // };
     useEffect(() => {
         if (!data) return;
-        const mapAvailability = dayAvailability =>
-            dayAvailability.map(slot => ({
-                startTime: slot.startTime,
-                endTime: slot.endTime
-            }));
         const {
             employeeId,
             name,
@@ -230,7 +274,7 @@ console.log("see form data ---->>>>>>>.",formData)
             location,
             products,
             email,
-            // isRockStar,
+            isRockstar,
             gender,
             mondayAvailability,
             tuesdayAvailability,
@@ -244,46 +288,64 @@ console.log("see form data ---->>>>>>>.",formData)
             ...prevData,
             employeeId,
             name,
-            centerId,
+            centerId: parseInt(centerId),
             phone,
             center,
-            location,
-            products,
+            products: products?.replace(/'/g, '"'),
             email,
-            // isRockStar,
+            isRockstar,
             gender,
             schedule: {
                 Monday: {
-                    startTime: mondayAvailability[0].startTime,
-                    endTime: mondayAvailability[mondayAvailability.length - 1].endTime
+                    startTime: mondayAvailability[0]?.startTime ||"WEEK_OFF",
+                    endTime: mondayAvailability[mondayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Tuesday: {
-                    startTime: tuesdayAvailability[0].startTime,
-                    endTime: tuesdayAvailability[tuesdayAvailability.length - 1].endTime
+                    startTime: tuesdayAvailability[0]?.startTime ||"WEEK_OFF",
+                    endTime: tuesdayAvailability[tuesdayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Wednesday: {
-                    startTime: wednesdayAvailability[0].startTime,
-                    endTime: wednesdayAvailability[wednesdayAvailability.length - 1].endTime
+                    startTime: wednesdayAvailability[0]?.startTime||"WEEK_OFF",
+                    endTime: wednesdayAvailability[wednesdayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Thursday: {
-                    startTime: thursdayAvailability[0].startTime,
-                    endTime: thursdayAvailability[thursdayAvailability.length - 1].endTime
+                    startTime: thursdayAvailability[0]?.startTime||"WEEK_OFF",
+                    endTime: thursdayAvailability[thursdayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Friday: {
-                    startTime: fridayAvailability[0].startTime,
-                    endTime: fridayAvailability[fridayAvailability.length - 1].endTime
+                    startTime: fridayAvailability[0]?.startTime||"WEEK_OFF",
+                    endTime: fridayAvailability[fridayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Saturday: {
-                    startTime: saturdayAvailability[0].startTime,
-                    endTime: saturdayAvailability[saturdayAvailability.length - 1].endTime
+                    startTime: saturdayAvailability[0]?.startTime||"WEEK_OFF",
+                    endTime: saturdayAvailability[saturdayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 },
                 Sunday: {
-                    startTime: sundayAvailability[0].startTime,
-                    endTime: sundayAvailability[sundayAvailability.length - 1].endTime
+                    startTime: sundayAvailability[0]?.startTime||"WEEK_OFF",
+                    endTime: sundayAvailability[sundayAvailability.length - 1]?.endTime||"WEEK_OFF"
                 }
             },
         }))
     }, [data])
+
+    const [selected, setSelected] = useState([]);
+
+    useEffect(() => {
+        if (id) {
+            setSelected(productList.filter(item => formData.products.includes(item.id)));
+        }
+    }, [id, formData.products, productList]);
+    const handleAutocompleteChange = (event, value) => {
+        setSelected(value);
+        setFormData(prevData => ({
+            ...prevData,
+            products: value.map(option => option.id),
+        }));
+    };
+
+    const handleOption = () => {
+        return productList.filter(item => item.gender === formData.gender.toLowerCase());
+    };
 
     return (
         <div className="add-edit-partner-form">
@@ -300,8 +362,8 @@ console.log("see form data ---->>>>>>>.",formData)
                         <input type="text" id="name" name="name" value={formData.name} onChange={handleFieldChange} required />
                     </div>
                 </div>
-               {!data&&<div className="form-row">
-                      <div className="form-group">
+                {!data && <div className="form-row">
+                    <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input type="email" id="email" name="email" value={formData.email} onChange={handleFieldChange} required />
                     </div>
@@ -314,34 +376,34 @@ console.log("see form data ---->>>>>>>.",formData)
                     </div>
                 </div>}
                 <div className="form-row">
-                <div className="form-group">
+                    {/* <div className="form-group">
                         <label htmlFor="location">Location</label>
                         <input type="text" id="location" name="location" value={formData.location} onChange={handleFieldChange} required />
-                    </div>
+                    </div> */}
                     <div className="form-group">
                         <label htmlFor="centerId">Center</label>
                         <select id="centerId" name="centerId" value={formData.centerId} onChange={handleFieldChange} required>
                             <option value="">Select Center</option>
                             {centerList?.map(center => (
-                                <option key={center.id} value={center.name}>{center.name}</option>
+                                <option key={center.id} value={center.id}>{center.name}</option>
                             ))}
                         </select>
                     </div>
                 </div>
                 <div class="rockstar">
-                    <label for="female">Gender:</label>
+                    <label for="gender">Gender:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="gender" required value="Male" style={{ width: "35px" }} />&nbsp;&nbsp;
+                        <input type="radio" name="gender" required value="Female" style={{ width: "35px" }} checked={formData.gender === "Female"} />&nbsp;&nbsp;
                         <label for="female">Female</label>
                     </div>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="gender" required value="Female" style={{ width: "35px" }} />&nbsp;&nbsp;
+                        <input type="radio" name="gender" required value="Male" style={{ width: "35px" }} checked={formData.gender === "Male"} />&nbsp;&nbsp;
                         <label for="male">Male</label>
                     </div>
                 </div>
                 <br />
                 <div>
-                  <label htmlFor="choose-product">Choose Product</label>
+                    <label htmlFor="choose-product">Choose Product</label>
                     {/* <Typography id="modal-modal-description" sx={{ mb: 1 }}>
                         Choose Product
                     </Typography> */}
@@ -350,7 +412,9 @@ console.log("see form data ---->>>>>>>.",formData)
                         onChange={handleAutocompleteChange}
                         multiple
                         id="checkboxes-tags-demo"
-                        options={productList.filter((item=>item.gender===formData.gender.toLocaleLowerCase()))}
+                        // options={productList.filter((item => item.gender === formData.gender.toLocaleLowerCase()))}
+                        value={selected}
+                        options={handleOption()}
                         disableCloseOnSelect
                         getOptionLabel={(option) => option.name}
                         renderOption={(props, option, { selected }) => (
@@ -371,11 +435,11 @@ console.log("see form data ---->>>>>>>.",formData)
                 <div class="rockstar">
                     <label for="yes">Is Rockstar:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="isRockStar" required value="yes" style={{ width: "35px" }} />&nbsp;&nbsp;
+                        <input type="radio" name="isRockstar" required value="ture" style={{ width: "35px" }} checked={formData?.isRockstar} />&nbsp;&nbsp;
                         <label for="yes">Yes</label>
                     </div>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="isRockStar" required value="no" style={{ width: "35px" }} />&nbsp;&nbsp;
+                        <input type="radio" name="isRockstar" required value="false" style={{ width: "35px" }} checked={formData?.isRockstar === false || formData?.isRockstar === "false"} />&nbsp;&nbsp;
                         <label for="no">No</label>
                     </div>
                 </div>
@@ -402,7 +466,8 @@ console.log("see form data ---->>>>>>>.",formData)
                                         type="time"
                                         step="3600"
                                         name="startTime"
-                                        value={formData.schedule[day].startTime}
+                                        disabled={(id && formData.schedule[day].startTime==="WEEK_OFF") || (day === formData.weekendOff)}
+                                        value={!(day === formData.weekendOff) && formData.schedule[day].startTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
                                     />
@@ -412,13 +477,15 @@ console.log("see form data ---->>>>>>>.",formData)
                                         type="time"
                                         step="3600"
                                         name="endTime"
-                                        value={formData.schedule[day].endTime}
+                                        disabled={(id && formData.schedule[day].endTime==="WEEK_OFF") || (day === formData.weekendOff)}
+                                        value={!(day === formData.weekendOff) && formData.schedule[day].endTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
                                     />
                                 </td>
                                 <td>
                                     <input
+                                        checked={(id && formData.schedule[day].endTime==="WEEK_OFF") || (day === formData.weekendOff)}
                                         type="radio"
                                         name="weekendOff"
                                         value={day}
@@ -446,7 +513,7 @@ console.log("see form data ---->>>>>>>.",formData)
 
             {data && <div>
                 <h3>Therapist Previous Record</h3>
-                <TableComponent data={formattedTherapistRecord} hiddenFields={["createdAt","updatedAt","extra","deletedAt","id"]} />
+                <TableComponent data={formattedTherapistRecord} hiddenFields={["createdAt", "updatedAt", "extra", "deletedAt", "id"]} />
             </div>}
         </div>
     );

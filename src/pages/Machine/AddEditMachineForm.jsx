@@ -18,6 +18,8 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const AddEditMachineForm = () => {
     const dispatch = useDispatch()
+    const location = useLocation();
+    const data = location?.state?.data;
     let centerList = useSelector(state => state.center?.centerList?.centers)
     const productList = useSelector((state) => state.machine?.productList);
     const machineRecord=useSelector(state=>state?.machine?.machineRecord)
@@ -27,6 +29,7 @@ const AddEditMachineForm = () => {
         endDate: new Date(endDate).toLocaleDateString('en-GB')
     }));
     console.log("see machine recoerd",formattedMachineRecord)
+    const id = data?.id
     useEffect(() => {
         dispatch(fetchCenter())
         dispatch(fetchProducts())
@@ -36,8 +39,7 @@ const AddEditMachineForm = () => {
     }, [dispatch])
 
     const navigate = useNavigate()
-    const location = useLocation();
-    const data = location?.state?.data;
+    const [selected, setSelected] = useState([]);
     console.log("Hii data---->>>>", data)
     const [formData, setFormData] = useState({
         name: '',
@@ -149,23 +151,16 @@ const AddEditMachineForm = () => {
         }
     };
 
-    const handleAutocompleteChange = (event, value) => {
-        setFormData(prevData => ({
-            ...prevData,
-            products: value.map(option => option.id),
-        }));
-    };
-
+    // const handleAutocompleteChange = (event, value) => {
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         products: value.map(option => option.id),
+    //     }));
+    // };
+console.log("see data--->>>>>>",data)
 
     useEffect(() => {
         if (!data) return;
-
-        const mapAvailability = dayAvailability =>
-            dayAvailability.map(slot => ({
-                startTime: slot.startTime,
-                endTime: slot.endTime
-            }));
-
         const {
             name,
             centerId = 1,
@@ -176,7 +171,8 @@ const AddEditMachineForm = () => {
             thursdayAvailability,
             fridayAvailability,
             saturdayAvailability,
-            sundayAvailability
+            sundayAvailability,
+            products
         } = data;
 
         setFormData(prevData => ({
@@ -184,6 +180,7 @@ const AddEditMachineForm = () => {
             name,
             centerId,
             uniqueMachineCode,
+            products: products?.replace(/'/g, '"'),
             machineAvailability: {
                 Monday: {
                     startTime: mondayAvailability[0].startTime,
@@ -244,6 +241,19 @@ const AddEditMachineForm = () => {
             }));
         }
     };
+
+    useEffect(() => {
+        if (id) {
+            setSelected(productList.filter(item => formData.products?.includes(item.id)));
+        }
+    }, [id, formData.products, productList]);
+    const handleAutocompleteChange = (event, value) => {
+        setSelected(value);
+        setFormData(prevData => ({
+            ...prevData,
+            products: value.map(option => option.id),
+        }));
+    };
     return (
         <div className="add-edit-machine-form">
             <h3>{data ? "Update Machine" : "Add Machine"}</h3>
@@ -281,6 +291,7 @@ const AddEditMachineForm = () => {
                         multiple
                         id="checkboxes-tags-demo"
                         options={productList}
+                        value={selected}
                         disableCloseOnSelect
                         getOptionLabel={(option) => option.name+"-"+[option.gender]}
                         renderOption={(props, option, { selected }) => (
