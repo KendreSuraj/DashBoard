@@ -12,7 +12,6 @@ const AddEditCenterForm = () => {
     const  adminList = useSelector(state => state.center?.adminList)
     const data = location?.state?.data?.data;
     const id = data?.Id;
-    console.log('Testing center---data ---- ', data);
     useEffect(() => {
         dispatch(fetchCity())
         dispatch(fetchAdmin())
@@ -32,8 +31,6 @@ const AddEditCenterForm = () => {
         lat:'',
         long:''
     });
-    console.log("Hii----->>>>>", formData)
-
     useEffect(() => {
         if (data) {
             setFormData(prevData => ({

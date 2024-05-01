@@ -32,16 +32,9 @@ const AddEditTherapistForm = () => {
         startDate: new Date(startDate).toLocaleDateString('en-GB'),
         endDate: new Date(endDate).toLocaleDateString('en-GB')
     }));
-
-    console.log(formattedTherapistRecord);
-
-    useEffect(() => {
-        dispatch(fetchProductList())
-        dispatch(fetchCenter())
-        dispatch(fetchTherapistRecord(data?.id))
-        dispatch(fetchProducts())
-    }, [dispatch])
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selected, setSelected] = useState([]);
+   
     const [formData, setFormData] = useState({
         employeeId: '',
         name: '',
@@ -64,8 +57,7 @@ const AddEditTherapistForm = () => {
             Sunday: { startTime: '', endTime: '' },
         },
     });
-    console.log("see form data ---->>>>>>>.", formData)
-    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const handleChange = (e, day) => {
         const { name, value } = e.target;
@@ -80,6 +72,8 @@ const AddEditTherapistForm = () => {
             },
         }));
     };
+
+
 
     // const handleFieldChange = (e) => {
     //     const { name, value } = e.target;
@@ -175,12 +169,9 @@ const AddEditTherapistForm = () => {
             employeeId: formData.employeeId,
             centerId: parseInt(formData?.centerId),
             phone: formData?.phone,
-            // location: formData.location,
             email: formData.email,
-            // isRockstar: formData.isRockstar,
             isRockstar: isRockstarBoolean,
             gender: formData.gender,
-            // weekendOff: formData.weekendOff,
             products: JSON.stringify(formData.products),
             mondayAvailability: {
                 startTime: formData?.schedule?.Monday?.startTime,
@@ -216,11 +207,9 @@ const AddEditTherapistForm = () => {
             name: formData?.name,
             employeeId: formData.employeeId,
             centerId: parseInt(formData.centerId),
-            // location: formData.location,
             products: JSON.stringify(formData.products),
             isRockstar: true,
             gender: formData.gender,
-            // weekendOff: formData.weekendOff,
             mondayAvailability: {
                 startTime: formData?.schedule?.Monday?.startTime,
                 endTime: formData?.schedule?.Monday?.endTime
@@ -255,6 +244,10 @@ const AddEditTherapistForm = () => {
             alert(res.data.status?.message)
             navigate("/therapistlist")
         }
+    };
+
+    const handleOption = () => {
+        return productList.filter(item => item.gender === formData.gender.toLowerCase());
     };
 
     // const handleAutocompleteChange = (event, value) => {
@@ -328,13 +321,6 @@ const AddEditTherapistForm = () => {
         }))
     }, [data])
 
-    const [selected, setSelected] = useState([]);
-
-    useEffect(() => {
-        if (id) {
-            setSelected(productList.filter(item => formData.products.includes(item.id)));
-        }
-    }, [id, formData.products, productList]);
     const handleAutocompleteChange = (event, value) => {
         setSelected(value);
         setFormData(prevData => ({
@@ -342,10 +328,23 @@ const AddEditTherapistForm = () => {
             products: value.map(option => option.id),
         }));
     };
+   
 
-    const handleOption = () => {
-        return productList.filter(item => item.gender === formData.gender.toLowerCase());
-    };
+    useEffect(() => {
+        if (id) {
+            setSelected(productList.filter(item => formData.products.includes(item.id)));
+        }
+    }, [id, formData.products, productList]);
+
+  
+    useEffect(() => {
+        dispatch(fetchProductList())
+        dispatch(fetchCenter())
+        dispatch(fetchTherapistRecord(data?.id))
+        dispatch(fetchProducts())
+    }, [dispatch,id])
+
+ 
 
     return (
         <div className="add-edit-partner-form">

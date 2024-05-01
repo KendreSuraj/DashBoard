@@ -9,7 +9,6 @@ export const fetchMachine = createAsyncThunk('machine', async (_, { rejectWithVa
     const res = await axios.get(`${apiUrl}/api/v1/machine/get-all-machines`);
     return res?.data;
   } catch (error) {
-    console.error('Error in fetchMachine:', error);
     return rejectWithValue('Failed to fetch Machines. Please try again later.');
   }
 });
@@ -17,7 +16,6 @@ export const fetchMachine = createAsyncThunk('machine', async (_, { rejectWithVa
 export const addMachine = async (data) => {
   try {
     const res = await axios.post(`${apiUrl}/api/v1/machine/add-machine`, data);
-    console.log("Center added successfully!---->>>>", res);
     return res;
   } catch (error) {
     console.error("Error adding center:", error);
@@ -33,6 +31,7 @@ export const UpdateMachine = async (id, data) => {
     return res;
   } catch (error) {
     console.error("Error adding center:", error);
+    return error;
   }
 }
 
@@ -42,6 +41,7 @@ export const addMachineRequest = async (data) => {
     return res;
   } catch (error) {
     console.error("Error adding center:", error);
+    return error;
   }
 }
 
@@ -51,7 +51,6 @@ export const fetchMachineRecord = createAsyncThunk('machine/record', async (id, 
     const res = await axios.get(`${apiUrl}/api/v1/custom-machine-slot/get-machine-custom-slots/${id}`);
     return res?.data?.slotDetails;
   } catch (error) {
-    console.error('Error in fetchMachine:', error);
     return rejectWithValue('Failed to fetch Machines. Please try again later.');
   }
 });
@@ -61,10 +60,8 @@ export const fetchMachineRecord = createAsyncThunk('machine/record', async (id, 
 export const fetchProducts = createAsyncThunk('machine/products', async (id, { rejectWithValue }) => {
   try {
     const res = await axios.get(`${apiUrl}/api/v1/misc/get-products`);
-    console.log("--======", res)
     return res?.data?.productList;
   } catch (error) {
-    console.error('Error in fetchMachine:', error);
     return rejectWithValue('Failed to fetch Machines. Please try again later.');
   }
 });

@@ -19,7 +19,9 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const AddEditMachineForm = () => {
     const dispatch = useDispatch()
     const location = useLocation();
+    const navigate = useNavigate()
     const data = location?.state?.data;
+    const id = data?.id
     let centerList = useSelector(state => state.center?.centerList?.centers)
     const productList = useSelector((state) => state.machine?.productList);
     const machineRecord=useSelector(state=>state?.machine?.machineRecord)
@@ -28,18 +30,8 @@ const AddEditMachineForm = () => {
         startDate: new Date(startDate).toLocaleDateString('en-GB'),
         endDate: new Date(endDate).toLocaleDateString('en-GB')
     }));
-    console.log("see machine recoerd",formattedMachineRecord)
-    const id = data?.id
-    useEffect(() => {
-        dispatch(fetchCenter())
-        dispatch(fetchProducts())
-        if(data?.id){
-            dispatch(fetchMachineRecord(data?.id))
-        }
-    }, [dispatch])
-
-    const navigate = useNavigate()
     const [selected, setSelected] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     console.log("Hii data---->>>>", data)
     const [formData, setFormData] = useState({
         name: '',
@@ -56,8 +48,13 @@ const AddEditMachineForm = () => {
         },
         products: [],
     });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
+    useEffect(() => {
+        dispatch(fetchCenter())
+        dispatch(fetchProducts())
+        if(data?.id){
+            dispatch(fetchMachineRecord(data?.id))
+        }
+    }, [dispatch,id])
     const handleChange = (e, day) => {
         const { name, value } = e.target;
         setFormData(prevData => ({
@@ -80,7 +77,6 @@ const AddEditMachineForm = () => {
             centerId: formData.centerId,
             uniqueMachineCode: formData.uniqueMachineCode,
             products: JSON.stringify(formData.products),
-            // machineAvailability: formData.machineAvailability,
             mondayAvailability: {
                 startTime: formData?.machineAvailability?.Monday?.startTime,
                 endTime: formData?.machineAvailability?.Monday?.endTime
@@ -114,7 +110,6 @@ const AddEditMachineForm = () => {
             name: formData.name,
             centerId: formData.centerId,
             products: JSON.stringify(formData.products),
-            // machineAvailability: formData.machineAvailability,
             mondayAvailability: {
                 startTime: formData?.machineAvailability?.Monday?.startTime,
                 endTime: formData?.machineAvailability?.Monday?.endTime
@@ -157,7 +152,6 @@ const AddEditMachineForm = () => {
     //         products: value.map(option => option.id),
     //     }));
     // };
-console.log("see data--->>>>>>",data)
 
     useEffect(() => {
         if (!data) return;
