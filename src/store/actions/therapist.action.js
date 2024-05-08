@@ -14,57 +14,81 @@ export const fetchTherapist = createAsyncThunk('therapist', async (_, { rejectWi
 
 
 export const addTherapist = async (data) => {
-    try {
-      const res = await axios.post(`${apiUrl}/api/v1/therapist/add-therapist`, data);
-      return res;
-    } catch (error) {
-      return error;
-    }
-  
-  };
-
-  export const fetchTherapistCustomslots = createAsyncThunk('therapist-custom-slot', async (_, { rejectWithValue }) => {
-    try {
-      const res = await axios.get(`${apiUrl}/api/v1/custom-therapist-slot/get-all-therapist-custom-slots`);
-      return res?.data;
-    } catch (error) {
-      return rejectWithValue('Failed to fetch Centers. Please try again later.');
-    }
-  });
-
-
-  export const UpdateTherapist = async (id, data) => {
-    try {
-      const res = await axios.put(`${apiUrl}/api/v1/therapist/update-therapist/${id}`, data);
-      return res;
-    } catch (error) {
-      console.error("Error adding center:", error);
-    }
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/therapist/add-therapist`, data);
+    return res;
+  } catch (error) {
+    return error;
   }
 
+};
 
-
-
-  export const updateCustomTherapistSlot  = async (id, data) => {
-    console.log("see daata-------->>>>>>", id)
-    try {
-      const res = await axios.put(`${apiUrl}/api/v1/custom-therapist-slot/update-therapist-custom-slot/${id}`,data);
-      console.log("Center added successfully!---->>>>", res);
-      return res;
-    } catch (error) {
-      console.error("Error adding center:", error);
-    }
+export const fetchTherapistCustomslots = createAsyncThunk('therapist-custom-slot', async (_, { rejectWithValue }) => {
+  try {
+    const res = await axios.get(`${apiUrl}/api/v1/custom-therapist-slot/get-all-therapist-custom-slots`);
+    return res?.data;
+  } catch (error) {
+    return rejectWithValue('Failed to fetch Centers. Please try again later.');
   }
+});
 
-  export const fetchTherapistRecord = createAsyncThunk('therapist/record', async (therapistId, { rejectWithValue }) => {
-    console.log("see id for record-->>",therapistId)
-    try {
-      const res = await axios.get(`${apiUrl}/api/v1/custom-therapist-slot/get-therapist-custom-slots/${therapistId}`);
-      console.log("--======",res)
-      return res?.data?.slotDetails;
-    } catch (error) {
-      console.error('Error in fetchMachine:', error);
-      return rejectWithValue('Failed to fetch Machines. Please try again later.');
-    }
-  });
-  
+
+export const UpdateTherapist = async (id, data) => {
+  try {
+    const res = await axios.put(`${apiUrl}/api/v1/therapist/update-therapist/${id}`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+
+
+export const updateCustomTherapistSlot = async (id, data) => {
+  try {
+    const res = await axios.put(`${apiUrl}/api/v1/custom-therapist-slot/update-therapist-custom-slot/${id}`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+export const fetchTherapistRecord = createAsyncThunk('therapist/record', async (therapistId, { rejectWithValue }) => {
+  try {
+    const res = await axios.get(`${apiUrl}/api/v1/custom-therapist-slot/get-therapist-custom-slots/${therapistId}`);
+    return res?.data?.slotDetails;
+  } catch (error) {
+    return rejectWithValue('Failed to fetch Machines. Please try again later.');
+  }
+});
+
+
+export const fetchAvailableTherapist = createAsyncThunk('available/therapist', async (body, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/candidate-therapist-list`, body);
+    return res?.data?.therapistList
+      ;
+  } catch (error) {
+    return rejectWithValue('Failed to available fetch Therapists. Please try again later.');
+  }
+});
+
+export const reAllocateTherapist = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/allot-therapist`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+export const manualTherapistAllocation = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/manual-therapist-allot`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

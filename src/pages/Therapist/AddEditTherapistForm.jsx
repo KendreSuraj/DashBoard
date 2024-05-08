@@ -22,7 +22,6 @@ const AddEditTherapistForm = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const data = location?.state?.data;
-    console.log("see comming data",data)
     const id = data?.id
     const centerList = useSelector(state => state.center?.centerList?.centers)
     const therapistRecord = useSelector(state => state?.therapist?.therapistRecord)
@@ -58,7 +57,6 @@ const AddEditTherapistForm = () => {
         },
     });
 
-
     const handleChange = (e, day) => {
         const { name, value } = e.target;
         setFormData(prevData => ({
@@ -72,40 +70,6 @@ const AddEditTherapistForm = () => {
             },
         }));
     };
-
-
-
-    // const handleFieldChange = (e) => {
-    //     const { name, value } = e.target;
-    //     if(name==="weekendOff"){
-    //         setFormData(prevData=>({
-    //             ...prevData,
-    //               schedule[value]:[]
-    //         }))
-    //     }
-    //     setFormData(prevData => ({
-    //         ...prevData,
-    //         [name]: value,
-    //     }));
-    // };
-    // const handleFieldChange = (e) => {
-    //     const { name, value } = e.target;
-    //     if (name === "weekendOff") {
-    //         setFormData(prevData => ({
-    //             ...prevData,
-    //             schedule: {
-    //                 ...prevData.schedule,
-    //                 [value]: { startTime: 'WEEK_OFF', endTime: 'WEEK_OFF' }
-    //             },
-    //             [name]: value
-    //         }));
-    //     } else {
-    //         setFormData(prevData => ({
-    //             ...prevData,
-    //             [name]: value,
-    //         }));
-    //     }
-    // };
 
     const handleFieldChange = (e) => {
         const { name, value } = e.target;
@@ -126,13 +90,19 @@ const AddEditTherapistForm = () => {
                 };
             });
         } else {
+            if (name === "gender") {
+                setFormData({
+                    ...formData,
+                    products: []
+                })
+            }
             setFormData(prevData => ({
                 ...prevData,
                 [name]: value,
             }));
         }
     };
-    
+
 
     const handleCopyTime = (e) => {
         const isChecked = e.target.checked;
@@ -162,8 +132,12 @@ const AddEditTherapistForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData?.products.length <= 0) {
+            alert("Please Add at least one Product");
+            return;
+        }
         setIsSubmitting(true);
-        const isRockstarBoolean = formData.isRockstar === 'true';
+        const isRockstarBoolean = formData.isRockstar === true || formData?.isRockstar === "yes";
         const addBody = {
             name: formData?.name,
             employeeId: formData.employeeId,
@@ -208,7 +182,7 @@ const AddEditTherapistForm = () => {
             employeeId: formData.employeeId,
             centerId: parseInt(formData.centerId),
             products: JSON.stringify(formData.products),
-            isRockstar: true,
+            isRockstar: isRockstarBoolean,
             gender: formData.gender,
             mondayAvailability: {
                 startTime: formData?.schedule?.Monday?.startTime,
@@ -256,6 +230,16 @@ const AddEditTherapistForm = () => {
     //         products: value.map(option => option.id),
     //     }));
     // };
+   
+
+    function convertStringToArray(stringArray) {
+        var cleanedString = stringArray.replace(/[^\d,]/g, '');    
+        var array = cleanedString.split(',').map(function(item) {
+            return parseInt(item.trim());
+        });
+    
+        return array;
+    }
     useEffect(() => {
         if (!data) return;
         const {
@@ -277,6 +261,7 @@ const AddEditTherapistForm = () => {
             saturdayAvailability,
             sundayAvailability
         } = data;
+        console.log("hii pppp",products)
         setFormData(prevData => ({
             ...prevData,
             employeeId,
@@ -284,38 +269,39 @@ const AddEditTherapistForm = () => {
             centerId: parseInt(centerId),
             phone,
             center,
-            products: products?.replace(/'/g, '"'),
+            // products: products?.replace(/'/g, '"'),
+            products:convertStringToArray(products),
             email,
             isRockstar,
             gender,
             schedule: {
                 Monday: {
-                    startTime: mondayAvailability[0]?.startTime ||"WEEK_OFF",
-                    endTime: mondayAvailability[mondayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: mondayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: mondayAvailability[mondayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Tuesday: {
-                    startTime: tuesdayAvailability[0]?.startTime ||"WEEK_OFF",
-                    endTime: tuesdayAvailability[tuesdayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: tuesdayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: tuesdayAvailability[tuesdayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Wednesday: {
-                    startTime: wednesdayAvailability[0]?.startTime||"WEEK_OFF",
-                    endTime: wednesdayAvailability[wednesdayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: wednesdayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: wednesdayAvailability[wednesdayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Thursday: {
-                    startTime: thursdayAvailability[0]?.startTime||"WEEK_OFF",
-                    endTime: thursdayAvailability[thursdayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: thursdayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: thursdayAvailability[thursdayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Friday: {
-                    startTime: fridayAvailability[0]?.startTime||"WEEK_OFF",
-                    endTime: fridayAvailability[fridayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: fridayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: fridayAvailability[fridayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Saturday: {
-                    startTime: saturdayAvailability[0]?.startTime||"WEEK_OFF",
-                    endTime: saturdayAvailability[saturdayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: saturdayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: saturdayAvailability[saturdayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 },
                 Sunday: {
-                    startTime: sundayAvailability[0]?.startTime||"WEEK_OFF",
-                    endTime: sundayAvailability[sundayAvailability.length - 1]?.endTime||"WEEK_OFF"
+                    startTime: sundayAvailability[0]?.startTime || "WEEK_OFF",
+                    endTime: sundayAvailability[sundayAvailability.length - 1]?.endTime || "WEEK_OFF"
                 }
             },
         }))
@@ -328,23 +314,24 @@ const AddEditTherapistForm = () => {
             products: value.map(option => option.id),
         }));
     };
-   
+
 
     useEffect(() => {
         if (id) {
             setSelected(productList.filter(item => formData.products.includes(item.id)));
+
         }
     }, [id, formData.products, productList]);
 
-  
+
     useEffect(() => {
         dispatch(fetchProductList())
         dispatch(fetchCenter())
         dispatch(fetchTherapistRecord(data?.id))
         dispatch(fetchProducts())
-    }, [dispatch,id])
+    }, [dispatch, id])
 
- 
+
 
     return (
         <div className="add-edit-partner-form">
@@ -403,19 +390,17 @@ const AddEditTherapistForm = () => {
                 <br />
                 <div>
                     <label htmlFor="choose-product">Choose Product</label>
-                    {/* <Typography id="modal-modal-description" sx={{ mb: 1 }}>
-                        Choose Product
-                    </Typography> */}
                     <Autocomplete
                         sx={{ width: '100%' }}
                         onChange={handleAutocompleteChange}
                         multiple
                         id="checkboxes-tags-demo"
-                        // options={productList.filter((item => item.gender === formData.gender.toLocaleLowerCase()))}
+                        options={productList?.filter((item => item.gender === formData.gender.toLocaleLowerCase()))}
                         value={selected}
-                        options={handleOption()}
+                        // options={handleOption()}
                         disableCloseOnSelect
-                        getOptionLabel={(option) => option.name}
+                        // getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option.name + "-" + [option.gender]}
                         renderOption={(props, option, { selected }) => (
                             <li {...props}>
                                 <Checkbox
@@ -424,7 +409,8 @@ const AddEditTherapistForm = () => {
                                     style={{ marginRight: 8 }}
                                     checked={selected}
                                 />
-                                {option.name}
+                                {option.name}-[{option['gender']}]
+                                {/* {option.name} */}
                             </li>
                         )}
                         renderInput={(params) => <TextField {...params} />}
@@ -434,18 +420,20 @@ const AddEditTherapistForm = () => {
                 <div class="rockstar">
                     <label for="yes">Is Rockstar:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="isRockstar" required value="ture" style={{ width: "35px" }} checked={formData?.isRockstar} />&nbsp;&nbsp;
+                        <input type="radio" name="isRockstar" required value="yes" style={{ width: "35px" }} checked={formData.isRockstar === true || formData?.isRockstar === "yes"} />&nbsp;&nbsp;
                         <label for="yes">Yes</label>
                     </div>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="isRockstar" required value="false" style={{ width: "35px" }} checked={formData?.isRockstar === false || formData?.isRockstar === "false"} />&nbsp;&nbsp;
+                        <input type="radio" name="isRockstar" required value="no" style={{ width: "35px" }} checked={formData.isRockstar === false || formData?.isRockstar === "no"} />&nbsp;&nbsp;
                         <label for="no">No</label>
                     </div>
                 </div>
                 <h3>Therapist Availability</h3>
-                {!data && <div style={{ display: 'flex', float: "right", width: "150px" }}>
-                    <label>Copy&nbsp;Time</label>
-                    <input type='checkbox' onChange={handleCopyTime} />
+                {<div style={{ display: 'flex', float: "right", width: "150px" }}>
+                    <label title='First Choose Monday Time Slots for copy all Days'>Copy&nbsp;Time</label>
+                    <input type='checkbox' title='First Choose Monday Time Slots for copy all Days' onChange={handleCopyTime}
+                        disabled={!(formData?.schedule?.Monday.startTime && formData?.schedule?.Monday.endTime)}
+                    />
                 </div>}
                 <table className="schedule-table">
                     <thead>
@@ -465,7 +453,7 @@ const AddEditTherapistForm = () => {
                                         type="time"
                                         step="3600"
                                         name="startTime"
-                                        disabled={(id && formData.schedule[day].startTime==="WEEK_OFF") || (day === formData.weekendOff)}
+                                        disabled={(id && formData.schedule[day].startTime === "WEEK_OFF") || (day === formData.weekendOff)}
                                         value={!(day === formData.weekendOff) && formData.schedule[day].startTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
@@ -476,7 +464,7 @@ const AddEditTherapistForm = () => {
                                         type="time"
                                         step="3600"
                                         name="endTime"
-                                        disabled={(id && formData.schedule[day].endTime==="WEEK_OFF") || (day === formData.weekendOff)}
+                                        disabled={(id && formData.schedule[day].endTime === "WEEK_OFF") || (day === formData.weekendOff)}
                                         value={!(day === formData.weekendOff) && formData.schedule[day].endTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
@@ -484,7 +472,7 @@ const AddEditTherapistForm = () => {
                                 </td>
                                 <td>
                                     <input
-                                        checked={(id && formData.schedule[day].endTime==="WEEK_OFF") || (day === formData.weekendOff)}
+                                        checked={(id && formData.schedule[day].endTime === "WEEK_OFF") || (day === formData.weekendOff)}
                                         type="radio"
                                         name="weekendOff"
                                         value={day}

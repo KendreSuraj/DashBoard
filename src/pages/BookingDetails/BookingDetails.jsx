@@ -14,10 +14,14 @@ import CallerBox from '../../components/common/BookingComponent/CallerBox';
 
 import PaymentHistory from '../../components/common/BookingComponent/PaymentHistory';
 import UserLogs from '../../components/common/BookingComponent/UserLogs';
+import AllotMachine from '../../components/common/BookingComponent/AllotMachine';
+import { fetchAvailableTherapist } from '../../store/actions/therapist.action';
+import { useDispatch } from 'react-redux';
 
 
 const BookingDetails = () => {
   // const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [userDataObject, setUserDataObject] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
@@ -25,11 +29,12 @@ const BookingDetails = () => {
   const [partnerNameStr, setPartnerNameStr] = useState('');
   const [secondPartnerStr, setSecondPartnerStr] = useState("")
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [bookingData, setBookingData] = useState({})
   const [callerDetails, setCallerDetails] = useState({
     callerName: "",
     callerPhone: ""
   })
-
+  const [machineDetail,setMachineDetail]=useState({})
   const [userLogs, setUserLogs] = useState([])
 
   const params = useParams();
@@ -108,7 +113,7 @@ const BookingDetails = () => {
         },
       )
       .then((response) => {
-        console.log(response.data);
+        setBookingData(response?.data)
         const bookingDetail =
           response.data && response.data.bookingDetail
             ? response.data.bookingDetail
@@ -149,7 +154,12 @@ const BookingDetails = () => {
             partnerDetail && partnerDetail.phone ? partnerDetail.phone : '-',
           'Therapist Email':
             partnerDetail && partnerDetail.email ? partnerDetail.email : '-',
+           'Therapist Id': partnerDetail?.id
         };
+        const machineDetails={
+          "Machine Name":response?.data?.machineDetail?.name,
+          "Machine Id":response?.data?.machineDetail?.id,
+        }
         const extractedStartDate =
           partnerDetail && partnerDetail.date
             ? partnerDetail.date.split('T')[0]
@@ -196,6 +206,7 @@ const BookingDetails = () => {
         setPartnerNameStr(`${partnerId} - ${partnerName}`);
         setSelectedStatus(detailObj.Status);
         setUserDataObject(detailObj);
+        setMachineDetail(machineDetails)
         setSecondPartnerStr(`${secondPartnerId} - ${secondPartnerName}`)
         const callerName =
           bookingDetail && bookingDetail.callerName ? bookingDetail.callerName : ''
@@ -287,11 +298,47 @@ const BookingDetails = () => {
       .catch((err) => console.log(err));
   }
 
+  function operateOnTimes(time1, time2) {
+    const time1Moment = moment(time1, "HH:mm");
+    const [hours2, minutes2] = time2.split(":").map(Number);
+    const isNegative = hours2 < 0 || minutes2 < 0;
+    const time2Moment = moment(time2.replace("-", ""), "HH:mm");
+    const result = isNegative ? time1Moment.subtract(time2Moment.hours(), 'hours').subtract(time2Moment.minutes(), 'minutes') :
+      time1Moment.add(time2Moment.hours(), 'hours').add(time2Moment.minutes(), 'minutes');
+    const formattedTime = result.format("HH:mm");
+    return formattedTime;
+  }
+
+  const body = {
+    slotDate: userDataObject?.["Booking Date"],
+    slotTime: {
+      startTime: userDataObject?.["Booking Time"],
+      endTime: operateOnTimes(userDataObject?.["Booking Time"], "01:00")
+    },
+    blockedSlotTime: {
+      startTime: operateOnTimes(userDataObject?.["Booking Time"], "-01:00"),
+      endTime: userDataObject?.["Booking Time"]
+    },
+    city: bookingData?.bookingDetail?.addressCity,
+    productId: bookingData?.bookingDetail?.productId,
+    clientLat: bookingData?.bookingDetail?.latitude,
+    clientLong: bookingData?.bookingDetail?.longitude,
+    sessionScheduleId: bookingData?.bookingDetail?.sessionScheduleId,
+    previousTherapistId: bookingData?.partnerDetail?.id,
+    previousMachineId:bookingData?.machineDetail?.id
+  }
+
+  useEffect(()=>{
+    if(body?.slotTime?.startTime){
+      dispatch(fetchAvailableTherapist(body))
+    }
+  },[body])
+  
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
       {Object.keys(userDataObject).length > 0 ? (
-        <UserDetailsComponent data={userDataObject} />
+        <UserDetailsComponent data={userDataObject} machineDetails={machineDetail} />
       ) : (
         ''
       )}
@@ -312,24 +359,40 @@ const BookingDetails = () => {
               }
               deleteFirstTherapistHandler={deleteFirstTherapistHandler}
               deleteSecondTherapistHandler={deleteSecondTherapistHandler}
-
-
-
+              reAllocateBody={body}
+              therapist={userDataObject}
             />
           </Grid>
           <Grid item xs={12} md={6}>
+            <AllotMachine body={body}    
+            isDisabled={
+                userDataObject.Status === 'COMPLETED' ||
+                userDataObject.Status === 'PAID'
+              }/>
+          </Grid>
+          {/* <Grid item xs={12} md={6}>
             <UpdateStatusComponent
               updateStatusHandler={handleStatusUpdate}
               selectedStatus={selectedStatus}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
-            <AllotDate handleAllotDate={handleAllotDate} />
+            <AllotDate handleAllotDate={handleAllotDate}   
+            isDisabled={
+                userDataObject.Status === 'COMPLETED' ||
+                userDataObject.Status === 'PAID'
+              } />
           </Grid>
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <CommentBox />
+          </Grid> */}
+         <Grid item xs={12} md={6}>
+            <UpdateStatusComponent
+              updateStatusHandler={handleStatusUpdate}
+              selectedStatus={selectedStatus}
+            />
           </Grid>
         </Grid>
 
@@ -339,7 +402,9 @@ const BookingDetails = () => {
           <Grid item xs={6}>
             <CallerBox callerDetails={callerDetails} />
           </Grid>
-
+          <Grid item xs={12} md={6}>
+            <CommentBox />
+          </Grid>
         </Grid>
 
 

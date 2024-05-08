@@ -6,7 +6,6 @@ const AddMachineRequest = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const data = location?.state?.data;
-    console.log("see data", data);
 
     const [formData, setFormData] = useState({
         startDate: '',
@@ -25,7 +24,6 @@ const AddMachineRequest = () => {
             [name]: value
         });
     }
-    console.log("se data----->>>>>", formData)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -78,7 +76,7 @@ const AddMachineRequest = () => {
                     </div>
                     {(!formData?.type === "UNAVAILABLE" || formData?.type === "REPAIR") && <div className="form-group">
                         <label htmlFor="endDate">End Date</label>
-                        <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} required />
+                        <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} min={formData.startDate} required />
                     </div>}
                 </div>
                 {formData?.type === "UNAVAILABLE" && <div className="form-row">

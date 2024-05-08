@@ -3,10 +3,10 @@
 import React from 'react';
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
-const UserDetailsComponent = ({ data }) => {
+const UserDetailsComponent = ({ data,machineDetails }) => {
     const keys = Object.keys(data);
+    const keys1 = Object.keys(machineDetails);
     const middleIndex = Math.ceil(keys.length / 2);
-
     return (
         <Grid container spacing={2}>  
             <Grid item xs={12} md={6}>
@@ -40,6 +40,19 @@ const UserDetailsComponent = ({ data }) => {
                                             <strong>{key}:</strong>
                                         </TableCell>
                                         <TableCell>{data[key]}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <h3>Machine Details</h3>
+                        <Table>
+                            <TableBody>
+                                {keys1.map((key) => (
+                                    <TableRow key={key}>
+                                        <TableCell>
+                                            <strong>{key}:</strong>
+                                        </TableCell>
+                                        <TableCell>{machineDetails[key]}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
