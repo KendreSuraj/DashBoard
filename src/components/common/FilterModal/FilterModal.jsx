@@ -64,7 +64,6 @@ export default function FilterModal({
   }, [dispatch]);
 
   const cityList = useSelector((state) => state.booking.cityList);
-  console.log("see list ,,",cityList)
   const productList = useSelector((state) => state.booking.productList);
 
   return (

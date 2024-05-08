@@ -32,7 +32,6 @@ const AddEditMachineForm = () => {
     }));
     const [selected, setSelected] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    console.log("Hii data---->>>>", data)
     const [formData, setFormData] = useState({
         name: '',
         centerId: '',
@@ -71,6 +70,10 @@ const AddEditMachineForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData?.products.length <= 0) {
+            alert("Please Add at least one Product serviceable");
+            return;
+        }
         setIsSubmitting(true);
         const addBody = {
             name: formData.name,
@@ -153,6 +156,15 @@ const AddEditMachineForm = () => {
     //     }));
     // };
 
+    function convertStringToArray(stringArray) {
+        console.log("Se actual array ",stringArray)
+        var cleanedString = stringArray.replace(/[^\d,]/g, '');    
+        var array = cleanedString.split(',').map(function(item) {
+            return parseInt(item.trim());
+        });
+        return array;
+    }
+
     useEffect(() => {
         if (!data) return;
         const {
@@ -174,7 +186,8 @@ const AddEditMachineForm = () => {
             name,
             centerId,
             uniqueMachineCode,
-            products: products?.replace(/'/g, '"'),
+            // products: products?.replace(/'/g, '"'),
+            products:convertStringToArray(products),
             machineAvailability: {
                 Monday: {
                     startTime: mondayAvailability[0].startTime,
@@ -207,9 +220,6 @@ const AddEditMachineForm = () => {
             },
         }));
     }, [data]);
-
-
-    console.log("check formm data---->>>", formData)
 
     const handleCopyTime = (e) => {
         const isChecked = e.target.checked;
@@ -305,9 +315,9 @@ const AddEditMachineForm = () => {
                 </div>
 
                 <h3>Machine Availability</h3>
-                {!data && <div style={{ display: 'flex', float: "right", width: "150px" }}>
-                    <label>Copy&nbsp;Time</label>
-                    <input type='checkbox' onChange={handleCopyTime} />
+                {<div style={{ display: 'flex', float: "right", width: "150px" }}>
+                    <label title='First Choose Monday Time Slots for copy all Days'>Copy&nbsp;Time</label>
+                    <input type='checkbox' title='First Choose Monday Time Slots for copy all Days' onChange={handleCopyTime} disabled={!(formData?.machineAvailability?.Monday.startTime && formData?.machineAvailability?.Monday.endTime)}/>
                 </div>}
                 <br />
                 <table className="machineAvailability-table">
@@ -338,7 +348,7 @@ const AddEditMachineForm = () => {
                                         step="3600"
                                         name="endTime"
                                         value={availability.endTime}
-                                        min={availability.startTime}
+                                        // min={availability.startTime}
                                         onChange={(e) => handleChange(e, day)}
                                         required
                                     />

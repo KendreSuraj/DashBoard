@@ -12,7 +12,7 @@ const TherapistList = () => {
   let therapistList = useSelector(state => state?.therapist?.therapistList?.therapists)
   const handleEdit = (data) => {
     if (data) {
-      navigate("/addedit-therapist", {
+      navigate(`/addedit-therapist?id=${data?.id}`, {
         state: {data },
       });
     }

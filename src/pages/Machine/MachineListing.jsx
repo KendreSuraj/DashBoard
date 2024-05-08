@@ -11,7 +11,7 @@ const MachineListing = () => {
   let machineList = useSelector(state => state?.machine?.machineList?.machines)
   const handleEdit = (data) => {
     if (data) {
-      navigate("/addedit-machine", {
+      navigate(`/addedit-machine?id=${data?.id}`, {
         state: {data},
       });
     }

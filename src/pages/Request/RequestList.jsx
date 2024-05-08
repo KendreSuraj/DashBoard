@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchTherapistCustomslots, updateCustomTherapistSlot } from '../../store/actions/therapist.action'
 
 import './RequestList.css'
+import { fetchAdmin } from '../../store/actions/center.action'
 const RequestList = () => {
     const dispatch = useDispatch()
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
-    console.log("see slot", therapistCustomSlot)
+    const  adminList = useSelector(state => state.center?.adminList)
     useEffect(() => {
         dispatch(fetchTherapistCustomslots())
+        dispatch(fetchAdmin())
     }, [dispatch])
 
     const localToken = JSON.parse(localStorage.getItem("userData"))
@@ -24,7 +26,14 @@ const RequestList = () => {
         }
     };
 
-
+    const getAdminNameById = (id) => {
+        for (let i = 0; i < adminList.length; i++) {
+            if (adminList[i].id === id) {
+                return adminList[i].name;
+            }
+        }
+    }
+    
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
@@ -56,9 +65,8 @@ const RequestList = () => {
 
                                     {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
                                     {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
-                                     {schedule?.isApproved&&"Approve"}
-                                     {schedule?.isApproved===false &&"Reject"}
-                                    {/* {schedule?.isApproved === true ? 'Approved' : 'Rejected'} */}
+                                     {schedule?.isApproved&&`Approved By:${getAdminNameById(schedule.adminId)}`}
+                                     {schedule?.isApproved===false &&`Rejected By:${getAdminNameById(schedule.adminId)}`}
                                 </td>
                             </tr>
                         ))}
