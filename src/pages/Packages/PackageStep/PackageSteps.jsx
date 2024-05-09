@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import './PackagesSteps.style.css';
 import { Button } from '@mui/material';
+
 import PackageDetails from '../PackageDetails';
 import RulesStep from '../Rules';
 import OffersStep from '../Offers';
+
+import './PackagesSteps.style.css';
 
 const PackagesSteps = () => {
     const [packageDetails, setPackageDetails] = useState(false);

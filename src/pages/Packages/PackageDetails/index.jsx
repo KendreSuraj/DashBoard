@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import {
   TextField,
-  Button,
 } from '@material-ui/core';
 import Select from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -11,9 +13,8 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
 
-import { useNavigate } from 'react-router-dom';
 import { getToken } from '../../../components/common/userLocalStorageUtils';
-import axios from 'axios';
+import { Button } from '@mui/material';
 
 const PackageDetails = ({setPackagesSubmitted}) => {
   const [values, setValues] = useState({
@@ -21,7 +22,9 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     description: "",
     productId: "",
   });
+
   const apiUrl = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
   const [personName, setPersonName] = useState([]);
   const [names, setNames] = useState([]);
@@ -45,8 +48,6 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     const product = await res.data.productList;
     setNames(product.map(obj => obj.id))
   }
-
-  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const {
@@ -85,10 +86,12 @@ const PackageDetails = ({setPackagesSubmitted}) => {
         description: values.description,
         products: formattedArray,
       };
+
       const response = await axios.post(
         `${apiUrl}/api/v1/admin/packages/create-package`,
         body,
       )
+
       if (response?.status?.code === 201 || response?.status?.code === 200) {
         setPackagesSubmitted(true)
         navigate('/packages');
