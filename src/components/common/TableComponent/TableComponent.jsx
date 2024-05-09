@@ -20,6 +20,7 @@ const TableComponent = ({
   viewButton,
   updateDetails,
   viewDetails,
+  viewPackagesButton,
   viewBookingButton,
   bookingDetails,
   deleteCoupon,
@@ -38,6 +39,9 @@ const TableComponent = ({
   const handleViewBookingDetails = (details) => {
     bookingDetails(details);
   };
+  const handlePackagesDetails=()=>{
+    
+  }
 
   const stringifiedUser = localStorage.getItem('userData');
   const userData = stringifiedUser ? JSON.parse(stringifiedUser) : null;
@@ -88,6 +92,9 @@ const TableComponent = ({
                 )}
                 {deleteFAQButton && (
                   <TableCell className="table-cell">Delete</TableCell>
+                )}
+                {viewPackagesButton && (
+                  <TableCell className="table-cell">View</TableCell>
                 )}
               </TableRow>
             </TableHead>
@@ -142,6 +149,7 @@ const TableComponent = ({
                       </Button>
                     </TableCell>
                   )}
+
                   {!concentrixUser
                     ? viewBookingButton && (
                         <TableCell className="table-cell">
@@ -164,6 +172,26 @@ const TableComponent = ({
                         </TableCell>
                       )
                     : ''}
+
+                  <TableCell className="table-cell">
+                    {viewPackagesButton === 'img' ? (
+                      <img
+                        className="view-unchecked-img"
+                        src={`${row.image}?w=100&h=100&fit=crop`}
+                        onClick={() => window.open(row.image, '_blank')}
+                        alt="img"
+                      />
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePackagesDetails(row)}
+                      >
+                        {viewPackagesButton}
+                      </Button>
+                    )}
+                  </TableCell>
+
                   {deleteCouponButton && (
                     <TableCell className="table-cell">
                       {deleteCouponButton === 'img' ? (
@@ -186,7 +214,7 @@ const TableComponent = ({
                     </TableCell>
                   )}
 
-{deleteFAQButton && (
+                  {deleteFAQButton && (
                     <TableCell className="table-cell">
                       {deleteFAQButton === 'img' ? (
                         <img
