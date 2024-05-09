@@ -11,7 +11,7 @@ const PackagesSteps = () => {
     const [packageDetails, setPackageDetails] = useState(false);
     const [rules, setRules] = useState(false);
     const [offers, setOffers] = useState(false);
-    const [packagesubmitted, setPackagesSubmitted] = useState(false)
+    const [packagesubmitted, setPackagesSubmitted] = useState(true)
     const handleClick = (text) => {
         if (text === "package") {
             setPackageDetails(true);
