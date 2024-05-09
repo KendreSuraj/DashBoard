@@ -4,16 +4,17 @@ import TableComponent from '../../components/common/TableComponent/TableComponen
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { listPackages } from '../../store/actions/packages.action';
+import { useNavigate } from 'react-router-dom';
 
 const Packages = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate();
 
   let packageList = useSelector((state) => state.packages.packagesList?.packages);
 
   useEffect(() => {
     dispatch(listPackages());
   }, [dispatch]);
-
 
   return (
     <div>
@@ -29,7 +30,7 @@ const Packages = () => {
         }}
         onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
         onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-        onClick={null}
+        onClick={()=>navigate("/packages/packagesteps")}
       >
         Add Package
       </Button>
@@ -37,7 +38,7 @@ const Packages = () => {
       <TableComponent 
       hiddenFields={["products"]}
       data={packageList} 
-      viewPackagesButton={'view'}
+      viewPackagesButton={'edit'}
       />
     </div>
   );

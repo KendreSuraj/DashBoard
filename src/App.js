@@ -25,6 +25,7 @@ import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
 import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
+import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
               element={<BookingDetails />}
             />
             <Route path="/add-coupon" element={<AddCoupon />} />
+            <Route path="/packages/packagesteps" element={<PackagesSteps />} />
 
             <Route
               path="/virtual-consultations"
