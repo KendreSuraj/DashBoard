@@ -13,8 +13,8 @@ export const listPackages = createAsyncThunk('packages', async () => {
           token: getToken(),
         },
       });
-      const data = await res.data;
-      console.log(data)
+      const data = await res.data.data;
+      // console.log(data)
       return data;
     }
     catch (error) {
