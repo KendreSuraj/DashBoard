@@ -1,10 +1,20 @@
-import React from 'react';
+import React, {useEffect}from 'react';
+
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
+import { listPackages } from '../../store/actions/packages.action';
 
 const Packages = () => {
-  let packageList = useSelector((state) => state.packages.packageList?.Packages);
+  const dispatch = useDispatch();
+
+  let packageList = useSelector((state) => state.packages.packagesList?.packages);
+
+  useEffect(() => {
+    dispatch(listPackages());
+  }, [dispatch]);
+
+
   return (
     <div>
       <h3>Packages</h3>
@@ -24,7 +34,11 @@ const Packages = () => {
         Add Package
       </Button>
 
-      <TableComponent data={packageList} />
+      <TableComponent 
+      hiddenFields={["products"]}
+      data={packageList} 
+      viewPackagesButton={'view'}
+      />
     </div>
   );
 };
