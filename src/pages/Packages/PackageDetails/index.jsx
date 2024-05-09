@@ -88,11 +88,15 @@ const PackageDetails = ({setPackagesSubmitted}) => {
       };
 
       const response = await axios.post(
-        `${apiUrl}/api/v1/admin/packages/create-package`,
-        body,
+        `${apiUrl}/api/v1/admin/package/create-package`, body, {
+        headers: {
+          token: getToken(),
+        }
+      }
       )
+      console.log(response)
 
-      if (response?.status?.code === 201 || response?.status?.code === 200) {
+      if (response?.status === 201 || response?.status === 200) {
         setPackagesSubmitted(true)
         navigate('/packages');
       } else {
