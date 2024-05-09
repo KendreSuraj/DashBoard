@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
+import Packages from './pages/Packages/Packages';
 import UserList from "./pages/Users/UserList"
 import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
@@ -73,6 +74,8 @@ function App() {
             <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
             <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
             <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
+            <Route path="/packages" element={<Packages/>}/> 
+
           </Route>
         </Routes>
       </Router>
