@@ -18,6 +18,7 @@ import FAQ from '../pages/FAQ/FAQ';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
 import FeedIcon from '@mui/icons-material/Feed';
+import BallotIcon from '@mui/icons-material/Ballot';
 import UserList from '../pages/Users/UserList';
 import HubIcon from '@mui/icons-material/Hub';
 import CenterListing from '../pages/Center/CenterListing';
@@ -26,6 +27,8 @@ import TherapistList from '../pages/Therapist/TherapistList';
 import RequestList from '../pages/Request/RequestList';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import Packages from '../pages/Packages/Packages';
+
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
   // {
@@ -172,7 +175,16 @@ const appRoutes = [
       displayText: 'All Request',
       icon: <RequestPageIcon />,
     },
-  }
+  },
+  {
+    path: '/packages',
+    element: <Packages />,
+    state: 'packages',
+    sidebarProps: {
+      displayText: 'Packages',
+      icon: <BallotIcon />,
+    },
+  },
 ];
 
 export default appRoutes;
