@@ -39,7 +39,7 @@ const PackagesSteps = () => {
                     color="primary"
                     onClick={() => handleClick("package")}
                 >
-                    Package details
+                    Add Package details
                 </Button>
                 <Button
                     variant="contained"
@@ -48,7 +48,7 @@ const PackagesSteps = () => {
                     onClick={() => handleClick("rules")}
 
                 >
-                    Rules
+                    Add Rules
                 </Button>
                 {/* <Button
                     variant="contained"
@@ -56,7 +56,7 @@ const PackagesSteps = () => {
                     disabled={!packagesubmitted}
                     onClick={()=>handleClick("offer")}
                 >
-                    offers
+                    Add Offers
                 </Button> */}
             </div>
             {packageDetails && <PackageDetails setPackagesSubmitted={setPackagesSubmitted} />}
