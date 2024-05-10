@@ -172,7 +172,8 @@ const TableComponent = ({
                         </TableCell>
                       )
                     : ''}
-
+                  
+                  {viewPackagesButton && (
                   <TableCell className="table-cell">
                     {viewPackagesButton === 'img' ? (
                       <img
@@ -191,7 +192,7 @@ const TableComponent = ({
                       </Button>
                     )}
                   </TableCell>
-
+                )}
                   {deleteCouponButton && (
                     <TableCell className="table-cell">
                       {deleteCouponButton === 'img' ? (
