@@ -17,6 +17,9 @@ import { getToken } from '../../../components/common/userLocalStorageUtils';
 import { Button } from '@mui/material';
 
 const PackageDetails = ({setPackagesSubmitted}) => {
+  const packageType=localStorage.getItem('packageDetail');
+  const packageId=localStorage.getItem('packageEdit');
+
   const [values, setValues] = useState({
     packageName: "",
     description: "",
@@ -49,6 +52,25 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     setNames(product.map(obj => obj.id))
   }
 
+  const fetchParticularData = async () => {
+    const res = await axios.get(`${apiUrl}/api/v1/admin/package/detail/${packageId}`, {
+      headers: {
+        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+        token: getToken(),
+      },
+    });
+    // console.log(res.data.data)
+    setValues({
+      packageName: res.data.data.packageName,
+      description: res.data.data.packageDescription,
+      products: res.data.data.products.map(obj => obj.productId),
+    })
+    setPersonName(
+      res.data.data.products.map(obj => obj.productId)
+    );
+    // const product = await res.data.productList;
+    // setNames(product.map(obj => obj.id))
+  }
   const handleChange = (event) => {
     const {
       target: { value },
@@ -107,9 +129,52 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     }
   };
 
+  const handleEdit = async (event) => {
+    event.preventDefault();
+    try {
+      for (const key in values) {
+        if (values[key] === '') {
+          alert(`Please fill ${key} correctly.`);
+          return;
+        }
+      }
+      console.log(values)
+      const formattedArray = values.products.map(item => ({ productId: item }));
+
+      const body = {
+        packageName: values.packageName,
+        description: values.description,
+        products: formattedArray,
+      };
+
+      console.log(body)
+
+      const response = await axios.patch(
+        `${apiUrl}/api/v1/admin/package/${packageId}`, body, {
+        headers: {
+          token: getToken(),
+        }
+      }
+      )
+
+      if (response?.status === 201 || response?.status === 200) {
+        setPackagesSubmitted(true)
+        navigate('/packages');
+      } else {
+        alert('Something went wrong');
+      }
+    } catch (err) {
+      alert(err?.response?.data?.status?.message);
+    }
+  };
+
   useEffect(() => {
     fetchData()
   }, [])
+
+  useEffect(() => {
+    if (packageType === "edit") {fetchParticularData() }
+}, [packageType])
 
   return (
     <>
@@ -165,7 +230,7 @@ const PackageDetails = ({setPackagesSubmitted}) => {
         type="submit"
         variant="contained"
         color="primary"
-        onClick={handleSubmit}
+        onClick={packageType==="add"? handleSubmit:handleEdit}
         style={{ width: '20%', marginTop: '30px' }}
       >
         Submit

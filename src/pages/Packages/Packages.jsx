@@ -11,6 +11,12 @@ const Packages = () => {
   const navigate=useNavigate();
 
   let packageList = useSelector((state) => state.packages.packagesList?.packages);
+  const handleEdit=(e)=>{
+    localStorage.setItem('packageEdit', e.id);
+    localStorage.setItem('packageDetail', 'edit');
+    navigate('packagesteps')
+    
+  }
 
   useEffect(() => {
     dispatch(listPackages());
@@ -30,7 +36,9 @@ const Packages = () => {
         }}
         onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
         onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-        onClick={()=>navigate("/packages/packagesteps")}
+        onClick={()=>{navigate("/packages/packagesteps");
+        localStorage.setItem('packageDetail', 'add');
+      }}
       >
         Add Package
       </Button>
@@ -38,7 +46,8 @@ const Packages = () => {
       <TableComponent 
       hiddenFields={["products"]}
       data={packageList} 
-      viewPackagesButton={'edit'}
+      viewButton={'Edit'}
+      viewDetails={handleEdit}
       />
     </div>
   );

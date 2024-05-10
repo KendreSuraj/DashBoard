@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 
 import PackageDetails from '../PackageDetails';
@@ -8,12 +8,14 @@ import OffersStep from '../Offers';
 import './PackagesSteps.style.css';
 
 const PackagesSteps = () => {
-    const [packageDetails, setPackageDetails] = useState(false);
+    const packageType = localStorage.getItem('packageDetail')
+    const [packageDetails, setPackageDetails] = useState(packageType === "edit" ? true : false)
     const [rules, setRules] = useState(false);
     const [offers, setOffers] = useState(false);
     const [packagesubmitted, setPackagesSubmitted] = useState(true)
     const handleClick = (text) => {
         if (text === "package") {
+            localStorage.setItem('packageDetail', 'add');
             setPackageDetails(true);
             setRules(false);
             setOffers(false);
@@ -38,6 +40,7 @@ const PackagesSteps = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => handleClick("package")}
+                    disabled={packageType === "edit" ? true : false}
                 >
                     Add Package details
                 </Button>
