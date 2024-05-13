@@ -43,7 +43,9 @@ const RequestList = () => {
                 <table className="schedule-table">
                     <thead>
                         <tr>
-                            <th className="table-header">ID</th>
+                            <th className="table-header">Name</th>
+                            <th className="table-header">Phone</th>
+                            <th className="table-header">Employee Id</th>
                             <th className="table-header">Start Date</th>
                             <th className="table-header">End Date</th>
                             <th className="table-header">Start Time</th>
@@ -55,7 +57,9 @@ const RequestList = () => {
                     <tbody>
                         {therapistCustomSlot?.map(schedule => (
                             <tr key={schedule.id}>
-                                <td>{schedule.id}</td>
+                                <td>{schedule.scheduler_therapist.name}</td>
+                                <td>{schedule.scheduler_therapist.phone}</td>
+                                <td>{schedule.scheduler_therapist.employeeId}</td>
                                 <td>{new Date(schedule.startDate).toLocaleDateString('en-GB')}</td>
                                 <td>{new Date(schedule.endDate).toLocaleDateString('en-GB')}</td>
                                 <td>{schedule.startTime}</td>

@@ -17,6 +17,9 @@ import UserLogs from '../../components/common/BookingComponent/UserLogs';
 import AllotMachine from '../../components/common/BookingComponent/AllotMachine';
 import { fetchAvailableTherapist } from '../../store/actions/therapist.action';
 import { useDispatch } from 'react-redux';
+import UpdateStatusComponentV2 from '../../components/common/BookingComponent/UpdateStatusComponentV2';
+import AllotDateV2 from '../../components/common/BookingComponent/AllotDateV2';
+import AllotTherapistV1 from '../../components/common/BookingComponent/AllotTherapistV1';
 
 
 const BookingDetails = () => {
@@ -30,6 +33,7 @@ const BookingDetails = () => {
   const [secondPartnerStr, setSecondPartnerStr] = useState("")
   const [selectedStatus, setSelectedStatus] = useState('');
   const [bookingData, setBookingData] = useState({})
+  console.log("seeing bookib f ",bookingData)
   const [callerDetails, setCallerDetails] = useState({
     callerName: "",
     callerPhone: ""
@@ -345,7 +349,7 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          <Grid item xs={6}>
+          {bookingData?.bookingDetail?.addressCity === "Delhi"?<Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
@@ -355,21 +359,44 @@ const BookingDetails = () => {
               endTime={endTime ? endTime : ''}
               isDisabled={
                 userDataObject.Status === 'COMPLETED' ||
-                userDataObject.Status === 'PAID'
+                userDataObject.Status === 'PAID'||
+                userDataObject.Status === 'CANCELLED'
               }
               deleteFirstTherapistHandler={deleteFirstTherapistHandler}
               deleteSecondTherapistHandler={deleteSecondTherapistHandler}
               reAllocateBody={body}
               therapist={userDataObject}
             />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <AllotMachine body={body}    
+          </Grid>:
+          <Grid item xs={6}>
+          <AllotTherapistV1
+            handleAllotTherapist={handleSubmitAllotTherapist}
+            partnerNameStr={partnerNameStr ? partnerNameStr : ''}
+            secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
+            startDate={startDate ? startDate : ''}
+            startTime={startTime ? startTime : ''}
+            endTime={endTime ? endTime : ''}
             isDisabled={
-                userDataObject.Status === 'COMPLETED' ||
-                userDataObject.Status === 'PAID'
-              }/>
-          </Grid>
+              userDataObject.Status === 'COMPLETED' ||
+              userDataObject.Status === 'PAID'||
+              userDataObject.Status === 'CANCELLED'
+            }
+            deleteFirstTherapistHandler={deleteFirstTherapistHandler}
+            deleteSecondTherapistHandler={deleteSecondTherapistHandler}
+            reAllocateBody={body}
+            therapist={userDataObject}
+          />
+        </Grid>
+          }
+          {bookingData?.bookingDetail?.addressCity === "Delhi" &&
+            <Grid item xs={12} md={6}>
+              <AllotMachine body={body}
+                isDisabled={
+                  userDataObject.Status === 'COMPLETED' ||
+                  userDataObject.Status === 'PAID' ||
+                  userDataObject.Status === 'CANCELLED'
+                } />
+            </Grid>}
           {/* <Grid item xs={12} md={6}>
             <UpdateStatusComponent
               updateStatusHandler={handleStatusUpdate}
@@ -378,22 +405,43 @@ const BookingDetails = () => {
           </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
+          {bookingData?.bookingDetail?.addressCity === "Delhi"?
           <Grid item xs={6}>
+          <AllotDateV2 handleAllotDate={handleAllotDate}   
+          body={body}
+          isDisabled={
+              userDataObject.Status === 'COMPLETED' ||
+              userDataObject.Status === 'PAID' ||
+              userDataObject.Status === 'CANCELLED'
+            } />
+         </Grid>
+          :<Grid item xs={6}>
             <AllotDate handleAllotDate={handleAllotDate}   
+            body={body}
             isDisabled={
                 userDataObject.Status === 'COMPLETED' ||
-                userDataObject.Status === 'PAID'
+                userDataObject.Status === 'PAID' ||
+                userDataObject.Status === 'CANCELLED'
               } />
-          </Grid>
+          </Grid>}
           {/* <Grid item xs={12} md={6}>
             <CommentBox />
           </Grid> */}
+        {bookingData?.bookingDetail?.addressCity === "Delhi"?
          <Grid item xs={12} md={6}>
+         <UpdateStatusComponentV2
+           updateStatusHandler={handleStatusUpdate}
+           selectedStatus={selectedStatus}
+           body={body}
+         />
+       </Grid>
+        : <Grid item xs={12} md={6}>
             <UpdateStatusComponent
               updateStatusHandler={handleStatusUpdate}
               selectedStatus={selectedStatus}
+              body={body}
             />
-          </Grid>
+          </Grid>}
         </Grid>
 
       </Grid>

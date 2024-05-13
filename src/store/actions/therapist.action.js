@@ -92,3 +92,41 @@ export const manualTherapistAllocation = async (data) => {
     return error;
   }
 }
+
+export const getClientSlots = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/slot/get-client-slots`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+export const confirmClientSlots = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/reschedule-booking`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+export const cancelBooking = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/cancel-booking`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+export const autoAllocateTherapistAndMachine = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/auto-allocate`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
