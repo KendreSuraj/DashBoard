@@ -337,7 +337,7 @@ const BookingDetails = () => {
       dispatch(fetchAvailableTherapist(body))
     }
   },[body])
-  
+  const schedulerAllowedCity=["Delhi","Noida","Gurgaon","Ghaziabad"] 
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
@@ -349,7 +349,7 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.addressCity === "Delhi"?<Grid item xs={6}>
+          {schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?<Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
@@ -388,7 +388,7 @@ const BookingDetails = () => {
           />
         </Grid>
           }
-          {bookingData?.bookingDetail?.addressCity === "Delhi" &&
+          {schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
             <Grid item xs={12} md={6}>
               <AllotMachine body={body}
                 isDisabled={
@@ -405,7 +405,7 @@ const BookingDetails = () => {
           </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.addressCity === "Delhi"?
+          {schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
           <Grid item xs={6}>
           <AllotDateV2 handleAllotDate={handleAllotDate}   
           body={body}
@@ -427,7 +427,7 @@ const BookingDetails = () => {
           {/* <Grid item xs={12} md={6}>
             <CommentBox />
           </Grid> */}
-        {bookingData?.bookingDetail?.addressCity === "Delhi"?
+        {schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
          <Grid item xs={12} md={6}>
          <UpdateStatusComponentV2
            updateStatusHandler={handleStatusUpdate}
