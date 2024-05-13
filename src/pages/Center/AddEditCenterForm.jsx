@@ -111,6 +111,28 @@ const AddEditCenterForm = () => {
         }
     };
 
+
+
+
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+
+    const handleChangeStartTime = (event) => {
+        const newStartTime = event.target.value;
+        setStartTime(newStartTime);
+        if (newStartTime > endTime) {
+            setEndTime(newStartTime);
+        }
+    };
+
+    const handleChangeEndTime = (event) => {
+        const newEndTime = event.target.value;
+        setEndTime(newEndTime);
+        if (newEndTime < startTime) {
+            setStartTime(newEndTime);
+        }
+    };
+
     return (
         <div className="add-center-form">
             <h3>{data ? "Update Center" : "Add Center"}</h3>
