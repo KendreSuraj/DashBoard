@@ -37,7 +37,6 @@ const AllotDateV2 = (props) => {
         clientLong: "",
         sessionScheduleId: ""
     })
-    console.log("see params bookingg ", booking)
     const getTimeSlots = async (date, index) => {
         try {
             setIsLoading(true);
@@ -80,7 +79,6 @@ const AllotDateV2 = (props) => {
         return dates;
     }
     const confirmBookingSlot = async (item, index) => {
-        console.log("see item", item)
         setActiveOption1(index);
         setBooking(prevBooking => ({
             ...prevBooking,
@@ -95,7 +93,6 @@ const AllotDateV2 = (props) => {
             alert("Please Select Booking time ")
         }
         const res = await confirmClientSlots(booking)
-        console.log("see response")
         if (res.status === 200) {
             alert(res.data?.status?.message);
             window.location.reload()

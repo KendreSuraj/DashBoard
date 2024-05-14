@@ -15,7 +15,6 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const AddEditPartnerForm = () => {
     const location = useLocation()
     const data = location?.state?.data;
-    console.log('Testing location ---- ', data)
     const [formData, setFormData] = useState({
         empId: '',
         name: '',
@@ -82,7 +81,6 @@ const AddEditPartnerForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        console.log(formData);
     };
     useEffect(() => {
         setFormData({
@@ -105,8 +103,6 @@ const AddEditPartnerForm = () => {
             product: value.map(option => option.title),
         }));
     };
-
-    console.log("hiii---->>>>", formData);
 
     return (
         <div className="add-edit-partner-form">

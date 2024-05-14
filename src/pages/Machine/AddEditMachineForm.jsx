@@ -157,7 +157,6 @@ const AddEditMachineForm = () => {
     // };
 
     function convertStringToArray(stringArray) {
-        console.log("Se actual array ",stringArray)
         var cleanedString = stringArray.replace(/[^\d,]/g, '');    
         var array = cleanedString.split(',').map(function(item) {
             return parseInt(item.trim());
