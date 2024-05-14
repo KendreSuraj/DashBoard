@@ -19,7 +19,13 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import VirtualConsulations from '../pages/VirtualConsultations/VirtualConsultations';
 import FeedIcon from '@mui/icons-material/Feed';
 import UserList from '../pages/Users/UserList';
-
+import HubIcon from '@mui/icons-material/Hub';
+import CenterListing from '../pages/Center/CenterListing';
+import MachineListing from '../pages/Machine/MachineListing';
+import TherapistList from '../pages/Therapist/TherapistList';
+import RequestList from '../pages/Request/RequestList';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
   // {
@@ -131,7 +137,42 @@ const appRoutes = [
       icon: <QuestionAnswerIcon />,
     },
   },
-
+  {
+    path: '/centerlist',
+    element: <CenterListing />,
+    state: 'centerList',
+    sidebarProps: {
+      displayText: 'Center',
+      icon: <HubIcon />,
+    },
+  },
+  {
+    path: '/machinelist',
+    element: <MachineListing />,
+    state: 'MachineList',
+    sidebarProps: {
+      displayText: 'Machine',
+      icon: <FeedIcon />,
+    },
+  },
+  {
+    path: '/therapistlist',
+    element: <TherapistList />,
+    state: 'TherapistList',
+    sidebarProps: {
+      displayText: 'Therapist',
+      icon: <LocalHospitalIcon />,
+    },
+  },
+  {
+    path: '/allrequestlist',
+    element: <RequestList />,
+    state: 'dashboardRequest',
+    sidebarProps: {
+      displayText: 'All Request',
+      icon: <RequestPageIcon />,
+    },
+  }
 ];
 
 export default appRoutes;

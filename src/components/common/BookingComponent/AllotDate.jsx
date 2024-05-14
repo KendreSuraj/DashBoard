@@ -125,6 +125,7 @@ const AllotDate = (props) => {
                     variant="contained"
                     color="primary"
                     type="submit"
+                    disabled={props.isDisabled}
                     onClick={handleSubmit}
                 >
                     Submit

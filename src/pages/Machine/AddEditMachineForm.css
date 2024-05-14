@@ -1,0 +1,50 @@
+.add-edit-machine-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .add-edit-machine-form form{
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .machineAvailability-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .machineAvailability-table th,
+  .machineAvailability-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .machineAvailability-table th {
+    text-align: left;
+  }
+  
+  .machineAvailability-table td {
+    text-align: center;
+  }
+  
+  .machine-requset-btn{
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 30px;
+    padding: 8px 40px;
+  }
+
+
+  .add-edit-button {
+    display: block;
+    margin: 0 auto;
+    font-size: 1rem;
+  }

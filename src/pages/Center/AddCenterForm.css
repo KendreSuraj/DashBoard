@@ -1,0 +1,44 @@
+
+.add-center-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border: 2px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  }
+
+  .add-center-form form {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-center-form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .add-center-form input[type="text"],
+  .add-center-form input[type="time"],
+  .add-center-form input[type="tel"],
+  .add-center-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-center-form button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-center-form button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  

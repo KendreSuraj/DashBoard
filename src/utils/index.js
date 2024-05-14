@@ -18,6 +18,9 @@ export const getMinutesList = () => {
 
 export function splitDateTime(dateTimeString) {
   // Split the date and time based on 'T' separator
+  if(!dateTimeString){
+    return;
+  }
   const [datePart, timePart] = dateTimeString.split('T');
 
   // Extract the date and time components
