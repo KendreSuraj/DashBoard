@@ -336,7 +336,7 @@ const BookingDetails = () => {
       dispatch(fetchAvailableTherapist(body))
     }
   },[body])
-  const schedulerAllowedCity=["Delhi","Noida","Gurgaon","Ghaziabad","Greater Noida","Faridabad"];
+  const schedulerAllowedCity=["Delhi","Noida","Gurgaon"];
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
