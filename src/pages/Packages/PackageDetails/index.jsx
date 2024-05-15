@@ -12,18 +12,27 @@ import Box from '@mui/material/Box';
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import { Button } from '@mui/material';
+import PackageItem from './PackageItem';
 
-const PackageDetails = ({setPackagesSubmitted}) => {
-  const packageType=localStorage.getItem('packageDetail');
-  const packageId=localStorage.getItem('packageEdit');
+const PackageDetails = ({ setPackagesSubmitted }) => {
+  const packageType = localStorage.getItem('packageDetail');
+  const packageId = localStorage.getItem('packageEdit');
+  const [checked, setChecked] = useState(false);
+  const [customState, setCustomState] = useState("");
 
   const [values, setValues] = useState({
     packageName: "",
     description: "",
     productId: "",
+    collectionName: "",
+    noOfSession: "",
+    packageProduct: ""
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -31,6 +40,17 @@ const PackageDetails = ({setPackagesSubmitted}) => {
 
   const [personName, setPersonName] = useState([]);
   const [names, setNames] = useState([]);
+  const [packageItems, setPackageItems] = useState([]);
+
+  const addPackageItem = () => {
+    setPackageItems([...packageItems, { productId: "", sessions: "" }]);
+  };
+
+  const handlePackageItemChange = (index, itemData) => {
+    const updatedItems = [...packageItems];
+    updatedItems[index] = itemData;
+    setPackageItems(updatedItems);
+  };
 
   const MenuProps = {
     PaperProps: {
@@ -49,7 +69,7 @@ const PackageDetails = ({setPackagesSubmitted}) => {
       },
     });
     const product = await res.data.productList;
-    setNames(product.map(obj => obj.id))
+    setNames(product.map(obj => `${obj.id}. ${obj.name}`))
   }
 
   const fetchParticularData = async () => {
@@ -59,7 +79,7 @@ const PackageDetails = ({setPackagesSubmitted}) => {
         token: getToken(),
       },
     });
-    // console.log(res.data.data)
+
     setValues({
       packageName: res.data.data.packageName,
       description: res.data.data.packageDescription,
@@ -68,9 +88,8 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     setPersonName(
       res.data.data.products.map(obj => obj.productId)
     );
-    // const product = await res.data.productList;
-    // setNames(product.map(obj => obj.id))
   }
+
   const handleChange = (event) => {
     const {
       target: { value },
@@ -95,19 +114,34 @@ const PackageDetails = ({setPackagesSubmitted}) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      for (const key in values) {
-        if (values[key] === '') {
-          alert(`Please fill ${key} correctly.`);
-          return;
-        }
-      }
-      const formattedArray = values.productId.map(item => ({ productId: item }));
+      const packageProduct = packageItems.map(item => ({
+        productId: parseInt(item.productId.split(".")[0], 10),
+        numberOfSessions: parseInt(item.sessions, 10)
+      }));
+      let body;
+      
+      if (customState === "") {
+        body = {
+          packageName: values.packageName,
+          description: values.description,
+          products: packageProduct,
+          type: "fix"
+        };
+      } else {
+      const formattedArray = values?.productId?.map(item => (parseInt(item.split(".")[0], 10)));
 
-      const body = {
-        packageName: values.packageName,
-        description: values.description,
-        products: formattedArray,
-      };
+        body = {
+          packageName: values.packageName,
+          description: values.description,
+          products: packageProduct,
+          type: "custom",
+          collection: {
+            name: values.collectionName,
+            numberOfSessions: parseInt(values.noOfSession,10),
+            products: formattedArray,
+          }
+        };
+      }
 
       const response = await axios.post(
         `${apiUrl}/api/v1/admin/package/create-package`, body, {
@@ -125,7 +159,7 @@ const PackageDetails = ({setPackagesSubmitted}) => {
         alert('Something went wrong');
       }
     } catch (err) {
-      alert(err?.response?.data?.status?.message);
+      alert(err);
     }
   };
 
@@ -168,13 +202,18 @@ const PackageDetails = ({setPackagesSubmitted}) => {
     }
   };
 
+  const handleCheckBoxChange = (event) => {
+    setCustomState(event.target.checked ? "custom" : "")
+    setChecked(event.target.checked);
+  };
+
   useEffect(() => {
     fetchData()
   }, [])
 
   useEffect(() => {
-    if (packageType === "edit") {fetchParticularData() }
-}, [packageType])
+    if (packageType === "edit") { fetchParticularData() }
+  }, [packageType])
 
   return (
     <>
@@ -196,41 +235,91 @@ const PackageDetails = ({setPackagesSubmitted}) => {
         onChange={handleInputChange}
         required
       />
-      <FormControl sx={{ m: 1 }}>
-        <InputLabel id="productID">ProductId*</InputLabel>
-        <Select
-          labelId="productID"
-          multiple
-          required
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {names?.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
+      <div>
+
+        <FormControlLabel control={
+          <Checkbox
+            checked={checked}
+            onChange={handleCheckBoxChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />} label="Custom" />
+      </div>
+
+      {packageItems.map((item, index) => (
+        <PackageItem
+          key={index}
+          index={index}
+          rule={item}
+          names={names}
+          onChange={handlePackageItemChange}
+        />
+      ))}
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={addPackageItem}
+        style={{ marginBottom: '20px', width: "25%" }}
+      >
+        Add Package Item
+      </Button>
+
+      {checked &&
+        <>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <TextField
+              variant="outlined"
+              label="Collection Name"
+              name="collectionName"
+              value={values.collectionName}
+              onChange={handleInputChange}
+              style={{ width: "700px" }}
+            />
+
+            <TextField
+              variant="outlined"
+              label="Number Of Sessions"
+              name="noOfSession"
+              type='number'
+              value={values.noOfSession}
+              onChange={handleInputChange}
+            />
+          </div>
+          <FormControl sx={{ m: 1, width: "915px" }}>
+            <InputLabel id="productID">ProductId*</InputLabel>
+            <Select
+              labelId="productID"
+              multiple
+              value={personName}
+              onChange={handleChange}
+              input={<OutlinedInput />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
             >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+              {names?.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </>}
 
       <Button
         type="submit"
         variant="contained"
         color="primary"
-        onClick={packageType==="add"? handleSubmit:handleEdit}
+        onClick={packageType === "add" ? handleSubmit : handleEdit}
         style={{ width: '20%', marginTop: '30px' }}
       >
         Submit
