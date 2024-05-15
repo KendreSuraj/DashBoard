@@ -37,6 +37,7 @@ const BookingDetails = () => {
     callerName: "",
     callerPhone: ""
   })
+  console.log("se bookin g data",bookingData)
   const [machineDetail,setMachineDetail]=useState({})
   const [userLogs, setUserLogs] = useState([])
 
@@ -348,7 +349,7 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?<Grid item xs={6}>
+          {bookingData?.bookingDetail?.longitude !=="" && bookingData?.bookingDetail?.latitude !=="" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?<Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
@@ -387,7 +388,7 @@ const BookingDetails = () => {
           />
         </Grid>
           }
-          {bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
+          {bookingData?.bookingDetail?.longitude !=="" && bookingData?.bookingDetail?.latitude !=="" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
             <Grid item xs={12} md={6}>
               <AllotMachine body={body}
                 isDisabled={
@@ -404,7 +405,7 @@ const BookingDetails = () => {
           </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
+          {bookingData?.bookingDetail?.longitude !=="" && bookingData?.bookingDetail?.latitude !=="" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
           <Grid item xs={6}>
           <AllotDateV2 handleAllotDate={handleAllotDate}   
           body={body}
@@ -426,7 +427,7 @@ const BookingDetails = () => {
           {/* <Grid item xs={12} md={6}>
             <CommentBox />
           </Grid> */}
-        {bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
+        {bookingData?.bookingDetail?.latitude !=="" && bookingData?.bookingDetail?.longitude !=="" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude&& schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity)?
          <Grid item xs={12} md={6}>
          <UpdateStatusComponentV2
            updateStatusHandler={handleStatusUpdate}
