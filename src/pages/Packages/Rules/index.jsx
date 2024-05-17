@@ -9,19 +9,10 @@ import { Button } from '@mui/material';
 const RulesStep = ({ setPackagesSubmitted }) => {
   const [rules, setRules] = useState([{ productId: "", notIncludedProductIds: [] }]);
   const [names, setNames] = useState([]);
+  const [id, setId] = useState();
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    const res = await axios.get(`${apiUrl}/api/v1/admin/product/list`, {
-      headers: {
-        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-        token: getToken(),
-      },
-    });
-    const product = await res.data.productList;
-    setNames(product.map(obj => obj.id))
-  }
 
   const handleAddRuleItem = () => {
     setRules([...rules, { productId: "", notIncludedProductIds: [] }]);
@@ -41,21 +32,21 @@ const RulesStep = ({ setPackagesSubmitted }) => {
       }));
 
       const body = {
-        packageId: 1,
+        packageId: id,
         rules: formattedRules
       };
 
       let transformedObject = {
         "packageId": body.packageId,
         "rules": []
-    };
-    
-    body.rules.forEach((rule, index) => {
+      };
+
+      body.rules.forEach((rule, index) => {
         transformedObject.rules[index] = {
-            "productId": rule.productId,
-            "filter": rule.filter
+          "productId": rule.productId,
+          "filter": rule.filter
         };
-    });
+      });
 
       const response = await axios.post(
         `${apiUrl}/api/v1/admin/package/add-rule`, transformedObject, {
@@ -65,7 +56,8 @@ const RulesStep = ({ setPackagesSubmitted }) => {
       });
 
       if (response?.status === 201 || response?.status === 200) {
-        console.log("abc")
+        alert("Rules added successfully!!");
+        window.location.href =`http://localhost:3000/packages`
       } else {
         alert('Something went wrong');
       }
@@ -74,42 +66,66 @@ const RulesStep = ({ setPackagesSubmitted }) => {
     }
   };
 
+  const fetchParticularData = async () => {
+    if (id != undefined) {
+      const res = await axios.get(`${apiUrl}/api/v1/admin/package/detail/${id}`, {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      });
+      if(res.data.data.products.length>0){
+        setNames(res.data.data.products.map((item)=>item.productId))
+      }
+      else{
+        setNames([])
+      }
+    }
+  }
+  console.log(names,"names")
   useEffect(() => {
-    fetchData();
-  }, []);
+    const id = localStorage.getItem('packageId');
+    setId(parseInt(id, 10));
+  })
 
+  useEffect(() => {
+    fetchParticularData();
+  }, [id])
   return (
     <>
       <h3 style={{ textAlign: 'center' }}>Rules Details</h3>
-      <div style={{display:"flex", flexDirection:"column",gap:"20px"}}>
-        {rules.map((rule, index) => (
-          <RuleItem
-            key={index}
-            index={index}
-            rule={rule}
-            onChange={handleRuleChange}
-            names={names}
-          />
-        ))}
-      </div>
-      <Button
-        type="button"
-        variant="contained"
-        color="primary"
-        style={{ width: '5%', fontSize: '20px' }}
-        onClick={handleAddRuleItem}
-      >
-        +
-      </Button>
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        onClick={handleSubmit}
-        style={{ width: '12%', fontSize: '15px' }}
-      >
-        Add Rules
-      </Button>
+      {names.length > 0 ?
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {rules.map((rule, index) => (
+              <RuleItem
+                key={index}
+                index={index}
+                rule={rule}
+                onChange={handleRuleChange}
+                names={names}
+              />
+            ))}
+          </div>
+          <Button
+            type="button"
+            variant="contained"
+            color="primary"
+            style={{ width: '5%', fontSize: '20px' }}
+            onClick={handleAddRuleItem}
+          >
+            +
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            style={{ width: '12%', fontSize: '15px' }}
+          >
+            Add Rules
+          </Button>
+        </>:<p>No Products added</p>}
     </>
   );
 };

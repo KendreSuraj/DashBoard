@@ -12,13 +12,14 @@ const PackagesSteps = () => {
     const [packageDetails, setPackageDetails] = useState(packageType === "edit" ? true : false)
     const [rules, setRules] = useState(false);
     const [offers, setOffers] = useState(false);
-    const [packagesubmitted, setPackagesSubmitted] = useState(true)
+    const [packagesubmitted, setPackagesSubmitted] = useState(false)
     const handleClick = (text) => {
         if (text === "package") {
             localStorage.setItem('packageDetail', 'add');
             setPackageDetails(true);
             setRules(false);
             setOffers(false);
+
         }
         if (text === "rules") {
             setPackageDetails(false);
@@ -40,7 +41,7 @@ const PackagesSteps = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => handleClick("package")}
-                    disabled={packageType === "edit" ? true : false}
+                    disabled={packagesubmitted ? true : packageType === "edit" ? true : false}
                 >
                     Add Package details
                 </Button>
@@ -62,8 +63,8 @@ const PackagesSteps = () => {
                     Add Offers
                 </Button> */}
             </div>
-            {packageDetails && <PackageDetails setPackagesSubmitted={setPackagesSubmitted} />}
-            {rules && <RulesStep />}
+            {packageDetails && !packagesubmitted && <PackageDetails setPackagesSubmitted={setPackagesSubmitted} />}
+            {packagesubmitted && <RulesStep />}
             {offers && <OffersStep />}
         </div>
     )

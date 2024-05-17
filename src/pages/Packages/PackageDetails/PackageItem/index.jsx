@@ -11,15 +11,16 @@ const PackageItem = ({ index, rule, names, onChange }) => {
         const sessions = event.target.value;
         onChange(index, { ...rule, sessions });
     };
+    const productID = parseInt(rule.productId);
 
     return (
         <div style={{ display: "flex", gap: "20px" }}>
             <FormControl style={{ width: "400px" }}>
-                <InputLabel id={`product-${index}-label`}>Product ID*</InputLabel>
+                <InputLabel id={`product-${index}-label`}>Products*</InputLabel>
                 <Select
                     labelId={`product-${index}-label`}
                     id={`product-${index}-select`}
-                    value={rule.productId}
+                    value={names[productID - 1]}
                     onChange={handleProductChange}
                     label="Product ID"
                 >

@@ -14,33 +14,40 @@ import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
+import { Button } from '@mui/material';
 
 import { getToken } from '../../../components/common/userLocalStorageUtils';
-import { Button } from '@mui/material';
 import PackageItem from './PackageItem';
 
 const PackageDetails = ({ setPackagesSubmitted }) => {
   const packageType = localStorage.getItem('packageDetail');
   const packageId = localStorage.getItem('packageEdit');
+
   const [checked, setChecked] = useState(false);
   const [customState, setCustomState] = useState("");
-
   const [values, setValues] = useState({
     packageName: "",
     description: "",
     productId: "",
-    collectionName: "",
     noOfSession: "",
     packageProduct: ""
   });
+  const [personName, setPersonName] = useState([]);
+  const [names, setNames] = useState([]);
+  const [packageItems, setPackageItems] = useState([]);
+  const [collectionID, setCollectionID] = useState();
 
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
-  const [personName, setPersonName] = useState([]);
-  const [names, setNames] = useState([]);
-  const [packageItems, setPackageItems] = useState([]);
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 280,
+        width: 250,
+      },
+    },
+  };
 
   const addPackageItem = () => {
     setPackageItems([...packageItems, { productId: "", sessions: "" }]);
@@ -52,15 +59,6 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     setPackageItems(updatedItems);
   };
 
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: 280,
-        width: 250,
-      },
-    },
-  };
-
   const fetchData = async () => {
     const res = await axios.get(`${apiUrl}/api/v1/admin/product/list`, {
       headers: {
@@ -69,8 +67,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       },
     });
     const product = await res.data.productList;
-    setNames(product.map(obj => `${obj.id}. ${obj.name}`))
-  }
+    setNames(product.map(obj => `${obj.id}. ${obj.name}`));
+  };
 
   const fetchParticularData = async () => {
     const res = await axios.get(`${apiUrl}/api/v1/admin/package/detail/${packageId}`, {
@@ -79,24 +77,37 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         token: getToken(),
       },
     });
-
-    setValues({
-      packageName: res.data.data.packageName,
-      description: res.data.data.packageDescription,
-      products: res.data.data.products.map(obj => obj.productId),
-    })
-    setPersonName(
-      res.data.data.products.map(obj => obj.productId)
-    );
-  }
+    // if (type === "fix") {
+      const items = res.data.data.products.map(obj => ({
+        productId: obj.productId,
+        sessions: obj.numberOfSessions
+      }));
+      setPackageItems(items);
+      setValues({
+        packageName: res.data.data.packageName,
+        description: res.data.data.packageDescription,
+      });
+      setChecked(false);
+    // } 
+    // else {
+    //   setChecked(true);
+    //   const collectionId = res.data.data.collection.id;
+    //   setCollectionID(parseInt(collectionId, 10));
+    //   setValues({
+    //     packageName: res.data.data.packageName,
+    //     description: res.data.data.packageDescription,
+    //     noOfSession: res.data.data.collection?.numberOfSessions,
+    //     productId: res.data.data.collection?.products.map(obj => obj),
+    //   });
+    //   setPersonName(res.data.data.collection?.products.map(obj => obj));
+    // }
+  };
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    setPersonName(typeof value === 'string' ? value.split(',') : value);
     setValues({
       ...values,
       "productId": typeof value === 'string' ? value.split(',') : value,
@@ -111,6 +122,11 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     });
   };
 
+  const handleCheckBoxChange = (event) => {
+    setCustomState(event.target.checked ? "custom" : "");
+    setChecked(event.target.checked);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -119,42 +135,41 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         numberOfSessions: parseInt(item.sessions, 10)
       }));
       let body;
-      
+      let response;
+
       if (customState === "") {
         body = {
           packageName: values.packageName,
           description: values.description,
           products: packageProduct,
-          type: "fix"
         };
+        response = await axios.post(
+          `${apiUrl}/api/v1/admin/package/create-fix-package`, body, {
+          headers: {
+            token: getToken(),
+          }
+        });
       } else {
-      const formattedArray = values?.productId?.map(item => (parseInt(item.split(".")[0], 10)));
-
+        const formattedArray = values?.productId?.map(item => (parseInt(item.split(".")[0], 10)));
         body = {
           packageName: values.packageName,
           description: values.description,
           products: packageProduct,
           type: "custom",
           collection: {
-            name: values.collectionName,
-            numberOfSessions: parseInt(values.noOfSession,10),
+            id: collectionID,
+            numberOfSessions: parseInt(values.noOfSession, 10),
             products: formattedArray,
           }
         };
       }
 
-      const response = await axios.post(
-        `${apiUrl}/api/v1/admin/package/create-package`, body, {
-        headers: {
-          token: getToken(),
-        }
-      }
-      )
-      console.log(response)
+
+      const id = response.data.data.id;
+      localStorage.setItem('packageId', id);
 
       if (response?.status === 201 || response?.status === 200) {
-        setPackagesSubmitted(true)
-        navigate('/packages');
+        setPackagesSubmitted(true);
       } else {
         alert('Something went wrong');
       }
@@ -163,57 +178,66 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     }
   };
 
-  const handleEdit = async (event) => {
+  const handleUpdate = async (event) => {
     event.preventDefault();
     try {
-      for (const key in values) {
-        if (values[key] === '') {
-          alert(`Please fill ${key} correctly.`);
-          return;
-        }
-      }
-      console.log(values)
-      const formattedArray = values.products.map(item => ({ productId: item }));
+      const packageProduct = packageItems.map(item => ({
+        productId: typeof item.productId==="number"?item.productId:parseInt(item.productId.split(".")[0], 10),
+        numberOfSessions: parseInt(item.sessions, 10)
+      }));
 
-      const body = {
-        packageName: values.packageName,
-        description: values.description,
-        products: formattedArray,
-      };
+      let body;
 
-      console.log(body)
+      // if (customState === "") {
+        body = {
+          packageName: values.packageName,
+          description: values.description,
+          products: packageProduct,
+        };
+
+        console.log(body)
+      // } 
+      // else {
+      //   const formattedArray = values?.productId?.map(item => typeof item === "string" ? (parseInt(item.split(".")[0], 10)) : item);
+
+      //   body = {
+      //     packageName: values.packageName,
+      //     description: values.description,
+      //     products: packageProduct,
+      //     type: "custom",
+      //     collection: {
+      //       numberOfSessions: parseInt(values.noOfSession, 10),
+      //       products: formattedArray,
+      //     }
+      //   };
+      // }
 
       const response = await axios.patch(
-        `${apiUrl}/api/v1/admin/package/${packageId}`, body, {
+        `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
         headers: {
           token: getToken(),
         }
-      }
-      )
+      });
 
       if (response?.status === 201 || response?.status === 200) {
-        setPackagesSubmitted(true)
-        navigate('/packages');
+        setPackagesSubmitted(true);
       } else {
         alert('Something went wrong');
       }
     } catch (err) {
-      alert(err?.response?.data?.status?.message);
+      alert(err);
     }
   };
 
-  const handleCheckBoxChange = (event) => {
-    setCustomState(event.target.checked ? "custom" : "")
-    setChecked(event.target.checked);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    if (packageType === "edit") { fetchParticularData() }
-  }, [packageType])
+    if (packageType === "edit") {
+      fetchParticularData();
+    }
+  }, [packageType]);
 
   return (
     <>
@@ -236,7 +260,6 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         required
       />
       <div>
-
         <FormControlLabel control={
           <Checkbox
             checked={checked}
@@ -266,60 +289,79 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
       {checked &&
         <>
+          <TextField
+            variant="outlined"
+            label="Number Of Sessions"
+            name="noOfSession"
+            type='number'
+            value={values.noOfSession}
+            onChange={handleInputChange}
+          />
           <div style={{ display: "flex", gap: "20px" }}>
-            <TextField
-              variant="outlined"
-              label="Collection Name"
-              name="collectionName"
-              value={values.collectionName}
-              onChange={handleInputChange}
-              style={{ width: "700px" }}
-            />
-
-            <TextField
-              variant="outlined"
-              label="Number Of Sessions"
-              name="noOfSession"
-              type='number'
-              value={values.noOfSession}
-              onChange={handleInputChange}
-            />
+            <FormControl sx={{ width: "850px" }}>
+              <InputLabel id="productID">Products*</InputLabel>
+              <Select
+                labelId="productID"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {names?.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ width: "330px" }}>
+              <InputLabel id="productID">Body Parts*</InputLabel>
+              <Select
+                labelId="productID"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {names?.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
-          <FormControl sx={{ m: 1, width: "915px" }}>
-            <InputLabel id="productID">ProductId*</InputLabel>
-            <Select
-              labelId="productID"
-              multiple
-              value={personName}
-              onChange={handleChange}
-              input={<OutlinedInput />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names?.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </>}
 
       <Button
         type="submit"
         variant="contained"
         color="primary"
-        onClick={packageType === "add" ? handleSubmit : handleEdit}
+        onClick={packageType === "add" ? handleSubmit : handleUpdate}
         style={{ width: '20%', marginTop: '30px' }}
       >
         Submit
