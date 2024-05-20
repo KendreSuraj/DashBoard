@@ -7,9 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
 
-const RuleItem = ({ onChange, rule, index, names }) => {
-    const [productNames, setProductNames] = useState([]);
-    
+const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames }) => {
+
     const handleProductChange = (event) => {
         const productId = event.target.value;
         setProductNames(names.filter(item => item !== productId));

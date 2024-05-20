@@ -6,9 +6,12 @@ import RuleItem from './RuleItem';
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import { Button } from '@mui/material';
 
-const RulesStep = ({ setPackagesSubmitted }) => {
+const RulesStep = () => {
   const [rules, setRules] = useState([{ productId: "", notIncludedProductIds: [] }]);
   const [names, setNames] = useState([]);
+  const [productNames, setProductNames] = useState([]);
+  const packageType = localStorage.getItem('packageDetail');
+
   const [id, setId] = useState();
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -80,6 +83,22 @@ const RulesStep = ({ setPackagesSubmitted }) => {
       else {
         setNames(res.data.data.products.map((item) => item.id))
       }
+
+      if(packageType==="edit"){
+
+      const rulesRes=await axios.get(`${apiUrl}/api/v1/admin/package/get-rules/${id}`,{
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      })
+
+      const alreadyRules = rulesRes.data.data.rules.map(rule => ({
+        productId: rule.productId,
+        notIncludedProductIds: rule.filter
+      }));
+      setRules(alreadyRules)
+    }
     }
   }
   useEffect(() => {
@@ -105,7 +124,9 @@ const RulesStep = ({ setPackagesSubmitted }) => {
                 rule={rule}
                 onChange={handleRuleChange}
                 names={names}
-              />
+                productNames={productNames}
+                setProductNames={setProductNames}
+                />
             ))}
           </div>
           <Button
