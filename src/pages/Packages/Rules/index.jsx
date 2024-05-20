@@ -14,7 +14,6 @@ const RulesStep = () => {
 
   const [id, setId] = useState();
   const apiUrl = process.env.REACT_APP_API_URL;
-  const navigate = useNavigate();
 
 
   const handleAddRuleItem = () => {
@@ -30,8 +29,8 @@ const RulesStep = () => {
   const handleSubmit = async () => {
     try {
       const formattedRules = rules.map(rule => ({
-        productId: rule.productId,
-        filter: rule.notIncludedProductIds
+        productId: parseInt(rule.productId.split(".")[0]),
+        filter: rule.notIncludedProductIds.map((item) => parseInt(item.split(".")[0]))
       }));
 
       const body = {
@@ -78,33 +77,35 @@ const RulesStep = () => {
         },
       });
       if (res.data.data.products.length > 0 && !res.data.data.bodyParts) {
-        setNames(res.data.data.products.map((item) => item.productId))
+        setNames(res.data.data.products.map((item) => `${item.productId}. ${item.name}`))
       }
       else {
-        setNames(res.data.data.products.map((item) => item.id))
+        setNames(res.data.data.products.map((item) => `${item.id}. ${item.name}`))
       }
 
-      if(packageType==="edit"){
+      if (packageType === "edit") {
 
-      const rulesRes=await axios.get(`${apiUrl}/api/v1/admin/package/get-rules/${id}`,{
-        headers: {
-          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
-          token: getToken(),
-        },
-      })
+        const rulesRes = await axios.get(`${apiUrl}/api/v1/admin/package/get-rules/${id}`, {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        })
 
-      const alreadyRules = rulesRes.data.data.rules.map(rule => ({
-        productId: rule.productId,
-        notIncludedProductIds: rule.filter
-      }));
-      setRules(alreadyRules)
-    }
+        if (rulesRes.data.data) {
+          const alreadyRules = rulesRes.data.data.rules.map(rule => ({
+            productId: `${rule.productId}. ${rule.name}`,
+            notIncludedProductIds: rule.filter.map((item)=> `${item.id}. ${item.name}`)
+          }));
+          setRules(alreadyRules)
+        }
+      }
     }
   }
   useEffect(() => {
     const packageType = localStorage.getItem('packageDetail');
 
-    const id = packageType==="edit"?localStorage.getItem("packageEdit"):localStorage.getItem('packageId');
+    const id = packageType === "edit" ? localStorage.getItem("packageEdit") : localStorage.getItem('packageId');
     setId(parseInt(id, 10));
   })
 
@@ -126,7 +127,7 @@ const RulesStep = () => {
                 names={names}
                 productNames={productNames}
                 setProductNames={setProductNames}
-                />
+              />
             ))}
           </div>
           <Button
