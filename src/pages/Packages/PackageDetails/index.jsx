@@ -19,6 +19,8 @@ import { Button } from '@mui/material';
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
 
+const bodyparts=["Hands","Chest","Legs","Abdomen","Head"];
+
 const PackageDetails = ({ setPackagesSubmitted }) => {
   const packageType = localStorage.getItem('packageDetail');
   const packageId = localStorage.getItem('packageEdit');
@@ -33,10 +35,9 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     packageProduct: ""
   });
   const [personName, setPersonName] = useState([]);
+  const [parts,setParts]=useState([]);
   const [names, setNames] = useState([]);
   const [packageItems, setPackageItems] = useState([]);
-  const [collectionID, setCollectionID] = useState();
-
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
@@ -77,9 +78,10 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         token: getToken(),
       },
     });
-    // if (type === "fix") {
+    if (!res.data.data.bodyParts) {
+      setCustomState("");
       const items = res.data.data.products.map(obj => ({
-        productId: obj.productId,
+        productId: `${obj.productId}. ${obj.name}`,
         sessions: obj.numberOfSessions
       }));
       setPackageItems(items);
@@ -88,19 +90,19 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         description: res.data.data.packageDescription,
       });
       setChecked(false);
-    // } 
-    // else {
-    //   setChecked(true);
-    //   const collectionId = res.data.data.collection.id;
-    //   setCollectionID(parseInt(collectionId, 10));
-    //   setValues({
-    //     packageName: res.data.data.packageName,
-    //     description: res.data.data.packageDescription,
-    //     noOfSession: res.data.data.collection?.numberOfSessions,
-    //     productId: res.data.data.collection?.products.map(obj => obj),
-    //   });
-    //   setPersonName(res.data.data.collection?.products.map(obj => obj));
-    // }
+    } 
+    else {
+      setCustomState("custom");
+
+      setChecked(true);
+      setValues({
+        packageName: res.data.data.packageName,
+        description: res.data.data.packageDescription,
+        noOfSession: res.data.data.numberOfSessions,
+      });
+      setPersonName(res.data.data.products.map(obj => `${obj.id}. ${obj.name}`));
+      setParts(res.data.data.bodyParts)
+    }
   };
 
   const handleChange = (event) => {
@@ -113,6 +115,16 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       "productId": typeof value === 'string' ? value.split(',') : value,
     });
   };
+
+  const handleBodyParts=(event)=>{
+    const {
+      target: { value },
+    } = event;
+    setParts(typeof value === 'string' ? value.split(',') : value);
+    setValues({
+      ...values,
+    });
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -154,16 +166,17 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         body = {
           packageName: values.packageName,
           description: values.description,
-          products: packageProduct,
-          type: "custom",
-          collection: {
-            id: collectionID,
-            numberOfSessions: parseInt(values.noOfSession, 10),
-            products: formattedArray,
-          }
+          products: formattedArray,
+          numberOfSessions: parseInt(values.noOfSession, 10),
+          bodyParts:parts
         };
+        response = await axios.post(
+          `${apiUrl}/api/v1/admin/package/create-custom-package`, body, {
+          headers: {
+            token: getToken(),
+          }
+        });
       }
-
 
       const id = response.data.data.id;
       localStorage.setItem('packageId', id);
@@ -181,43 +194,44 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
+
       const packageProduct = packageItems.map(item => ({
-        productId: typeof item.productId==="number"?item.productId:parseInt(item.productId.split(".")[0], 10),
+        productId: parseInt(item.productId.split(".")[0], 10),
         numberOfSessions: parseInt(item.sessions, 10)
       }));
-
       let body;
+      let response;
 
-      // if (customState === "") {
+      if (customState === "") {
         body = {
           packageName: values.packageName,
           description: values.description,
           products: packageProduct,
         };
-
         console.log(body)
-      // } 
-      // else {
-      //   const formattedArray = values?.productId?.map(item => typeof item === "string" ? (parseInt(item.split(".")[0], 10)) : item);
+        response = await axios.patch(
+          `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
+          headers: {
+            token: getToken(),
+          }
+        });
+      } else {
+        const formattedArray = values?.productId?.map(item => (parseInt(item.split(".")[0], 10)));
+        body = {
+          packageName: values.packageName,
+          description: values.description,
+          products: formattedArray,
+          numberOfSessions: parseInt(values.noOfSession, 10),
+          bodyParts:parts
+        };
 
-      //   body = {
-      //     packageName: values.packageName,
-      //     description: values.description,
-      //     products: packageProduct,
-      //     type: "custom",
-      //     collection: {
-      //       numberOfSessions: parseInt(values.noOfSession, 10),
-      //       products: formattedArray,
-      //     }
-      //   };
-      // }
-
-      const response = await axios.patch(
-        `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
-        headers: {
-          token: getToken(),
-        }
-      });
+        response = await axios.patch(
+          `${apiUrl}/api/v1/admin/package/custom/${packageId}`, body, {
+          headers: {
+            token: getToken(),
+          }
+        });
+      }
 
       if (response?.status === 201 || response?.status === 200) {
         setPackagesSubmitted(true);
@@ -331,8 +345,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
               <Select
                 labelId="productID"
                 multiple
-                value={personName}
-                onChange={handleChange}
+                value={parts}
+                onChange={handleBodyParts}
                 input={<OutlinedInput />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -343,13 +357,13 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
                 )}
                 MenuProps={MenuProps}
               >
-                {names?.map((name) => (
+                {bodyparts?.map((bodypart) => (
                   <MenuItem
-                    key={name}
-                    value={name}
+                    key={bodypart}
+                    value={bodypart}
                     style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
                   >
-                    {name}
+                    {bodypart}
                   </MenuItem>
                 ))}
               </Select>

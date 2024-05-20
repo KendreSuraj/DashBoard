@@ -57,7 +57,7 @@ const RulesStep = ({ setPackagesSubmitted }) => {
 
       if (response?.status === 201 || response?.status === 200) {
         alert("Rules added successfully!!");
-        window.location.href =`http://localhost:3000/packages`
+        window.location.href = `http://localhost:3000/packages`
       } else {
         alert('Something went wrong');
       }
@@ -74,17 +74,18 @@ const RulesStep = ({ setPackagesSubmitted }) => {
           token: getToken(),
         },
       });
-      if(res.data.data.products.length>0){
-        setNames(res.data.data.products.map((item)=>item.productId))
+      if (res.data.data.products.length > 0 && !res.data.data.bodyParts) {
+        setNames(res.data.data.products.map((item) => item.productId))
       }
-      else{
-        setNames([])
+      else {
+        setNames(res.data.data.products.map((item) => item.id))
       }
     }
   }
-  console.log(names,"names")
   useEffect(() => {
-    const id = localStorage.getItem('packageId');
+    const packageType = localStorage.getItem('packageDetail');
+
+    const id = packageType==="edit"?localStorage.getItem("packageEdit"):localStorage.getItem('packageId');
     setId(parseInt(id, 10));
   })
 
@@ -125,7 +126,7 @@ const RulesStep = ({ setPackagesSubmitted }) => {
           >
             Add Rules
           </Button>
-        </>:<p>No Products added</p>}
+        </> : <p>No Products added</p>}
     </>
   );
 };
