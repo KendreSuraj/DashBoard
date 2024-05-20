@@ -9,7 +9,7 @@ import './PackagesSteps.style.css';
 
 const PackagesSteps = () => {
     const packageType = localStorage.getItem('packageDetail')
-    const [packageDetails, setPackageDetails] = useState(packageType === "edit" ? true : false)
+    const [packageDetails, setPackageDetails] = useState(true)
     const [rules, setRules] = useState(false);
     const [offers, setOffers] = useState(false);
     const [packagesubmitted, setPackagesSubmitted] = useState(false)
@@ -41,14 +41,13 @@ const PackagesSteps = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => handleClick("package")}
-                    disabled={packagesubmitted ? true : packageType === "edit" ? true : false}
                 >
                     Add Package details
                 </Button>
                 <Button
                     variant="contained"
                     color="primary"
-                    disabled={!packagesubmitted}
+                    disabled={!packagesubmitted && packageType!=="edit" }
                     onClick={() => handleClick("rules")}
 
                 >
@@ -64,7 +63,7 @@ const PackagesSteps = () => {
                 </Button> */}
             </div>
             {packageDetails && !packagesubmitted && <PackageDetails setPackagesSubmitted={setPackagesSubmitted} />}
-            {packagesubmitted && <RulesStep />}
+            {(packagesubmitted || rules) && <RulesStep />}
             {offers && <OffersStep />}
         </div>
     )
