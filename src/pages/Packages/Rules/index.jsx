@@ -60,7 +60,7 @@ const RulesStep = () => {
 
       if (response?.status === 201 || response?.status === 200) {
         alert("Rules added successfully!!");
-        window.location.href = `http://localhost:3000/packages`
+        window.location.href = `https://test.partner.avataarskin.com/packages`
       } else {
         alert('Something went wrong');
       }
