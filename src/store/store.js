@@ -12,6 +12,7 @@ import faqSlice from './slices/faqSlice';
 import centerSlice from './slices/centerSlice';
 import machineSlice from './slices/machineSlice';
 import therapistSlice from './slices/therapistSlice';
+import packagesSlice from './slices/packagesSlice';
 
 const store = configureStore({
   reducer: {
@@ -27,7 +28,8 @@ const store = configureStore({
     faq: faqSlice,
     center:centerSlice,
     machine:machineSlice,
-    therapist:therapistSlice
+    therapist:therapistSlice,
+    packages: packagesSlice,
   },
 });
 export default store;

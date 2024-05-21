@@ -46,6 +46,7 @@ const AddCoupon = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -66,6 +67,7 @@ const AddCoupon = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
 
     // validate all fields
     try {
@@ -108,6 +110,9 @@ const AddCoupon = () => {
     } catch (err) {
       alert(err?.response?.data?.status?.message);
     }
+    finally {
+      setIsSubmitting(false);
+  }
   };
 
   return (
@@ -253,9 +258,15 @@ const AddCoupon = () => {
               variant="contained"
               color="primary"
               onClick={handleSubmit}
-              style={{ width: '20%', marginTop: '30px' }}
+              disabled={isSubmitting}
+              style={{
+                width: '20%',
+                marginTop: '30px',
+                background: isSubmitting ? 'gray' : '#007BFF',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              }}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </Grid>
         </form>
