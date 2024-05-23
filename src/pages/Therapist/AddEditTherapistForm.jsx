@@ -433,11 +433,11 @@ const AddEditTherapistForm = () => {
                 <div class="rockstar">
                     <label for="yes">Is Week Off:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="weekOff" required value="yes" style={{ width: "35px" }} checked={formData.weekOff === true || formData?.weekOff === "yes"} />&nbsp;&nbsp;
+                        <input type="radio" name="weekOff" required value="yes" style={{ width: "35px" }} checked={formData?.weekOff === "yes"} />&nbsp;&nbsp;
                         <label for="yes">Yes</label>
                     </div>
                     <div class="radio-buttons" onChange={handleFieldChange}>
-                        <input type="radio" name="weekOff" required value="no" style={{ width: "35px" }} checked={formData.weekOff === false || formData?.weekOff === "no"} />&nbsp;&nbsp;
+                        <input type="radio" name="weekOff" required value="no" style={{ width: "35px" }} checked={formData?.weekOff === "no"} />&nbsp;&nbsp;
                         <label for="no">No</label>
                     </div>
                 </div>
