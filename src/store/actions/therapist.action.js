@@ -130,3 +130,17 @@ export const autoAllocateTherapistAndMachine = async (data) => {
     return error;
   }
 }
+
+export const addTherapistUnavailabilityAndLeave = async (
+  addTherapistUnavailabilityAndLeaveBody
+) => {
+  try {
+    const res = await axios.post(
+      `${apiUrl}/api/v1/custom-therapist-slot/add-therapist-custom-slot`,
+      addTherapistUnavailabilityAndLeaveBody
+    );
+    return res.data;
+  } catch (err) {
+    return err.response.data.status.message;
+  }
+};
