@@ -26,6 +26,7 @@ import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
+import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability';
 
 function App() {
   return (
@@ -77,7 +78,7 @@ function App() {
             <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
             <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
             <Route path="/packages" element={<Packages/>}/> 
-
+            <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability/>}/>
           </Route>
         </Routes>
       </Router>
