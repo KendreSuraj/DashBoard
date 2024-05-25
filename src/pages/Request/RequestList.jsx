@@ -46,7 +46,7 @@ const RequestList = () => {
             </div> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
         <h3 style={{ margin: '0 auto' }}>Therapist Unavailability/Request</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist</Button>
+        <Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist Request</Button>
       </div>
             <div className="table-container">
                 <table className="schedule-table">
