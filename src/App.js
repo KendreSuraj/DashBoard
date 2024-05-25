@@ -24,6 +24,7 @@ import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
 import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
+import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
             <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
             <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
+            <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability/>}/>
           </Route>
         </Routes>
       </Router>
