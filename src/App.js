@@ -27,6 +27,8 @@ import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
+import AdvancePayments from './pages/AdvancePayment/AdvancePayments.jsx';
+import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments.jsx';
 
 function App() {
   return (
@@ -72,13 +74,15 @@ function App() {
             <Route path="/add-faq"
               element={<AddFAQ />} />
             <Route path="/add-booking-payment" element={<AddPayment />} />
-            <Route path="/addedit-center" element={<AddEditCenterForm/>}/>
-            <Route path="/addedit-machine" element={<AddEditMachineForm/>}/>
-            <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
-            <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
-            <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
-            <Route path="/packages" element={<Packages/>}/> 
-            <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability/>}/>
+            <Route path="/addedit-center" element={<AddEditCenterForm />} />
+            <Route path="/addedit-machine" element={<AddEditMachineForm />} />
+            <Route path="/addedit-partner" element={<AddEditPartnerForm />} />
+            <Route path="/addedit-therapist" element={<AddEditTherapistForm />} />
+            <Route path="/add-machine-request" element={<AddMachineRequest />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability />} />
+            <Route path="/advance-payments" element={<AdvancePayments />} />
+            <Route path="/add-advance-payments" element={< AddAdvancePayments />} />
           </Route>
         </Routes>
       </Router>
