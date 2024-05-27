@@ -1,5 +1,6 @@
 import React from 'react';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import BallotIcon from '@mui/icons-material/Ballot';
 // import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -26,6 +27,7 @@ import TherapistList from '../pages/Therapist/TherapistList';
 import RequestList from '../pages/Request/RequestList';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import Packages from '../pages/Packages/Packages';
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 const appRoutes = [
   // {
@@ -110,7 +112,7 @@ const appRoutes = [
       icon: <LocalActivityIcon />,
     },
   },
-  role==="SUPER ADMIN"&&{  
+  role === "SUPER ADMIN" && {
     path: '/users',
     element: <UserList />,
     state: 'userList',
@@ -172,7 +174,16 @@ const appRoutes = [
       displayText: 'All Request',
       icon: <RequestPageIcon />,
     },
-  }
+  },
+  {
+    path: '/packages',
+    element: <Packages />,
+    state: 'packages',
+    sidebarProps: {
+      displayText: 'Packages',
+      icon: <BallotIcon />,
+    },
+  },
 ];
 
 export default appRoutes;

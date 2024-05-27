@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
+import Packages from './pages/Packages/Packages';
 import UserList from "./pages/Users/UserList"
 import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
@@ -25,6 +26,7 @@ import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
+import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
               element={<BookingDetails />}
             />
             <Route path="/add-coupon" element={<AddCoupon />} />
+            <Route path="/packages/packagesteps" element={<PackagesSteps />} />
 
             <Route
               path="/virtual-consultations"
@@ -74,6 +77,7 @@ function App() {
             <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
             <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
             <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
+            <Route path="/packages" element={<Packages/>}/> 
             <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability/>}/>
           </Route>
         </Routes>
