@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './RequestList.css'
 import { fetchAdmin } from '../../store/actions/center.action'
 import { Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 
 const RequestList = () => {
     const dispatch = useDispatch()

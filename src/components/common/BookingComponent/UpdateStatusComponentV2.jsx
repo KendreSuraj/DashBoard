@@ -22,6 +22,9 @@ const UpdateStatusComponentV2 = (props) => {
             slotTime: body?.slotTime,
             productId: body?.productId,
             sessionScheduleId: body?.sessionScheduleId,
+            clientLat:body?.clientLat,
+            clientLong:body?.clientLong,
+            city:body?.city
         }
         if (props?.selectedStatus !== "CANCELLED" && selectedStatus === "CANCELLED") {
             const res = await cancelBooking(reqBody)
