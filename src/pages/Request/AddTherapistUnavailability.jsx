@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { addTherapistUnavailabilityAndLeave, fetchTherapist } from '../../store/actions/therapist.action';
+import { addTherapistUnavailabilityAndLeave, fetchTherapist, updateCustomTherapistSlot } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 
 const AddTherapistUnavailability = () => {
