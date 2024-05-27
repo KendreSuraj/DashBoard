@@ -7,6 +7,8 @@ import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
 import Packages from './pages/Packages/Packages';
+import AdvancePayments from './pages/AdvancePayment/AdvancePayments';
+import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments';
 import UserList from "./pages/Users/UserList"
 import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
@@ -27,8 +29,6 @@ import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
-import AdvancePayments from './pages/AdvancePayment/AdvancePayments.jsx';
-import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments.jsx';
 
 function App() {
   return (
