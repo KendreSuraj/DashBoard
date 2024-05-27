@@ -7,6 +7,8 @@ import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
 import Packages from './pages/Packages/Packages';
+import AdvancePayments from './pages/AdvancePayment/AdvancePayments';
+import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments';
 import UserList from "./pages/Users/UserList"
 import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
@@ -71,12 +73,14 @@ function App() {
             <Route path="/add-faq"
               element={<AddFAQ />} />
             <Route path="/add-booking-payment" element={<AddPayment />} />
-            <Route path="/addedit-center" element={<AddEditCenterForm/>}/>
-            <Route path="/addedit-machine" element={<AddEditMachineForm/>}/>
-            <Route path="/addedit-partner" element={<AddEditPartnerForm/>}/>
-            <Route path="/addedit-therapist" element={<AddEditTherapistForm/>}/>
-            <Route path="/add-machine-request" element={<AddMachineRequest/>}/> 
-            <Route path="/packages" element={<Packages/>}/> 
+            <Route path="/addedit-center" element={<AddEditCenterForm />} />
+            <Route path="/addedit-machine" element={<AddEditMachineForm />} />
+            <Route path="/addedit-partner" element={<AddEditPartnerForm />} />
+            <Route path="/addedit-therapist" element={<AddEditTherapistForm />} />
+            <Route path="/add-machine-request" element={<AddMachineRequest />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/advance-payments" element={<AdvancePayments />} />
+            <Route path="/add-advance-payments" element={< AddAdvancePayments />} />
 
           </Route>
         </Routes>
