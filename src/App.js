@@ -7,6 +7,8 @@ import Profile from './pages/Profile/Profile';
 import { routes } from './routes';
 import Coupons from './pages/Coupons/Coupons';
 import Packages from './pages/Packages/Packages';
+import AdvancePayments from './pages/AdvancePayment/AdvancePayments';
+import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments';
 import UserList from "./pages/Users/UserList"
 import FAQ from './pages/FAQ/FAQ';
 import ViewProductDetails from './pages/Product/ViewProductDetails';
