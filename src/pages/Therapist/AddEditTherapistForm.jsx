@@ -55,7 +55,6 @@ const AddEditTherapistForm = () => {
             Saturday: { startTime: '', endTime: '' },
             Sunday: { startTime: '', endTime: '' },
         },
-        weekOff:''
     });
 
     const handleChange = (e, day) => {
@@ -429,8 +428,8 @@ const AddEditTherapistForm = () => {
                         <label for="no">No</label>
                     </div>
                 </div>
-                <br/>
-                <div class="rockstar">
+                {/* <br/> */}
+                {/* <div class="rockstar">
                     <label for="yes">Is Week Off:</label>
                     <div class="radio-buttons" onChange={handleFieldChange}>
                         <input type="radio" name="weekOff" required value="yes" style={{ width: "35px" }} checked={formData?.weekOff === "yes"} />&nbsp;&nbsp;
@@ -440,7 +439,7 @@ const AddEditTherapistForm = () => {
                         <input type="radio" name="weekOff" required value="no" style={{ width: "35px" }} checked={formData?.weekOff === "no"} />&nbsp;&nbsp;
                         <label for="no">No</label>
                     </div>
-                </div>
+                </div> */}
                 <h3>Therapist Availability</h3>
                 {<div style={{ display: 'flex', float: "right", width: "150px" }}>
                     <label title='First Choose Monday Time Slots for copy all Days'>Copy&nbsp;Time</label>
@@ -454,7 +453,7 @@ const AddEditTherapistForm = () => {
                             <th>Day</th>
                             <th>Start Time</th>
                             <th>End Time</th>
-                 {formData.weekOff==="yes"&&<th>Weekly Off</th>}
+                           <th>Weekly Off</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -469,7 +468,7 @@ const AddEditTherapistForm = () => {
                                         disabled={(id && formData.schedule[day].startTime === "WEEK_OFF") || (day === formData.weekendOff)}
                                         value={!(day === formData.weekendOff) && formData.schedule[day].startTime}
                                         onChange={(e) => handleChange(e, day)}
-                                        required
+                                        // required
                                     />
                                 </td>
                                 <td>
@@ -483,17 +482,17 @@ const AddEditTherapistForm = () => {
                                         required
                                     />
                                 </td>
-                               {formData.weekOff==="yes"&& <td>
+                               <td>
                                     <input
                                         checked={(id && formData.schedule[day].endTime === "WEEK_OFF") || (day === formData.weekendOff)}
                                         type="radio"
                                         name="weekendOff"
                                         value={day}
-                                        required
+                                        // required
                                         onChange={handleFieldChange}
                                         style={{ height: "20px" }}
                                     />
-                                </td>}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

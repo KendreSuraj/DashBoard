@@ -1,5 +1,4 @@
 export function addHoursToTime(time, hoursToAdd, minutesToAdd) {
-    console.log("see argssss",time, hoursToAdd, minutesToAdd)
     // Split the time string into hours and minutes
     let [hours, minutes] = time?.split(':').map(Number);
   

@@ -38,7 +38,6 @@ const BookingDetails = () => {
     callerName: "",
     callerPhone: ""
   })
-  console.log("se bookin g data", bookingData)
   const [machineDetail, setMachineDetail] = useState({})
   const [userLogs, setUserLogs] = useState([])
 

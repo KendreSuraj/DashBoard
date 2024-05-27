@@ -6,13 +6,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './RequestList.css'
 import { fetchAdmin } from '../../store/actions/center.action'
 import { Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 
 const RequestList = () => {
     const dispatch = useDispatch()
     const navigate=useNavigate()
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
-    const  adminList = useSelector(state => state.center?.adminList)
+    const adminList = useSelector(state => state.center?.adminList)
     useEffect(() => {
         dispatch(fetchTherapistCustomslots())
         dispatch(fetchAdmin())
@@ -25,7 +24,7 @@ const RequestList = () => {
             if (res.data?.status.code === 200) {
                 window.location.reload()
                 alert(res?.data.status?.message)
-            }else if(res?.response?.data?.status.code === 400){
+            } else if (res?.response?.data?.status.code === 400) {
                 alert(res?.response?.data?.status?.message)
             }
         } catch (error) {
@@ -40,7 +39,7 @@ const RequestList = () => {
             }
         }
     }
-    
+
     return (
         <div>
             {/* <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
@@ -80,8 +79,8 @@ const RequestList = () => {
 
                                     {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
                                     {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
-                                     {schedule?.isApproved&&`Approved By:${getAdminNameById(schedule.adminId)}`}
-                                     {schedule?.isApproved===false &&`Rejected By:${getAdminNameById(schedule.adminId)}`}
+                                    {schedule?.isApproved && `Approved By:${getAdminNameById(schedule.adminId)}`}
+                                    {schedule?.isApproved === false && `Rejected By:${getAdminNameById(schedule.adminId)}`}
                                 </td>
                             </tr>
                         ))}
