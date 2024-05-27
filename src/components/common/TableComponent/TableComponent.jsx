@@ -27,6 +27,8 @@ const TableComponent = ({
   deleteCouponButton,
   deleteFAQ,
   deleteFAQButton,
+  deletePaymentButton,
+  deletePayment
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -39,8 +41,8 @@ const TableComponent = ({
   const handleViewBookingDetails = (details) => {
     bookingDetails(details);
   };
-  const handlePackagesDetails=()=>{
-    
+  const handlePackagesDetails = () => {
+
   }
 
   const stringifiedUser = localStorage.getItem('userData');
@@ -93,6 +95,9 @@ const TableComponent = ({
                 {deleteFAQButton && (
                   <TableCell className="table-cell">Delete</TableCell>
                 )}
+                {deletePaymentButton && (
+                  <TableCell className="table-cell">Delete</TableCell>
+                )}
                 {viewPackagesButton && (
                   <TableCell className="table-cell">View</TableCell>
                 )}
@@ -111,7 +116,13 @@ const TableComponent = ({
                               Click here
                             </Link>
                           ) : (
-                            row[key]
+                            key === 'image' ? <img
+                              className="view-unchecked-img"
+                              src={`${row[key]}?w=100&h=100&fit=crop`}
+                              onClick={() => window.open(row[key], '_blank')}
+                              style={{ maxWidth: '100px', maxHeight: '100px', cursor: 'pointer' }}
+                              alt="img"
+                            /> : row[key]
                           )}
                         </TableCell>
                       );
@@ -152,47 +163,47 @@ const TableComponent = ({
 
                   {!concentrixUser
                     ? viewBookingButton && (
-                        <TableCell className="table-cell">
-                          {viewBookingButton === 'img' ? (
-                            <img
-                              className="view-unchecked-img"
-                              src={`${row.image}?w=100&h=100&fit=crop`}
-                              onClick={() => window.open(row.image, '_blank')}
-                              alt="img"
-                            />
-                          ) : (
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() => handleViewBookingDetails(row)}
-                            >
-                              {viewBookingButton}
-                            </Button>
-                          )}
-                        </TableCell>
-                      )
+                      <TableCell className="table-cell">
+                        {viewBookingButton === 'img' ? (
+                          <img
+                            className="view-unchecked-img"
+                            src={`${row.image}?w=100&h=100&fit=crop`}
+                            onClick={() => window.open(row.image, '_blank')}
+                            alt="img"
+                          />
+                        ) : (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleViewBookingDetails(row)}
+                          >
+                            {viewBookingButton}
+                          </Button>
+                        )}
+                      </TableCell>
+                    )
                     : ''}
-                  
+
                   {viewPackagesButton && (
-                  <TableCell className="table-cell">
-                    {viewPackagesButton === 'img' ? (
-                      <img
-                        className="view-unchecked-img"
-                        src={`${row.image}?w=100&h=100&fit=crop`}
-                        onClick={() => window.open(row.image, '_blank')}
-                        alt="img"
-                      />
-                    ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handlePackagesDetails(row)}
-                      >
-                        {viewPackagesButton}
-                      </Button>
-                    )}
-                  </TableCell>
-                )}
+                    <TableCell className="table-cell">
+                      {viewPackagesButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handlePackagesDetails(row)}
+                        >
+                          {viewPackagesButton}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
                   {deleteCouponButton && (
                     <TableCell className="table-cell">
                       {deleteCouponButton === 'img' ? (
@@ -210,6 +221,27 @@ const TableComponent = ({
                           onClick={() => deleteCoupon(row)}
                         >
                           {deleteCouponButton}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
+                  {deletePaymentButton && (
+                    <TableCell className="table-cell">
+                      {deletePaymentButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ backgroundColor: '#D70040', color: 'white' }}
+                          onClick={() => deletePayment(row)}
+                        >
+                          {deletePaymentButton}
                         </Button>
                       )}
                     </TableCell>

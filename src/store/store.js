@@ -13,6 +13,7 @@ import centerSlice from './slices/centerSlice';
 import machineSlice from './slices/machineSlice';
 import therapistSlice from './slices/therapistSlice';
 import packagesSlice from './slices/packagesSlice';
+import advancePaymentSlice from './slices/advancePaymentSlice';
 
 const store = configureStore({
   reducer: {
@@ -26,10 +27,11 @@ const store = configureStore({
     users: usersSlice,
     VirtualConsultation: VirtualConsultationsSlice,
     faq: faqSlice,
-    center:centerSlice,
-    machine:machineSlice,
-    therapist:therapistSlice,
+    center: centerSlice,
+    machine: machineSlice,
+    therapist: therapistSlice,
     packages: packagesSlice,
+    advancePayments: advancePaymentSlice
   },
 });
 export default store;
