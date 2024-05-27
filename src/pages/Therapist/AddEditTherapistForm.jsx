@@ -476,7 +476,7 @@ const AddEditTherapistForm = () => {
                                         type="radio"
                                         name="weekendOff"
                                         value={day}
-                                        required
+                                        // required
                                         onChange={handleFieldChange}
                                         style={{ height: "20px" }}
                                     />
