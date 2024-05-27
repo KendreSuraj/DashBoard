@@ -54,7 +54,7 @@ const AddTherapistUnavailability = () => {
 
     return (
         <div className="add-center-form">
-            <h3>Add Unavailable/leave Request</h3>
+            <h3>Add Unavailable/leave Request </h3>
             <form onSubmit={handleSubmit}>
                 <div className="form-row">
                     <div className="form-group">

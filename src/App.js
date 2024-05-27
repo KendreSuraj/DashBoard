@@ -25,8 +25,8 @@ import AddEditPartnerForm from './pages/Partner/AddEditPartnerForm';
 import AddEditCenterForm from './pages/Center/AddEditCenterForm';
 import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
+import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
-import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability';
 
 function App() {
   return (
