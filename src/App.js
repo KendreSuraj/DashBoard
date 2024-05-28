@@ -29,8 +29,6 @@ import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
-import AdvancePayments from './pages/AdvancePayment/AdvancePayments.jsx';
-import AddAdvancePayments from './pages/AdvancePayment/AddAdvancePayments.jsx';
 
 function App() {
   return (
