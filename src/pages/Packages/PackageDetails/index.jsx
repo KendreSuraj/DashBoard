@@ -5,21 +5,19 @@ import axios from 'axios';
 import {
   TextField,
 } from '@material-ui/core';
-import Select from '@mui/material/Select';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Chip from '@mui/material/Chip';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Button } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
 
-const bodyparts=["Hands","Chest","Legs","Abdomen","Head"];
+const bodyparts = ["Hands", "Chest", "Legs", "Abdomen", "Head"];
 
 const PackageDetails = ({ setPackagesSubmitted }) => {
   const packageType = localStorage.getItem('packageDetail');
@@ -35,9 +33,24 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     packageProduct: ""
   });
   const [personName, setPersonName] = useState([]);
-  const [parts,setParts]=useState([]);
+  const [parts, setParts] = useState([]);
   const [names, setNames] = useState([]);
   const [packageItems, setPackageItems] = useState([]);
+  const [Radiovalue, setRadioValue] = React.useState('female');
+  const [discount, setDiscount] = useState('')
+  const [price, setPrice] = useState(0);
+  const [discountValue, setDiscountValue] = useState(0)
+  const [finalPrice, setFinalPrice] = useState(0);
+  const [discountPercent, setDiscountPercent] = useState(0);
+
+  const handleRadioChange = (event) => {
+    setRadioValue(event.target.value);
+  };
+
+  const handleDiscountChange = (event) => {
+    setDiscount(event.target.value);
+  };
+
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
@@ -68,7 +81,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       },
     });
     const product = await res.data.productList;
-    setNames(product.map(obj => `${obj.id}. ${obj.name}`));
+    setNames(product.filter((item) => item.categoryGender === Radiovalue).map(obj => `${obj.id}. ${obj.name}`));
   };
 
   const fetchParticularData = async () => {
@@ -89,8 +102,13 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         packageName: res.data.data.packageName,
         description: res.data.data.packageDescription,
       });
+      setPrice(res.data.data.price);
+      setFinalPrice(res.data.data.finalPrice)
+      setDiscountValue(res.data.data.packagePriceType==="flat"?res.data.data.price-res.data.data.finalPrice:0)
+      setDiscountPercent(res.data.data.packagePriceType==="flat"?res.data.data.price-res.data.data.finalPrice:res.data.data.discount)
+      setDiscount(res.data.data.packagePriceType)
       setChecked(false);
-    } 
+    }
     else {
       setCustomState("custom");
 
@@ -102,25 +120,26 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       });
       setPersonName(res.data.data.products.map(obj => `${obj.id}. ${obj.name}`));
       setParts(res.data.data.bodyParts)
+      setDiscountPercent(res.data.data.discount)
     }
   };
 
   const handleChange = (event) => {
     const {
-      target: { value },
+      target: { innerHTML },
     } = event;
-    setPersonName(typeof value === 'string' ? value.split(',') : value);
+    setPersonName([...personName,innerHTML.split('.')[0]]);
     setValues({
       ...values,
-      "productId": typeof value === 'string' ? value.split(',') : value,
+      "productId": [...personName,innerHTML.split(".")[0]],
     });
   };
 
-  const handleBodyParts=(event)=>{
+  const handleBodyParts = (event) => {
     const {
-      target: { value },
+      target: { innerHTML },
     } = event;
-    setParts(typeof value === 'string' ? value.split(',') : value);
+    setParts([...new Set(parts),innerHTML]);
     setValues({
       ...values,
     });
@@ -150,10 +169,18 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       let response;
 
       if (customState === "") {
+        if (packageProduct.length < 2) {
+          alert("Please select atleast 2 products")
+          return;
+        }
         body = {
           packageName: values.packageName,
           description: values.description,
           products: packageProduct,
+          price,
+          finalPrice,
+          packagePriceType: discount,
+          discount: discountPercent
         };
         response = await axios.post(
           `${apiUrl}/api/v1/admin/package/create-fix-package`, body, {
@@ -168,7 +195,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           description: values.description,
           products: formattedArray,
           numberOfSessions: parseInt(values.noOfSession, 10),
-          bodyParts:parts
+          bodyParts: parts,
+          discount: discountPercent,
         };
         response = await axios.post(
           `${apiUrl}/api/v1/admin/package/create-custom-package`, body, {
@@ -203,12 +231,25 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       let response;
 
       if (customState === "") {
+        if (packageProduct.length < 2) {
+          alert("Please select atleast 2 products")
+          return;
+        }
+        if (discount === "flat") {
+          setDiscountPercent(parseInt((discountValue / price) * 100))
+        }
+        else {
+          setDiscountPercent(parseInt(discountValue))
+        }
         body = {
           packageName: values.packageName,
           description: values.description,
           products: packageProduct,
+          price: parseInt(price, 10),
+          finalPrice,
+          packagePriceType: discount,
+          discount: discountPercent
         };
-        console.log(body)
         response = await axios.patch(
           `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
           headers: {
@@ -216,13 +257,15 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           }
         });
       } else {
-        const formattedArray = values?.productId?.map(item => (parseInt(item.split(".")[0], 10)));
+        const formattedArray = personName?.map(item => (parseInt(item.split(".")[0], 10)));
+
         body = {
           packageName: values.packageName,
           description: values.description,
           products: formattedArray,
           numberOfSessions: parseInt(values.noOfSession, 10),
-          bodyParts:parts
+          bodyParts: parts,
+          discount: parseInt(discountPercent,10),
         };
 
         response = await axios.patch(
@@ -243,15 +286,34 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     }
   };
 
+  const handleDiscountValue = (event) => {
+    if (discount === "flat") {
+      setDiscountValue(event.target.value)
+      setDiscountPercent(parseInt((event.target.value / price) * 100))
+    }
+    else {
+      setDiscountValue((event.target.value * price) / 100)
+      setDiscountPercent(parseInt(event.target.value))
+    }
+  }
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [Radiovalue]);
 
   useEffect(() => {
     if (packageType === "edit") {
       fetchParticularData();
     }
   }, [packageType]);
+
+  useEffect(() => {
+    if (price - discountValue < 0) {
+      alert("Please Enter valid Discount")
+    } else {
+      setFinalPrice(price - discountValue)
+    }
+  }, [price,discountValue])
 
   return (
     <>
@@ -282,24 +344,39 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           />} label="Custom" />
       </div>
 
-      {packageItems.map((item, index) => (
+      <FormControl>
+        <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: "black" }}>Select Gender</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-controlled-radio-buttons-group"
+          name="controlled-radio-buttons-group"
+          value={Radiovalue}
+          onChange={handleRadioChange}
+        >
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+        </RadioGroup>
+      </FormControl>
+
+      {!checked && packageItems.map((item, index) => (
         <PackageItem
           key={index}
           index={index}
           rule={item}
           names={names}
           onChange={handlePackageItemChange}
+          price={price}
+          setPrice={setPrice}
         />
       ))}
 
-      <Button
+      {!checked && <Button
         variant="contained"
         color="primary"
         onClick={addPackageItem}
         style={{ marginBottom: '20px', width: "25%" }}
       >
         Add Package Item
-      </Button>
+      </Button>}
 
       {checked &&
         <>
@@ -313,64 +390,73 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           />
           <div style={{ display: "flex", gap: "20px" }}>
             <FormControl sx={{ width: "850px" }}>
-              <InputLabel id="productID">Products*</InputLabel>
-              <Select
-                labelId="productID"
-                multiple
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={names}
                 value={personName}
                 onChange={handleChange}
-                input={<OutlinedInput />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {names?.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
-                  >
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+                multiple
+                renderInput={(params) => <TextField {...params} label="Products" />}
+              />
             </FormControl>
             <FormControl sx={{ width: "330px" }}>
-              <InputLabel id="productID">Body Parts*</InputLabel>
-              <Select
-                labelId="productID"
-                multiple
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={bodyparts}
                 value={parts}
                 onChange={handleBodyParts}
-                input={<OutlinedInput />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {bodyparts?.map((bodypart) => (
-                  <MenuItem
-                    key={bodypart}
-                    value={bodypart}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: "12px" }}
-                  >
-                    {bodypart}
-                  </MenuItem>
-                ))}
-              </Select>
+                multiple
+                renderInput={(params) => <TextField {...params} label="Body Parts" />}
+              />
             </FormControl>
           </div>
         </>}
-
+      <div style={{ fontSize: "20px" }}>
+        {!checked && <p>Price: {price}</p>}
+        {price > 0 && <>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={discount}
+              style={{ display: "flex", flexDirection: "row" }}
+              onChange={handleDiscountChange}
+            >
+              <FormControlLabel value="flat" control={<Radio />} label="Flat" />
+              <FormControlLabel value="percent" control={<Radio />} label="%" />
+            </RadioGroup>
+          </FormControl><br />
+          {discount === "flat" &&
+            <TextField
+              variant="outlined"
+              label="Flat Discount"
+              name="flatDiscount"
+              type='number'
+              value={discountPercent}
+              onChange={handleDiscountValue}
+              required />}
+          {discount === "percent" &&
+            <TextField
+              variant="outlined"
+              label="Discount Percentage"
+              name="percentageDiscount"
+              onChange={handleDiscountValue} 
+              value={discountPercent}
+              type='number'
+              required />}
+          {!checked && <p>Final Price: {finalPrice === 0 ? price : Math.ceil(finalPrice)}</p>}
+        </>}
+        {checked && <TextField
+          variant="outlined"
+          label="Discount Percentage"
+          name="percentageDiscount"
+          onChange={handleDiscountValue}
+          type='number'
+          value={discountPercent}
+          required />}
+      </div>
       <Button
         type="submit"
         variant="contained"

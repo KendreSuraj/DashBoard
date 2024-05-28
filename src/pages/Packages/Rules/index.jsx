@@ -38,6 +38,7 @@ const RulesStep = () => {
         rules: formattedRules
       };
 
+
       let transformedObject = {
         "packageId": body.packageId,
         "rules": []
