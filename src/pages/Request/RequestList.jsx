@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTherapistCustomslots, updateCustomTherapistSlot } from '../../store/actions/therapist.action'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import './RequestList.css'
 import { fetchAdmin } from '../../store/actions/center.action'
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 
 const RequestList = () => {
     const dispatch = useDispatch()
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
     const adminList = useSelector(state => state.center?.adminList)
     useEffect(() => {
@@ -47,9 +47,9 @@ const RequestList = () => {
                 <h3 style={{ margin: '0 auto' }}>All  Therapist Request</h3>
             </div> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
-        <h3 style={{ margin: '0 auto' }}>Therapist Unavailability/Request</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist Request</Button>
-      </div>
+                <h3 style={{ margin: '0 auto' }}>Therapist Unavailability/Request</h3>
+                <Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist Request</Button>
+            </div>
             <div className="table-container">
                 <table className="schedule-table">
                     <thead>

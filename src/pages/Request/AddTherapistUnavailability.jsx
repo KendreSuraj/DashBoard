@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addTherapistUnavailabilityAndLeave, fetchTherapist, updateCustomTherapistSlot } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTherapistUnavailabilityAndLeave, fetchTherapist } from '../../store/actions/therapist.action';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchBookings } from '../../store/actions/booking.action';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
