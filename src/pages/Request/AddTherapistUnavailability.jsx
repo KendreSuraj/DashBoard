@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { addTherapistUnavailabilityAndLeave, fetchTherapist } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
-import { fetchBookings } from '../../store/actions/booking.action';
+import { fetchBookings, fetchBookingsByPartner } from '../../store/actions/booking.action';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 
 const AddTherapistUnavailability = () => {
@@ -12,7 +12,8 @@ const AddTherapistUnavailability = () => {
     const [filteredTherapistList, setFilteredTherapistList] = useState([]);
     const therapistList = useSelector(state => state?.therapist?.therapistList?.therapists || []);
     const centerList = useSelector(state => state.center?.centerList?.centers || []);
-    let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+    // let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+    const [bookingList,setBookingList]=useState([])
 
     const today = new Date();
     const tomorrow = new Date();
@@ -87,7 +88,7 @@ const AddTherapistUnavailability = () => {
         setIsSubmitting(false);
     };
 
-    const fetchBookingData = () => {
+    const fetchBookingData = async() => {
         const obj = {
             startDate: formData.startDate,
             endDate: formData.endDate,
@@ -95,7 +96,10 @@ const AddTherapistUnavailability = () => {
             searchType: "partnerName",
             searchText: formData.therapistName
         };
-        dispatch(fetchBookings(obj));
+       const res=await fetchBookingsByPartner(obj)
+       if(res.status.code===200){
+         setBookingList(res?.bookings)
+       }
     };
 
     useEffect(() => {
