@@ -64,6 +64,11 @@ const AdvancePayments = () => {
         }
     }
 
+    const verifyPayment = (data) => {
+        setAdvancePaymentId(data.id)
+        setShowModal(true)
+    }
+
     useEffect(() => {
         dispatch(listPayments());
         dispatch(getVerificationUser())

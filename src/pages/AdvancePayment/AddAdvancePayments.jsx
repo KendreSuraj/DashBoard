@@ -65,6 +65,27 @@ const AddAdvancePayments = () => {
   };
 
 
+  // reqBodyData = (obj) => {
+  //   const data = {};
+  //   for (const key in obj) {
+  //     const value = obj[key];
+  //     if (value !== "" || value !== 0) {
+  //       data[key] = value;
+  //     }
+  //   }
+  //   console.log(data);
+  //   return data;
+  // }
+  // const replaceTimeInDate = (originalDateTime, newTime) => {
+  //   const parsedOriginalDateTime = moment(originalDateTime);
+
+  //   const datePart = parsedOriginalDateTime.format('YYYY-MM-DD');
+
+  //   const newDateTime = moment(`${datePart} ${newTime}`, 'YYYY-MM-DD HH:mm:ss');
+
+  //   return newDateTime.format();
+  // };
+
   const fetchCaller = async () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/caller-list`, {
@@ -130,6 +151,7 @@ const AddAdvancePayments = () => {
             data[key] = value;
           }
         }
+        console.log(data);
         return data;
       }
 
