@@ -4,23 +4,34 @@ import TableComponent from '../../components/common/TableComponent/TableComponen
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
-import { listPayments } from '../../store/actions/advancePayment.action';
+import { getVerificationUser, listPayments } from '../../store/actions/advancePayment.action';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from '../../components/common/userLocalStorageUtils';
+import PaymentOtpModal from './PaymentOtpModal';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const AdvancePayments = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [advancePaymentId, setAdvancePaymentId] = useState(null)
+    const [verificationUserDetail, setVerificationUserDetail] = useState()
+    const [isVerificationUser, setIsVerificationUser] = useState(false)
     // const [page, setPage] = useState(1);
     // const [paymentListLength, setPaymentListLength] = useState(0);
 
-    let paymentList = useSelector((state) => {
+    let { paymentList, verificationUser } = useSelector((state) => {
         console.log(state)
-        return state.advancePayments.paymentList
+        return state.advancePayments
     });
+    useEffect(() => {
+        if (verificationUser && verificationUser.isUser) {
+            setIsVerificationUser(true)
+            setVerificationUserDetail(verificationUser.user)
+        }
+    }, [])
 
     // useEffect(() => {
     //     if (paymentList && paymentList.length > 0) {
@@ -40,8 +51,14 @@ const AdvancePayments = () => {
     //     setPage(pageNumber);
     // }
 
+    const verifyPayment = (data) => {
+        setAdvancePaymentId(data.id)
+        setShowModal(true)
+    }
+
     useEffect(() => {
         dispatch(listPayments());
+        dispatch(getVerificationUser())
     }, [dispatch]);
 
 
@@ -98,6 +115,8 @@ const AdvancePayments = () => {
                     data={paymentList}
                     deletePaymentButton={'Delete'}
                     deletePayment={handleDelete}
+                    verifyPaymentButton={'Verify Payment'}
+                    verifyPayment={verifyPayment}
                 /> : <h3>No records added till now.</h3>
             }
 
@@ -108,6 +127,7 @@ const AdvancePayments = () => {
                     onChange={handlePagination}
                 />
             </div> */}
+            {showModal && <PaymentOtpModal verificationUserDetail={verificationUserDetail} isVerificationUser={isVerificationUser} handleVerification={handleVerification} advancePaymentId={advancePaymentId} closeModal={() => setShowModal(false)} />}
         </div>
     );
 }

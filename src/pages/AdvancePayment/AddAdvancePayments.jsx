@@ -13,8 +13,12 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getToken } from '../../components/common/userLocalStorageUtils';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 import moment from 'moment';
+import PaymentOtpModal from './PaymentOtpModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,16 +53,29 @@ const AddAdvancePayments = () => {
   const [callersList, setCallersList] = useState([])
   const [productList, setProductList] = useState([]);
   const [selectedCaller, setSelectedCaller] = useState("")
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setValues({
       ...values,
       [name]: value,
     });
   };
 
+
+  // reqBodyData = (obj) => {
+  //   const data = {};
+  //   for (const key in obj) {
+  //     const value = obj[key];
+  //     if (value !== "" || value !== 0) {
+  //       data[key] = value;
+  //     }
+  //   }
+  //   console.log(data);
+  //   return data;
+  // }
   // const replaceTimeInDate = (originalDateTime, newTime) => {
   //   const parsedOriginalDateTime = moment(originalDateTime);
 
@@ -112,7 +129,7 @@ const AddAdvancePayments = () => {
     setIsSubmitting(true);
 
     try {
-      const reqBody = {
+      const dummyReqBody = {
         name: values.name,
         phone: values.phone,
         gender: values.gender,
@@ -126,6 +143,21 @@ const AddAdvancePayments = () => {
         modeOfPayment: values.modeOfPayment,
         address: values.address,
       }
+
+      const reqBodyData = () => {
+        const data = {};
+        for (const key in dummyReqBody) {
+          const value = dummyReqBody[key];
+          if (value !== "" && value !== 0 && value !== undefined) {
+            data[key] = value;
+          }
+        }
+        console.log(data);
+        return data;
+      }
+
+      const reqBody = reqBodyData();
+
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/add-payment`,
         reqBody,
         {
@@ -136,11 +168,13 @@ const AddAdvancePayments = () => {
         })
 
       if (response?.status === 201 || response?.status === 200) {
-        navigate("/advance-payments")
+        toast.success('Payment added successfully!');
+        navigate("/advance-payments");
+        // setShowModal(true);
       }
 
     } catch (err) {
-      alert(err?.response?.data?.status?.message);
+      toast.error(err?.response?.data?.status?.message || 'An error occurred while adding the payment.');
     }
     finally {
       setIsSubmitting(false);
@@ -236,7 +270,7 @@ const AddAdvancePayments = () => {
                   name="gender"
                   value={values.gender}
                   onChange={handleInputChange}
-                  required
+
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
@@ -254,7 +288,7 @@ const AddAdvancePayments = () => {
                 value={values.city}
                 onChange={handleInputChange}
                 placeholder=""
-                required
+
               />
               <TextField
                 variant="outlined"
@@ -276,7 +310,7 @@ const AddAdvancePayments = () => {
                   name="caller"
                   value={selectedCaller}
                   onChange={handleCallerChange}
-                  required
+
                 >
                   {callersList && callersList.length > 0 ? (
                     callersList.map((caller) => (
@@ -327,6 +361,7 @@ const AddAdvancePayments = () => {
                 labelWidth={100}
                 InputLabelProps={{ shrink: true }}
                 placeholder=""
+
               />
               <TextField
                 variant="outlined"
@@ -335,7 +370,7 @@ const AddAdvancePayments = () => {
                 name="address"
                 value={values.address}
                 onChange={handleInputChange}
-                required
+
               />
               <FormControl variant="outlined">
                 <InputLabel id="modeOfPayment-label">Payment Mode: </InputLabel>
@@ -369,7 +404,7 @@ const AddAdvancePayments = () => {
                   name="product"
                   value={selectedProducts}
                   onChange={handleProductChange}
-                  required
+
                 >
                   {productList && productList.length > 0 ? (
                     productList.map((product) => (
@@ -416,6 +451,8 @@ const AddAdvancePayments = () => {
           </Grid>
         </form>
       </Paper>
+      <ToastContainer />
+      {/* {showModal && <PaymentOtpModal closeModal={() => setShowModal(false)} />} */}
     </>
   );
 };
