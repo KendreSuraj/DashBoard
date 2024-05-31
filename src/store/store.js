@@ -13,7 +13,7 @@ import centerSlice from './slices/centerSlice';
 import machineSlice from './slices/machineSlice';
 import therapistSlice from './slices/therapistSlice';
 import packagesSlice from './slices/packagesSlice';
-
+import schedulerAnalyticsSlice from "./slices/SchedulerAnalyticsSlice"
 const store = configureStore({
   reducer: {
     appState: appStateSlice,
@@ -30,6 +30,7 @@ const store = configureStore({
     machine:machineSlice,
     therapist:therapistSlice,
     packages: packagesSlice,
+    schedulerAnalytics:schedulerAnalyticsSlice
   },
 });
 export default store;
