@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { addTherapistUnavailabilityAndLeave, fetchTherapist, updateCustomTherapistSlot } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
-import { fetchBookings } from '../../store/actions/booking.action';
+import { fetchBookingsByPartner } from '../../store/actions/booking.action';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
+import { splitDateTime } from '../../utils';
 
 const AddTherapistUnavailability = () => {
     const dispatch = useDispatch();
@@ -12,7 +13,8 @@ const AddTherapistUnavailability = () => {
     const [filteredTherapistList, setFilteredTherapistList] = useState([]);
     const therapistList = useSelector(state => state?.therapist?.therapistList?.therapists || []);
     const centerList = useSelector(state => state.center?.centerList?.centers || []);
-    let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+    // let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
+    const [bookingList,setBookingList]=useState([])
 
     const today = new Date();
     const tomorrow = new Date();
@@ -44,6 +46,11 @@ const AddTherapistUnavailability = () => {
             setFilteredTherapistList(therapistList);
         }
     }, [formData.centerId, therapistList]);
+
+    const handleBookingDetail = (details) => {
+        console.log(details);
+        navigate(`/booking-details/${details['Service Id']}`);
+      };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -87,7 +94,7 @@ const AddTherapistUnavailability = () => {
         setIsSubmitting(false);
     };
 
-    const fetchBookingData = () => {
+    const fetchBookingData = async() => {
         const obj = {
             startDate: formData.startDate,
             endDate: formData.endDate,
@@ -95,7 +102,33 @@ const AddTherapistUnavailability = () => {
             searchType: "partnerName",
             searchText: formData.therapistName
         };
-        dispatch(fetchBookings(obj));
+       const res=await fetchBookingsByPartner(obj)
+       if(res.status.code===200){
+        //  setBookingList(res?.bookings)
+        const bookingList = res.bookings.map(data => {
+            const formattedDate = splitDateTime(data.appointmentAt);
+            const bookingDate = splitDateTime(data.bookingAt);
+    
+            return {
+                'Service Id': data?.sessionSchedulesId,
+                'Client Name': data.name ? data.name : '',
+                'Gender': data?.gender,
+                'Phone Number': data.phoneNumber,
+                'City': data.city ? data.city : '',
+                'Service Name': data.productName ? data.productName : '',
+                'Service Date': formattedDate.date,
+                'Service Time': formattedDate.time,
+                'Service Status': data.status ? data.status : '',
+                'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
+                "Start Time": data.startTime ? data.startTime : "",
+                "End Time": data.endTime ? data.endTime : "",
+                "Comment": data.comment ? data.comment : "",
+                "Booking Date": bookingDate?.date,
+                "Booking Time": data?.bookingTime
+            };
+        });    
+        setBookingList(bookingList);
+       }
     };
 
     useEffect(() => {
@@ -180,36 +213,8 @@ const AddTherapistUnavailability = () => {
             </div>
             <TableComponent
                 data={bookingList}
-                hiddenFields={[
-                    'orderId',
-                    'addressType',
-                    'addressPlaceId',
-                    'productSessionId',
-                    'isConsent',
-                    'productImage',
-                    'sessionId',
-                    'orderDetailId',
-                    'productId',
-                    'addressCompoundCode',
-                    'addressArea',
-                    'userId',
-                    'appointmentAt',
-                    "comment",
-                    "callerName",
-                    "callerPhone",
-                    "orderid",
-                    "addressId",
-                    "state",
-                    "postalCode",
-                    "placeId",
-                    "compoundCode",
-                    'latitude',
-                    "longitude",
-                    "map",
-                    "bookingAt",
-                    "clientId",
-                    "incentiveAllotted"
-                ]}
+                viewBookingButton={'view'}
+                 bookingDetails={handleBookingDetail}
             />
         </div>
     );

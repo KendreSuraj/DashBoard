@@ -29,7 +29,11 @@ import RequestPageIcon from '@mui/icons-material/RequestPage';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import Packages from '../pages/Packages/Packages';
 import AdvancePayments from '../pages/AdvancePayment/AdvancePayments';
+import SchedulerTabs from '../pages/Scheduler/SchedulerTabs';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+
 const appRoutes = [
   // {
   //   index: true,
@@ -174,6 +178,15 @@ const appRoutes = [
     sidebarProps: {
       displayText: 'All Request',
       icon: <RequestPageIcon />,
+    },
+  },
+  {
+    path: '/scheduler-analytics',
+    element: <SchedulerTabs />,
+    state: 'schedulerAnalytics',
+    sidebarProps: {
+      displayText: 'Scheduler Analytics',
+      icon: <AnalyticsIcon />,
     },
   },
   {
