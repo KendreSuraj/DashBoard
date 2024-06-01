@@ -85,7 +85,8 @@ const AdvancePayments = () => {
                 }
             )
             if (response?.status === 201 || response?.status === 200) {
-                toas
+                toast("Successfully deleted.")
+                window.location.reload()
             }
         } catch (err) {
             alert(err?.response?.data?.status?.message);
