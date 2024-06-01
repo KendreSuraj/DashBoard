@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import Pagination from '@mui/material/Pagination';
 import { getVerificationUser, listPayments } from '../../store/actions/advancePayment.action';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from '../../components/common/userLocalStorageUtils';
 import PaymentOtpModal from './PaymentOtpModal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -23,7 +24,6 @@ const AdvancePayments = () => {
     // const [paymentListLength, setPaymentListLength] = useState(0);
 
     let { paymentList, verificationUser } = useSelector((state) => {
-        console.log(state)
         return state.advancePayments
     });
     useEffect(() => {
@@ -31,13 +31,7 @@ const AdvancePayments = () => {
             setIsVerificationUser(true)
             setVerificationUserDetail(verificationUser.user)
         }
-    }, [])
-
-    // useEffect(() => {
-    //     if (paymentList && paymentList.length > 0) {
-    //         setPaymentListLength(paymentList.length)
-    //     }
-    // }, [])
+    }, [verificationUser])
 
 
     const handleEdit = (e) => {
@@ -46,14 +40,28 @@ const AdvancePayments = () => {
         navigate('packagesteps')
     }
 
-    // const handlePagination = (event) => {
-    //     const pageNumber = parseInt(event.target.innerHTML.split("")[0], 10);
-    //     setPage(pageNumber);
-    // }
-
-    const verifyPayment = (data) => {
+    const verifyPayment = async (data) => {
         setAdvancePaymentId(data.id)
-        setShowModal(true)
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/send-otp`,
+                {
+                    id: data.id
+                },
+                {
+                    headers: {
+                        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+                        token: getToken(),
+                    },
+                }
+            )
+
+            if (response?.status === 201 || response?.status === 200) {
+                toast.success('Otp sent successfully!');
+                setShowModal(true)
+            }
+        } catch (err) {
+            console.log("ERR: verifyPayment frontend", err)
+        }
     }
 
     useEffect(() => {
@@ -77,7 +85,7 @@ const AdvancePayments = () => {
                 }
             )
             if (response?.status === 201 || response?.status === 200) {
-                window.location.reload();
+                toas
             }
         } catch (err) {
             alert(err?.response?.data?.status?.message);
@@ -85,6 +93,36 @@ const AdvancePayments = () => {
 
 
     };
+    const handleVerification = async ({ id, code }) => {
+        try {
+            if (!id && !code) {
+                toast("Please fill the OTP")
+                return
+            }
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/verify-payment-otp`,
+                {
+                    id,
+                    otp: code
+                },
+                {
+                    headers: {
+                        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+                        token: getToken(),
+                    },
+                }
+            )
+            if (response?.status === 201 || response?.status === 200) {
+                toast.success('Verified successfully.');
+                setShowModal(false)
+                window.location.reload()
+            }
+        } catch (err) {
+            toast("Something went wrong")
+            console.log(err)
+        }
+
+
+    }
     return (
         <div>
             <h3>Advance Payments</h3>
@@ -115,19 +153,12 @@ const AdvancePayments = () => {
                     data={paymentList}
                     deletePaymentButton={'Delete'}
                     deletePayment={handleDelete}
-                    verifyPaymentButton={'Verify Payment'}
+                    verifyPaymentButton={'Verify'}
                     verifyPayment={verifyPayment}
                 /> : <h3>No records added till now.</h3>
             }
-
-            {/* <div style={{ marginTop: "20px", float: "right" }}>
-                <Pagination
-                    count={Math.ceil(paymentListLength / 5)}
-                    color="primary"
-                    onChange={handlePagination}
-                />
-            </div> */}
             {showModal && <PaymentOtpModal verificationUserDetail={verificationUserDetail} isVerificationUser={isVerificationUser} handleVerification={handleVerification} advancePaymentId={advancePaymentId} closeModal={() => setShowModal(false)} />}
+            <ToastContainer />
         </div>
     );
 }

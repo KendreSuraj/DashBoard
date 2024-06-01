@@ -14,8 +14,7 @@ const PaymentOtpModal = ({ closeModal, handleVerification, advancePaymentId, ver
 
     const handleSubmit = () => {
         // Handle the code submission logic here
-        console.log('Code submitted:', code);
-        handleVerification(code, advancePaymentId)
+        handleVerification({ code, id: advancePaymentId })
         setOpen(false);
         closeModal();
     };
@@ -32,7 +31,7 @@ const PaymentOtpModal = ({ closeModal, handleVerification, advancePaymentId, ver
             <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
                 {
                     isVerificationUser ? <>
-                        <DialogTitle>Enter 4-Digit Code sent to ${verificationUserDetail.name} on ${verificationUserDetail.phone}</DialogTitle>
+                        <DialogTitle>Enter 4-Digit Code sent to {verificationUserDetail.name} on {verificationUserDetail.phone}</DialogTitle>
                         <DialogContent>
                             <TextField
                                 autoFocus

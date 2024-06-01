@@ -24,7 +24,7 @@ export const listPayments = createAsyncThunk('advancePayments', async () => {
     }
 });
 
-export const getVerificationUser = createAsyncThunk('advancePayments', async () => {
+export const getVerificationUser = createAsyncThunk('advancePayment', async () => {
     try {
         const res = await axios.get(`${apiUrl}/api/v1/admin/advance-payment/get-verification-user`, {
 

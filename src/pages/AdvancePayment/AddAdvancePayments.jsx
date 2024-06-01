@@ -65,27 +65,6 @@ const AddAdvancePayments = () => {
   };
 
 
-  // reqBodyData = (obj) => {
-  //   const data = {};
-  //   for (const key in obj) {
-  //     const value = obj[key];
-  //     if (value !== "" || value !== 0) {
-  //       data[key] = value;
-  //     }
-  //   }
-  //   console.log(data);
-  //   return data;
-  // }
-  // const replaceTimeInDate = (originalDateTime, newTime) => {
-  //   const parsedOriginalDateTime = moment(originalDateTime);
-
-  //   const datePart = parsedOriginalDateTime.format('YYYY-MM-DD');
-
-  //   const newDateTime = moment(`${datePart} ${newTime}`, 'YYYY-MM-DD HH:mm:ss');
-
-  //   return newDateTime.format();
-  // };
-
   const fetchCaller = async () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/caller-list`, {
@@ -118,7 +97,6 @@ const AddAdvancePayments = () => {
       });
       const data = await res.data.productList;
       setProductList(data);
-      console.log(data);
     } catch (error) {
       console.log("ERR: productList......", error)
     }
@@ -152,7 +130,6 @@ const AddAdvancePayments = () => {
             data[key] = value;
           }
         }
-        console.log(data);
         return data;
       }
 
@@ -192,8 +169,6 @@ const AddAdvancePayments = () => {
         return;
       }
       const reader = new FileReader();
-      // const file = files[0];
-      console.log("see file type ", file.type)
       reader.onloadend = () => {
         const img = new Image();
         img.src = reader.result;
@@ -409,10 +384,10 @@ const AddAdvancePayments = () => {
                   {productList && productList.length > 0 ? (
                     productList.map((product) => (
                       <MenuItem
-                        value={`${product.id} - ${product.name}`}
+                        value={`${product.id} - ${product.name} - ${product.categoryGender}`}
                         key={product.id}
                       >
-                        {product.id} - {product.name}
+                        {product.id} - {product.name} - {product.categoryGender}
                       </MenuItem>
                     ))
                   ) : (

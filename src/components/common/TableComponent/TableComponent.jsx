@@ -28,7 +28,9 @@ const TableComponent = ({
   deleteFAQ,
   deleteFAQButton,
   deletePaymentButton,
-  deletePayment
+  deletePayment,
+  verifyPaymentButton,
+  verifyPayment
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -97,6 +99,9 @@ const TableComponent = ({
                 )}
                 {deletePaymentButton && (
                   <TableCell className="table-cell">Delete</TableCell>
+                )}
+                {verifyPaymentButton && (
+                  <TableCell className="table-cell">Verify Payment</TableCell>
                 )}
                 {viewPackagesButton && (
                   <TableCell className="table-cell">View</TableCell>
@@ -242,6 +247,30 @@ const TableComponent = ({
                           onClick={() => deletePayment(row)}
                         >
                           {deletePaymentButton}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
+
+                  {!row.isValidated && verifyPaymentButton && (
+                    <TableCell className="table-cell">
+                      {deletePaymentButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          style={{ backgroundColor: '#0d9149', color: 'white' }}
+                          onClick={() => {
+                            verifyPayment(row)
+                          }}
+                        >
+                          {verifyPaymentButton}
                         </Button>
                       )}
                     </TableCell>
