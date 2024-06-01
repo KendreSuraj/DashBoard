@@ -11,7 +11,7 @@ const MachineAnalytics = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [activeOption, setActiveOption] = useState(0);
-  const [centerId, setCenterId] = useState(3);
+  const [centerId, setCenterId] = useState(4);
   const [selectedDay, setSelectedDay] = useState(new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase());
   const centerList = useSelector(state => state.center?.centerList?.centers || []);
   const machines = useSelector(state => state.schedulerAnalytics?.machineAnalytics?.machines || []);
