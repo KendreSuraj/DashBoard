@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTherapistAvailability, fetchMachineAvailability } from "../actions/SchedulerAnalytics.action";
+import { fetchTherapistAvailability, fetchMachineAvailability, fetchSlotData } from "../actions/SchedulerAnalytics.action";
 
 const initialState = {
     therapistAnalytics: [],
     machineAnalytics: [],
+    schedulerSlotData:null,
     isLoading: false,
     error: null,
 };
@@ -34,6 +35,18 @@ const schedulerAnalyticsSlice = createSlice({
             state.machineAnalytics = action.payload;
         });
         builder.addCase(fetchMachineAvailability.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
+
+        builder.addCase(fetchSlotData.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(fetchSlotData.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.schedulerSlotData = action.payload;
+        });
+        builder.addCase(fetchSlotData.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
         });
