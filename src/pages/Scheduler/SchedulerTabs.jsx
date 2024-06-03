@@ -64,7 +64,7 @@ export default function SchedulerTabs() {
         >
           <Tab label="Therapist Analytics" {...a11yProps(0)} />
           <Tab label="Machine Analytics" {...a11yProps(1)} />
-          {/* <Tab label="Slot Data" {...a11yProps(1)} /> */}
+          <Tab label="Slot Data" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -79,9 +79,9 @@ export default function SchedulerTabs() {
           <MachineAnalytics />
         </TabPanel>
 
-        {/* <TabPanel value={value} index={2} dir={theme.direction}>
+        <TabPanel value={value} index={2} dir={theme.direction}>
           <SchedulerSlotData />
-        </TabPanel> */}
+        </TabPanel>
       </SwipeableViews>
     </Box>
   );
