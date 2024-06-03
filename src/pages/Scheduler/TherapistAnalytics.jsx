@@ -82,11 +82,11 @@ const TherapistAnalytics = () => {
                 } else if (slot.status === "UNAVAILABLE") {
                     slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' }}>Unavailable</span>;
                 } else if (slot.status === "SESSION_BLOCKED") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' }} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_START") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap' ,borderRadius: '10px'}} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap' ,borderRadius: '10px',cursor:'pointer'}} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_END") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' }} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' ,cursor:'pointer'}} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 }
                 else {
                     slotMap[timeRange] = 'error';
@@ -141,7 +141,8 @@ const TherapistAnalytics = () => {
                             onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'))}
                         >
                             <span>
-                                {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)}
+                                {/* {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)} */}
+                                {moment(item.date).format('MMMM ddd DD')}
                             </span>
                         </li>
                     ))}
