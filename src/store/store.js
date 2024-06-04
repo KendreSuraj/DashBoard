@@ -33,7 +33,7 @@ const store = configureStore({
     therapist: therapistSlice,
     packages: packagesSlice,
     advancePayments: advancePaymentSlice,
-    schedulerAnalytics:schedulerAnalyticsSlice
+    schedulerAnalytics: schedulerAnalyticsSlice
   },
 });
 export default store;

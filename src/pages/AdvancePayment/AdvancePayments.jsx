@@ -124,6 +124,16 @@ const AdvancePayments = () => {
 
 
     }
+
+    const handleTransactionHistory = (data) => {
+        if (data.id) {
+            navigate(`/transaction-history/${data.id}`)
+        } else {
+            toast("can not find the payment ID on the view")
+            return
+        }
+
+    }
     return (
         <div>
             <h3>Advance Payments</h3>
@@ -150,12 +160,15 @@ const AdvancePayments = () => {
 
             {
                 paymentList && paymentList.length > 0 ? <TableComponent
-                    hiddenFields={['id', 'callerId', "productId", "partner_caller", 'image']}
+                    hiddenFields={['id', 'callerId', "productId", "partner_caller", 'image', 'isValidated']}
                     data={paymentList}
                     deletePaymentButton={'Delete'}
                     deletePayment={handleDelete}
                     verifyPaymentButton={'Verify'}
                     verifyPayment={verifyPayment}
+                    handleTransactionHistoryButton={'View Transaction History'}
+                    handleTransactionHistory={handleTransactionHistory}
+
                 /> : <h3>No records added till now.</h3>
             }
             {showModal && <PaymentOtpModal verificationUserDetail={verificationUserDetail} isVerificationUser={isVerificationUser} handleVerification={handleVerification} advancePaymentId={advancePaymentId} closeModal={() => setShowModal(false)} />}

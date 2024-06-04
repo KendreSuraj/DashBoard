@@ -29,6 +29,7 @@ import AddEditTherapistForm from './pages/Therapist/AddEditTherapistForm';
 import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
+import TransactionHistory from './pages/AdvancePayment/TransactionHistory.jsx';
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
             <Route path="/addtherapist-unavailability" element={<AddTherapistUnavailability />} />
             <Route path="/advance-payments" element={<AdvancePayments />} />
             <Route path="/add-advance-payments" element={< AddAdvancePayments />} />
+            <Route path="/transaction-history/:id" element={< TransactionHistory />} />
           </Route>
         </Routes>
       </Router>

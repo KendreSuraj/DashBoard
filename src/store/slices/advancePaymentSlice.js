@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { listPayments, getVerificationUser } from '../actions/advancePayment.action';
+import { listPayments, getVerificationUser, getTransactionHistory } from '../actions/advancePayment.action';
 
 const initialState = {
     paymentList: [],
     isLoading: false,
     error: null,
     verificationUser: null,
+    transactionHistory: null
 };
 
 const advancePaymentSlice = createSlice({
@@ -36,6 +37,19 @@ const advancePaymentSlice = createSlice({
                 state.verificationUser = action.payload;
             })
             .addCase(getVerificationUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.message;
+            })
+
+            // Handle transaction history actions
+            .addCase(getTransactionHistory.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getTransactionHistory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.transactionHistory = action.payload;
+            })
+            .addCase(getTransactionHistory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message;
             });

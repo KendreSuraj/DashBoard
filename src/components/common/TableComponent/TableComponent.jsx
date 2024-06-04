@@ -30,7 +30,9 @@ const TableComponent = ({
   deletePaymentButton,
   deletePayment,
   verifyPaymentButton,
-  verifyPayment
+  verifyPayment,
+  handleTransactionHistory,
+  handleTransactionHistoryButton
 }) => {
   const handleUpdate = (id) => {
     updateDetails(id);
@@ -105,6 +107,9 @@ const TableComponent = ({
                 )}
                 {viewPackagesButton && (
                   <TableCell className="table-cell">View</TableCell>
+                )}
+                {handleTransactionHistoryButton && (
+                  <TableCell className="table-cell">Transaction History</TableCell>
                 )}
               </TableRow>
             </TableHead>
@@ -252,6 +257,7 @@ const TableComponent = ({
                     </TableCell>
                   )}
 
+
                   {!row.isValidated && verifyPaymentButton && (
                     <TableCell className="table-cell">
                       {deletePaymentButton === 'img' ? (
@@ -275,6 +281,27 @@ const TableComponent = ({
                       )}
                     </TableCell>
                   )}
+                  {row.isValidated && verifyPaymentButton && (
+                    <TableCell className="table-cell">
+                      {deletePaymentButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="success"
+                          style={{ backgroundColor: '#0d9149', color: 'white' }}
+                          disabled
+                        >
+                          {'Verified'}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
 
                   {deleteFAQButton && (
                     <TableCell className="table-cell">
@@ -293,6 +320,27 @@ const TableComponent = ({
                           onClick={() => deleteFAQ(row)}
                         >
                           {deleteFAQButton}
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
+                  {handleTransactionHistoryButton && (
+                    <TableCell className="table-cell">
+                      {deletePaymentButton === 'img' ? (
+                        <img
+                          className="view-unchecked-img"
+                          src={`${row.image}?w=100&h=100&fit=crop`}
+                          onClick={() => window.open(row.image, '_blank')}
+                          alt="img"
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ backgroundColor: '#0d9149', color: 'white' }}
+                          onClick={() => handleTransactionHistory(row)}
+                        >
+                          {handleTransactionHistoryButton}
                         </Button>
                       )}
                     </TableCell>
