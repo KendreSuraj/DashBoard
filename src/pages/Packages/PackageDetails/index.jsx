@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,6 +13,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
 import Autocomplete from '@mui/material/Autocomplete';
+import { Editor } from '@tinymce/tinymce-react';
 
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
@@ -42,7 +43,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [discountValue, setDiscountValue] = useState(0)
   const [finalPrice, setFinalPrice] = useState(0);
   const [discountPercent, setDiscountPercent] = useState(0);
-  const [packageImage, setPackageImage]=useState();
+  const [packageImage, setPackageImage] = useState();
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -179,7 +180,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           description: values.description,
           products: packageProduct,
           price,
-          finalPrice:Math.ceil(finalPrice),
+          finalPrice: Math.ceil(finalPrice),
           packagePriceType: discount,
           discount: discountPercent,
           image: packageImage,
@@ -248,7 +249,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           description: values.description,
           products: packageProduct,
           price: parseInt(price, 10),
-          finalPrice:Math.ceil(finalPrice),
+          finalPrice: Math.ceil(finalPrice),
           packagePriceType: discount,
           discount: discountPercent
         };
@@ -338,13 +339,22 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         ctx.drawImage(img, 0, 0, width, height);
         const compressedDataURL = canvas.toDataURL(file.type);
         setPackageImage(
-            compressedDataURL
+          compressedDataURL
         );
       };
     };
     reader.readAsDataURL(file);
-
   }
+
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      setValues({
+        ...values,
+        description: editorRef.current.getContent(),
+      });
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -376,13 +386,26 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         required
       />
 
-      <TextField
+      {/* <TextField
         variant="outlined"
         label="Description"
         name="description"
         value={values.description}
         onChange={handleInputChange}
         required
+      /> */}
+
+      <Editor
+        apiKey='1s2mvrmfdfu3iaw5yvt1n3mek2e2zds78tm3b2mzbihysqw0'
+        onInit={(_evt, editor) => editorRef.current = editor}
+        init={{
+          height: 500,
+          menubar: false,
+          plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker permanentpen powerpaste advtable advcode editimage tableofcontents mergetags inlinecss',
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        }}
+        onChange={log}
       />
       <div className="add-payment-form-group">
         <label className="add-payment-label" htmlFor="image">Package Image:</label>
@@ -475,7 +498,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
             </FormControl>
           </div>
         </>}
-        
+
       <div style={{ fontSize: "20px" }}>
 
         {!checked && <p>Price: {price}</p>}
