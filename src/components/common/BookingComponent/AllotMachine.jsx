@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAvailableMachine, fetchMachine, manualAllocateMachine, reAllocateMachine } from '../../../store/actions/machine.action';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const AllotMachine = ({ body,isDisabled }) => {
+   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
     const availableMachines = useSelector(state => state.machine?.availableMachine)
     const availableMachine = [...availableMachines, body?.previousMachineId]
@@ -66,13 +68,13 @@ const AllotMachine = ({ body,isDisabled }) => {
         <>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
                 <h3>Allot  Machine</h3>
-                <Button 
+               {hasAdminAndSuperAdminAccess(role)&&<Button 
                   variant="contained"
                   color="primary"
                   disabled={isDisabled}
                  style={{ float: 'right', textTransform: 'none' }} onClick={() => reAllocateMachineManual()}>
                     Re Allocate Machine
-                </Button>
+                </Button>}
                 <form>
                     <Grid container spacing={2} alignItems="center">
                         <TextField
@@ -100,7 +102,7 @@ const AllotMachine = ({ body,isDisabled }) => {
                             )}
                         </TextField>
                         <Grid item xs={12}>
-                            <Button
+                           {hasAdminAndSuperAdminAccess(role)&&<Button
                                 variant="contained"
                                 color="primary"
                                 type="submit"
@@ -108,7 +110,7 @@ const AllotMachine = ({ body,isDisabled }) => {
                                 disabled={isDisabled}
                             >
                                 Submit
-                            </Button>
+                            </Button>}
                         </Grid>
                     </Grid>
                 </form>

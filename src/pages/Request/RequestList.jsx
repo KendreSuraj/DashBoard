@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTherapistCustomslots, updateCustomTherapistSlot } from '../../store/actions/therapist.action'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './RequestList.css'
 import { fetchAdmin } from '../../store/actions/center.action'
@@ -11,7 +11,7 @@ import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesCo
 const RequestList = () => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const navigate = useNavigate() 
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
     const adminList = useSelector(state => state.center?.adminList)
     useEffect(() => {
