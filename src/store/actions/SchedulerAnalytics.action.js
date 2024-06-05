@@ -20,3 +20,12 @@ export const fetchMachineAvailability = createAsyncThunk('scheduler-machine-anal
     return rejectWithValue('Failed to fetch Machines. Please try again later.');
   }
 });
+
+export const fetchSlotData = createAsyncThunk('scheduler-slot-data', async (data, { rejectWithValue }) => {
+  try {
+    const res = await axios.get(`${apiUrl}/api/v1/slot/get-slot-count?centerId=${data?.centerId}&date=${data?.selectedDay}`);
+    return res?.data;
+  } catch (error) {
+    return rejectWithValue('Failed to fetch Machines. Please try again later.');
+  }
+});

@@ -11,7 +11,7 @@ const MachineAnalytics = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [activeOption, setActiveOption] = useState(0);
-  const [centerId, setCenterId] = useState(3);
+  const [centerId, setCenterId] = useState(4);
   const [selectedDay, setSelectedDay] = useState(new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase());
   const centerList = useSelector(state => state.center?.centerList?.centers || []);
   const machines = useSelector(state => state.schedulerAnalytics?.machineAnalytics?.machines || []);
@@ -79,18 +79,18 @@ const MachineAnalytics = () => {
         if (slot.status === "LEAVE") {
           slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', padding: '8px', borderRadius: '10px' }}>Leave</span>;
         } else if (slot.status === "AVAILABLE") {
-          slotMap[timeRange] = <span style={{ backgroundColor: '#01FF00', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Available</span>;
+          slotMap[timeRange] = <span style={{ backgroundColor: '#01FF00', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }}>Available</span>;
         } else if (slot.status === "UNAVAILABLE") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Unavailable</span>;
+          slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }}>Unavailable</span>;
         } else if (slot.status === "SESSION_BLOCKED") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
         } else if (slot.status === "BUFFER_START") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
         } else if (slot.status === "BUFFER_END") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }} onClick={() => navigate(`/booking-details/${slot?.serviceId}`)}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
         }
         else {
-          slotMap[timeRange] = 'error';
+          slotMap[timeRange] = 'Repair';
         }
       }
     });
@@ -158,7 +158,8 @@ const MachineAnalytics = () => {
               onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'))}
             >
               <span>
-                {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)}
+                {/* {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)} */}
+                {moment(item.date).format('MMMM ddd DD')}
               </span>
             </li>
           ))}

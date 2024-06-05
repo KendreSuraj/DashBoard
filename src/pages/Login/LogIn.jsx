@@ -50,7 +50,7 @@ const LogIn = () => {
       fetchLogin({
         email: user.email,
         password: user.password,
-        role: user.role
+        // role: user.role
       }),
     );
   };
@@ -97,7 +97,7 @@ const LogIn = () => {
             </div>
           </div>
 
-          <div className="input-container">
+          {/* <div className="input-container">
             <label htmlFor="role">Role</label>
 
             <select
@@ -110,7 +110,7 @@ const LogIn = () => {
               <option value="SUPER ADMIN">SUPER ADMIN</option>
               <option value="ADMIN">ADMIN</option>
             </select>
-          </div>
+          </div> */}
 
           <button type="submit" className="login-button">
             Log In

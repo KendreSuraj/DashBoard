@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Paper, TextField, Button, MenuItem } from '@mui/material';
 import moment from 'moment';
 import { getHoursList, getMinutesList } from '../../../utils';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const AllotDate = (props) => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [selectedDate, setSelectedDate] = useState(props.startDate);
     const [startTime, setStartTime] = useState({
         hour: '',
@@ -121,7 +123,7 @@ const AllotDate = (props) => {
                         </TextField>
                     </div>
                 </div>
-                <Button
+               {hasAdminAndSuperAdminAccess(role)&& <Button
                     variant="contained"
                     color="primary"
                     type="submit"
@@ -129,7 +131,7 @@ const AllotDate = (props) => {
                     onClick={handleSubmit}
                 >
                     Submit
-                </Button>
+                </Button>}
             </form>
         </Paper>
     );

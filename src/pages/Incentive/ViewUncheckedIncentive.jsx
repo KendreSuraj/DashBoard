@@ -10,8 +10,10 @@ import { useLocation } from 'react-router-dom';
 import './ViewUncheckedIncentive.style.css';
 import { Button } from '@mui/material';
 import moment from 'moment';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 export default function ViewUncheckedIncentive() {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const dispatch = useDispatch();
   const location = useLocation();
   const incentiveDetails = location.state?.details;
@@ -181,7 +183,7 @@ export default function ViewUncheckedIncentive() {
                         required
                       />
                       {item.isIncentive && index !== isEditing ? (
-                        <Button
+                       hasAdminAndSuperAdminAccess(role)&&<Button
                           type="button"
                           onClick={() => handleEdit(index)}
                           style={{
@@ -193,9 +195,10 @@ export default function ViewUncheckedIncentive() {
                           Edit
                         </Button>
                       ) : (
-                        <button
+                        hasAdminAndSuperAdminAccess(role)&&<button
                           type="submit"
                           className="incentive-edit-form-button button-green"
+                          disabled={hasAdminAndSuperAdminAccess(role)}
                         >
                           SUBMIT
                         </button>
@@ -217,9 +220,10 @@ export default function ViewUncheckedIncentive() {
           </tbody>
         </table>
       </div>
-      {incentiveSteps?.length > 0 && (
+      {incentiveSteps?.length > 0 && hasAdminAndSuperAdminAccess(role) && (
         <div className="center">
           <button
+          
             className="final-submit-button"
             onClick={() => handleFinalSubmit()}
           >

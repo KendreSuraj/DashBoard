@@ -2,8 +2,10 @@ import React from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell, Select, MenuItem } from '@mui/material';
 import { changeVirtualConsultationsStatus } from '../../store/actions/Virtualconsultations.action';
 import { useDispatch } from 'react-redux';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const VirtualConsultationTable = ({ data }) => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch();
     const changeConsultationsStatus = async (id, newStatus) => {
         try {
@@ -36,10 +38,11 @@ const VirtualConsultationTable = ({ data }) => {
                             <TableCell>{item.phone}</TableCell>
                             <TableCell>{item.time}</TableCell>
                             <TableCell>{item.date}</TableCell>
-                            <TableCell>
+                          <TableCell>
                                 <Select
                                     value={item.status}
                                     onChange={(e) => changeConsultationsStatus(item.id, e.target.value)}
+                                    disabled={!hasAdminAndSuperAdminAccess(role)}
                                 >
                                     <MenuItem value="PENDING">PENDING</MenuItem>
                                     <MenuItem value="RESOLVED">RESOLVED</MenuItem>

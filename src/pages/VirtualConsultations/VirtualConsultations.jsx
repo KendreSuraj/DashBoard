@@ -6,8 +6,10 @@ import { Button, Box } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { getVirtualconsultations } from '../../store/actions/Virtualconsultations.action';
 import VirtualConsultationTable from './VirtualConsultationTable';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const VirtualConsultations = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const dispatch = useDispatch();
   const virtualConsultations = useSelector(
     (state) => state?.VirtualConsultation?.VirtualConsulationList
@@ -50,7 +52,7 @@ const VirtualConsultations = () => {
     <div>
       <h5 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: "20px", fontSize: "1.5rem" }}>Virtual consultation list</h5>
       {/* <TableComponent data={virtualConsultations} /> */}
-      <Button
+     {hasAdminAndSuperAdminAccess(role)&& <Button
           style={{ display: 'flex', justifyContent: 'flex-end', float: 'right',marginBottom:'20px' }}
           variant="contained"
           color="primary"
@@ -58,7 +60,7 @@ const VirtualConsultations = () => {
           onClick={handleDownload}
         >
           Virtual consultation
-        </Button>
+        </Button>}
       <VirtualConsultationTable data={virtualConsultations}/>
     </div>
   );

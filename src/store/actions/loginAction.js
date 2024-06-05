@@ -8,7 +8,7 @@ export const fetchLogin = createAsyncThunk(
   async ({ email, password, role }) => {
     try {
       const res = await axios.post(
-        `${apiUrl}/api/v1/auth/login`,
+        `${apiUrl}/api/v1/auth/login-by-id`,
         {
           email,
           password,
