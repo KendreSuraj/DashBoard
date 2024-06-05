@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 
 const ProductDetails = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.product.productList);
@@ -34,7 +35,7 @@ const ProductDetails = () => {
         <TableComponent
           data={productList}
           hiddenFields={['image', 'description', 'slug']}
-          viewButton={'view'}
+          viewButton={hasAdminAndSuperAdminAccess(role) && 'view'}
           updateDetails={handleUpdateDetails}
           viewDetails={handleViewDetails}
         />

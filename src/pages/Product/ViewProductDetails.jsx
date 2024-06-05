@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { fetchProductStepsTemplates } from '../../store/actions/product.action';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const ViewProductDetails = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let location = useLocation();
@@ -56,15 +58,15 @@ const ViewProductDetails = () => {
           marginRight: '20px',
         }}
       >
-        <Button variant="contained" onClick={() => addProductStep()}>
+       {hasAdminAndSuperAdminAccess(role) && <Button variant="contained" onClick={() => addProductStep()}>
           Add Step
-        </Button>
+        </Button>}
       </div>
       <h3>{productDetails.name} Product Steps</h3>
       <TableComponent
         data={productSteps}
         hiddenFields={['productId']}
-        viewButton={'Edit'}
+        viewButton={hasAdminAndSuperAdminAccess(role) && 'Edit'}
         viewDetails={handleEdit}
       />
     </div>

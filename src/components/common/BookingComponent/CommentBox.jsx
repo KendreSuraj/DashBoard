@@ -3,8 +3,10 @@ import { Paper, Button, FormControl, TextareaAutosize } from '@mui/material';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../userLocalStorageUtils';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const CommentBox = () => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [commentData, setCommentData] = useState("")
     const [comment, setComment] = useState('')
     const params = useParams();
@@ -74,9 +76,9 @@ const CommentBox = () => {
                             required
                         />
                     </FormControl>
-                    <Button variant="contained" color="primary" type="submit">
+                   {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" type="submit">
                         Submit
-                    </Button>
+                    </Button>}
                 </form>
             </Paper>
         </div>
