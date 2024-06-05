@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+]import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -19,7 +19,7 @@ import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
 
 
-const bodyparts = ["Hands", "Chest", "Legs", "Abdomen", "Head","Face"];
+const bodyparts = ["Hands", "Chest", "Legs", "Abdomen", "Head", "Face"];
 
 const PackageDetails = ({ setPackagesSubmitted }) => {
   const packageType = localStorage.getItem('packageDetail');
@@ -56,7 +56,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const handleDiscountChange = (event) => {
     setDiscount(event.target.value);
     setDiscountValue(0)
-      setDiscountPercent(0)
+    setDiscountPercent(0)
   };
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -404,7 +404,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   }, [packageType]);
 
   useEffect(() => {
-    if (price - discountValue < 0 && customState!=='custom') {
+    if (price - discountValue < 0 && customState !== 'custom') {
       alert("Please Enter valid Discount")
     } else {
       setFinalPrice(price - discountValue)
