@@ -13,7 +13,9 @@ import centerSlice from './slices/centerSlice';
 import machineSlice from './slices/machineSlice';
 import therapistSlice from './slices/therapistSlice';
 import packagesSlice from './slices/packagesSlice';
+import advancePaymentSlice from './slices/advancePaymentSlice';
 import schedulerAnalyticsSlice from "./slices/SchedulerAnalyticsSlice"
+
 const store = configureStore({
   reducer: {
     appState: appStateSlice,
@@ -26,11 +28,12 @@ const store = configureStore({
     users: usersSlice,
     VirtualConsultation: VirtualConsultationsSlice,
     faq: faqSlice,
-    center:centerSlice,
-    machine:machineSlice,
-    therapist:therapistSlice,
+    center: centerSlice,
+    machine: machineSlice,
+    therapist: therapistSlice,
     packages: packagesSlice,
-    schedulerAnalytics:schedulerAnalyticsSlice
+    advancePayments: advancePaymentSlice,
+    schedulerAnalytics: schedulerAnalyticsSlice
   },
 });
 export default store;

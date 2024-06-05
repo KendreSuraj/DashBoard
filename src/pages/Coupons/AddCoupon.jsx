@@ -112,7 +112,7 @@ const AddCoupon = () => {
     }
     finally {
       setIsSubmitting(false);
-  }
+    }
   };
 
   return (
