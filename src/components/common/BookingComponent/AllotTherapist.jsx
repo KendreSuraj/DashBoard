@@ -7,8 +7,10 @@ import { getMinutesList } from '../../../utils';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const AllotTherapistBox = (props) => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const dispatch = useDispatch()
   const [partners, setPartners] = useState([]);
   const [selectedTherapist, setSelectedTherapist] = useState('');
@@ -140,14 +142,14 @@ const AllotTherapistBox = (props) => {
     <div>
       <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
         <h3>Allot Therapist</h3>
-        <Button
+        {hasAdminAndSuperAdminAccess(role)&&<Button
           variant="contained"
           color="primary"
           disabled={props.isDisabled}
           style={{ float: 'right', textTransform: 'none' }}
           onClick={(() => reAllocateAvailableTherapist())}>
           Re Allocate Therapist
-        </Button>
+        </Button>}
         <form>
           <Grid container spacing={2} alignItems="center">
             {/* First Therapist */}
@@ -206,12 +208,12 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              <DeleteIcon onClick={deleteSecondTherapist} />
+             {hasAdminAndSuperAdminAccess(role)&&<DeleteIcon onClick={deleteSecondTherapist} />}
             </Grid>
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <Button
+             {hasAdminAndSuperAdminAccess(role)&&<Button
                 variant="contained"
                 color="primary"
                 type="submit"
@@ -219,7 +221,7 @@ const AllotTherapistBox = (props) => {
                 disabled={props.isDisabled}
               >
                 Submit
-              </Button>
+              </Button>}
             </Grid>
           </Grid>
         </form>
