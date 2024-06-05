@@ -42,6 +42,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [discountValue, setDiscountValue] = useState(0)
   const [finalPrice, setFinalPrice] = useState(0);
   const [discountPercent, setDiscountPercent] = useState(0);
+  const [packageImage, setPackageImage]=useState();
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -104,8 +105,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       });
       setPrice(res.data.data.price);
       setFinalPrice(res.data.data.finalPrice)
-      setDiscountValue(res.data.data.packagePriceType==="flat"?res.data.data.price-res.data.data.finalPrice:0)
-      setDiscountPercent(res.data.data.packagePriceType==="flat"?res.data.data.price-res.data.data.finalPrice:res.data.data.discount)
+      setDiscountValue(res.data.data.packagePriceType === "flat" ? res.data.data.price - res.data.data.finalPrice : 0)
+      setDiscountPercent(res.data.data.packagePriceType === "flat" ? res.data.data.price - res.data.data.finalPrice : res.data.data.discount)
       setDiscount(res.data.data.packagePriceType)
       setChecked(false);
     }
@@ -128,10 +129,10 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     const {
       target: { innerHTML },
     } = event;
-    setPersonName([...personName,innerHTML.split('.')[0]]);
+    setPersonName([...personName, innerHTML.split('.')[0]]);
     setValues({
       ...values,
-      "productId": [...personName,innerHTML.split(".")[0]],
+      "productId": [...personName, innerHTML.split(".")[0]],
     });
   };
 
@@ -139,7 +140,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     const {
       target: { innerHTML },
     } = event;
-    setParts([...new Set(parts),innerHTML]);
+    setParts([...new Set(parts), innerHTML]);
     setValues({
       ...values,
     });
@@ -178,9 +179,10 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           description: values.description,
           products: packageProduct,
           price,
-          finalPrice,
+          finalPrice:Math.ceil(finalPrice),
           packagePriceType: discount,
-          discount: discountPercent
+          discount: discountPercent,
+          image: packageImage,
         };
         response = await axios.post(
           `${apiUrl}/api/v1/admin/package/create-fix-package`, body, {
@@ -246,7 +248,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           description: values.description,
           products: packageProduct,
           price: parseInt(price, 10),
-          finalPrice,
+          finalPrice:Math.ceil(finalPrice),
           packagePriceType: discount,
           discount: discountPercent
         };
@@ -265,7 +267,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           products: formattedArray,
           numberOfSessions: parseInt(values.noOfSession, 10),
           bodyParts: parts,
-          discount: parseInt(discountPercent,10),
+          discount: parseInt(discountPercent, 10),
         };
 
         response = await axios.patch(
@@ -297,6 +299,53 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     }
   }
 
+  const handleImageChange = (event) => {
+    const { files } = event.target;
+    const file = files[0];
+    console.log(file)
+    const acceptedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!acceptedTypes.includes(file.type)) {
+      alert("Please select only image files (JPEG, JPG, PNG).");
+      window.location.reload()
+      return;
+    }
+    const reader = new FileReader();
+    // const file = files[0];
+    console.log("see file type ", file.type)
+    reader.onloadend = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDimension = 1024;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDimension) {
+            height *= maxDimension / width;
+            width = maxDimension;
+          }
+        } else {
+          if (height > maxDimension) {
+            width *= maxDimension / height;
+            height = maxDimension;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataURL = canvas.toDataURL(file.type);
+        setPackageImage(
+            compressedDataURL
+        );
+      };
+    };
+    reader.readAsDataURL(file);
+
+  }
+
   useEffect(() => {
     fetchData();
   }, [Radiovalue]);
@@ -313,7 +362,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     } else {
       setFinalPrice(price - discountValue)
     }
-  }, [price,discountValue])
+  }, [price, discountValue])
 
   return (
     <>
@@ -335,6 +384,19 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         onChange={handleInputChange}
         required
       />
+      <div className="add-payment-form-group">
+        <label className="add-payment-label" htmlFor="image">Package Image:</label>
+        <input
+          className="add-payment-input"
+          type="file"
+          id="image"
+          name="image"
+          // accept="image/*"
+          accept=".jpeg, .jpg, .png"
+          onChange={handleImageChange}
+          required
+        />
+      </div>
       <div>
         <FormControlLabel control={
           <Checkbox
@@ -413,8 +475,11 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
             </FormControl>
           </div>
         </>}
+        
       <div style={{ fontSize: "20px" }}>
+
         {!checked && <p>Price: {price}</p>}
+
         {price > 0 && <>
           <FormControl>
             <RadioGroup
@@ -428,6 +493,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
               <FormControlLabel value="percent" control={<Radio />} label="%" />
             </RadioGroup>
           </FormControl><br />
+
           {discount === "flat" &&
             <TextField
               variant="outlined"
@@ -437,17 +503,20 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
               value={discountPercent}
               onChange={handleDiscountValue}
               required />}
+
           {discount === "percent" &&
             <TextField
               variant="outlined"
               label="Discount Percentage"
               name="percentageDiscount"
-              onChange={handleDiscountValue} 
+              onChange={handleDiscountValue}
               value={discountPercent}
               type='number'
               required />}
+
           {!checked && <p>Final Price: {finalPrice === 0 ? price : Math.ceil(finalPrice)}</p>}
         </>}
+
         {checked && <TextField
           variant="outlined"
           label="Discount Percentage"
