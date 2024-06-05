@@ -3,8 +3,10 @@ import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../userLocalStorageUtils';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const CallerBox = (props) => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [callersList, setCallersList] = useState([])
     const [selectedCaller, setSelectedCaller] = useState("")
     const params = useParams();
@@ -126,7 +128,7 @@ const CallerBox = (props) => {
 
                         {/* Submit Button */}
                         <Grid item xs={12}>
-                            <Button
+                           {hasAdminAndSuperAdminAccess(role)&& <Button
                                 variant="contained"
                                 color="primary"
                                 type="submit"
@@ -134,7 +136,7 @@ const CallerBox = (props) => {
                                 disabled={props.isDisabled}
                             >
                                 Submit
-                            </Button>
+                            </Button>}
                         </Grid>
                     </Grid>
                 </form>

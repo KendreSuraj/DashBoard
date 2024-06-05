@@ -4,8 +4,10 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { fetchFAQ,deleteFAQ } from '../../store/actions/faq.action';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const FAQ = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch();
     const navigate= useNavigate();
     const faqsList = useSelector(state=> 
@@ -43,7 +45,7 @@ const FAQ = () => {
   return (
     <div>
         <h3>FAQs</h3>
-        <Button
+       {hasAdminAndSuperAdminAccess(role)&&<Button
         color="primary"
         style={{
           cursor:'pointer',
@@ -63,7 +65,7 @@ const FAQ = () => {
           (e.currentTarget.style.transform = 'scale(1)')
         }
           
-         onClick={addFAQClickHandler}>Add FAQs</Button>
+         onClick={addFAQClickHandler}>Add FAQs</Button>}
         <TableComponent 
         data={faqsList} 
         hiddenFields={[
@@ -71,8 +73,8 @@ const FAQ = () => {
           'updatedAt',
           'deletedAt',
         ]}
-        deleteFAQButton={'delete'}
-        deleteFAQ={handleDeleteFAQ}
+        deleteFAQButton={hasAdminAndSuperAdminAccess(role) ? 'delete' : undefined}
+        deleteFAQ={hasAdminAndSuperAdminAccess(role) ? handleDeleteFAQ : undefined}
         />
 
     </div>

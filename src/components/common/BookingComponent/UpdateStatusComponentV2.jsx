@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { autoAllocateTherapistAndMachine, cancelBooking } from '../../../store/actions/therapist.action';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const UpdateStatusComponentV2 = (props) => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [selectedStatus, setSelectedStatus] = useState("");
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
@@ -73,9 +75,9 @@ const UpdateStatusComponentV2 = (props) => {
                             {/* <MenuItem value="SESSION_END" disabled>SESSION_END</MenuItem> */}
                         </Select>
                     </FormControl>
-                    <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+                    {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
                         Submit
-                    </Button>
+                    </Button>}
                 </form>
             </Paper>
         </div>

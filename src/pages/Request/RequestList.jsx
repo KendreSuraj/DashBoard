@@ -6,8 +6,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './RequestList.css'
 import { fetchAdmin } from '../../store/actions/center.action'
 import { Button } from '@mui/material'
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const RequestList = () => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
     const navigate=useNavigate()
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
@@ -47,7 +49,7 @@ const RequestList = () => {
             </div> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
         <h3 style={{ margin: '0 auto' }}>Therapist Unavailability/Request</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist Request</Button>
+        {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" onClick={() => navigate("/addtherapist-unavailability")}>Add Therapist Request</Button>}
       </div>
             <div className="table-container">
                 <table className="schedule-table">
@@ -77,8 +79,8 @@ const RequestList = () => {
                                 <td>{schedule.type}</td>
                                 <td>
 
-                                    {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
-                                    {schedule?.isApproved === null && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
+                                    {schedule?.isApproved === null && hasAdminAndSuperAdminAccess(role)&& <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
+                                    {schedule?.isApproved === null &&hasAdminAndSuperAdminAccess(role) && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
                                     {schedule?.isApproved && `Approved By:${getAdminNameById(schedule.adminId)}`}
                                     {schedule?.isApproved === false && `Rejected By:${getAdminNameById(schedule.adminId)}`}
                                 </td>

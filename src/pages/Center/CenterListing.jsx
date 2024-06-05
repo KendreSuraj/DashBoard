@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 
 const CenterListing = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const navigate = useNavigate()
   const dispatch = useDispatch()
   let centerList = useSelector(state => state.center?.centerList?.centers)
@@ -44,11 +46,11 @@ const CenterListing = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
         <h3 style={{ margin: '0 auto' }}>All Centers</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addedit-center")}>Add Center</Button>
+        {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" onClick={() => navigate("/addedit-center")}>Add Center</Button>}
       </div>
       <TableComponent data={centerList}
         hiddenFields={["timings"]}
-        viewButton={<EditIcon />}
+        viewButton={hasAdminAndSuperAdminAccess(role)&&<EditIcon />}
         viewDetails={handleEdit}
       />
     </div>
