@@ -54,15 +54,15 @@ const TherapistAnalytics = () => {
     };
 
     const timeSlots = [
-        '07:00-07:30','07:30-08:00',
+        '07:00-07:30', '07:30-08:00',
         '08:00-08:30', '08:30-09:00', '10:00-10:30', '10:30-11:00',
         '11:00-11:30', '11:30-12:00', '12:00-12:30', '12:30-13:00',
         '13:00-13:30', '13:30-14:00', '14:00-14:30', '14:30-15:00',
         '15:00-15:30', '15:30-16:00', '16:00-16:30', '16:30-17:00',
         '17:00-17:30', '17:30-18:00', '18:00-18:30', '18:30-19:00',
         '19:00-19:30', '19:30-20:00', '20:00-20:30', '20:30-21:00',
-        '21:00-21:30','21:30-22:00'
-      ];
+        '21:00-21:30', '21:30-22:00'
+    ];
     const renderSlots = (availability) => {
         const slotMap = {};
 
@@ -78,17 +78,17 @@ const TherapistAnalytics = () => {
                 const timeRange = `${startTimeFormatted}-${endTimeFormatted}`;
 
                 if (slot.status === "LEAVE") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', padding: '8px',borderRadius: '10px' }}>Leave</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', padding: '8px', borderRadius: '10px' }}>Leave</span>;
                 } else if (slot.status === "AVAILABLE") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: '#01FF00', color: 'black', padding: '8px', whiteSpace: 'nowrap' ,borderRadius: '10px'}}>Available</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: '#01FF00', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Available</span>;
                 } else if (slot.status === "UNAVAILABLE") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' }}>Unavailable</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Unavailable</span>;
                 } else if (slot.status === "SESSION_BLOCKED") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_START") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap' ,borderRadius: '10px',cursor:'pointer'}} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_END") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap',borderRadius: '10px' ,cursor:'pointer'}} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
                 }
                 else {
                     slotMap[timeRange] = 'error';
@@ -98,9 +98,10 @@ const TherapistAnalytics = () => {
 
         return timeSlots.map(time => (
             <TableCell key={time} align="center" sx={{ borderRight: 1, borderColor: 'divider' }}>
-                {slotMap[time] || (Object.keys(slotMap).length !== 0 ? <span style={{ color: 'black', padding: '8px', backgroundColor: 'gray',borderRadius: '10px'}}>Off&nbsp;hours</span> : <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px',borderRadius: '10px' }}>Week&nbsp;Off</span>)}
+                {slotMap[time] || (Object.keys(slotMap).length !== 0 ? <span style={{ color: 'black', padding: '8px', backgroundColor: 'gray', borderRadius: '10px' }}>Off&nbsp;hours</span> : <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', borderRadius: '10px' }}>Week&nbsp;Off</span>)}
             </TableCell>
-        ));}
+        ));
+    }
     return (
         <Box sx={{ width: '100%', padding: '20px' }}>
             <FormControl fullWidth required>
@@ -161,6 +162,7 @@ const TherapistAnalytics = () => {
                             ))}
                         </TableRow>
                     </TableHead>
+
                     <TableBody>
                         {therapists.map((therapist, index) => (
                             <TableRow key={index}>
