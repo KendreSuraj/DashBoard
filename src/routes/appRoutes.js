@@ -28,9 +28,12 @@ import RequestList from '../pages/Request/RequestList';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import Packages from '../pages/Packages/Packages';
+import AdvancePayments from '../pages/AdvancePayment/AdvancePayments';
 import SchedulerTabs from '../pages/Scheduler/SchedulerTabs';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+
 const appRoutes = [
   // {
   //   index: true,
@@ -192,6 +195,15 @@ const appRoutes = [
     state: 'packages',
     sidebarProps: {
       displayText: 'Packages',
+      icon: <BallotIcon />,
+    },
+  },
+  {
+    path: '/advance-payments',
+    element: <AdvancePayments />,
+    state: 'advancePayments',
+    sidebarProps: {
+      displayText: 'Advance Payments',
       icon: <BallotIcon />,
     },
   },

@@ -1,8 +1,10 @@
 // UpdateStatusComponent.js
 import React, { useEffect, useState } from 'react';
 import { Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const UpdateStatusComponent = (props) => {
+    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [selectedStatus, setSelectedStatus] = useState("");
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
@@ -46,9 +48,9 @@ const UpdateStatusComponent = (props) => {
                             <MenuItem value="SESSION_END">SESSION_END</MenuItem>
                         </Select>
                     </FormControl>
-                    <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+                   {hasAdminAndSuperAdminAccess(role)&& <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
                         Submit
-                    </Button>
+                    </Button>}
                 </form>
             </Paper>
         </div>

@@ -6,8 +6,10 @@ import { getHoursList, getMinutesList } from '../../../utils';
 import { confirmClientSlots, getClientSlots } from '../../../store/actions/therapist.action';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useParams } from 'react-router-dom';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const AllotDateV2 = (props) => {
+ const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [activeOption, setActiveOption] = useState(null);
     const [activeOption1, setActiveOption1] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
@@ -156,7 +158,7 @@ const AllotDateV2 = (props) => {
                                     </li>
                                 ))}
                             </ul>
-                            <button
+                           {hasAdminAndSuperAdminAccess(role)&&<button
                                 disabled={props?.isDisabled}
                                 style={{
                                     padding: '10px 20px',
@@ -171,7 +173,7 @@ const AllotDateV2 = (props) => {
                                 onClick={handleSlotConfirmation}
                             >
                                 Confirm your slot
-                            </button>
+                            </button>}
                         </>
                     ) : (
                         <h3>

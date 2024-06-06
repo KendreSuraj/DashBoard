@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { addTherapistUnavailabilityAndLeave, fetchTherapist } from '../../store/actions/therapist.action';
+import { addTherapistUnavailabilityAndLeave, fetchTherapist, updateCustomTherapistSlot } from '../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchBookingsByPartner } from '../../store/actions/booking.action';

@@ -5,8 +5,10 @@ import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
 import { getMinutesList } from '../../../utils';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
 const AllotTherapistV1 = (props) => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const [partners, setPartners] = useState([]);
   const [selectedTherapist, setSelectedTherapist] = useState('');
   const [selectSecondTherapist, setSelectSecondTherapist] = useState('');
@@ -146,8 +148,8 @@ const AllotTherapistV1 = (props) => {
                 )}
               </TextField>
             </Grid>
-            <Grid item xs={1}>
-              <DeleteIcon onClick={deleteFisrtTherapist} />
+            <Grid item xs={1}> 
+              {hasAdminAndSuperAdminAccess(role) &&<DeleteIcon onClick={deleteFisrtTherapist} />}
             </Grid>
 
             {/* Second Therapist */}
@@ -176,12 +178,12 @@ const AllotTherapistV1 = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              <DeleteIcon onClick={deleteSecondTherapist} />
+              {hasAdminAndSuperAdminAccess(role) && <DeleteIcon onClick={deleteSecondTherapist} />}
             </Grid>
 
             {/* Submit Button */}
             <Grid item xs={12}>
-              <Button
+              {hasAdminAndSuperAdminAccess(role) &&<Button
                 variant="contained"
                 color="primary"
                 type="submit"
@@ -189,7 +191,7 @@ const AllotTherapistV1 = (props) => {
                 disabled={props.isDisabled}
               >
                 Submit
-              </Button>
+              </Button>}
             </Grid>
           </Grid>
         </form>

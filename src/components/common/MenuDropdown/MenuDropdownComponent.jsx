@@ -26,6 +26,7 @@ function MenuDropdownComponent({
       localStorage.removeItem('userData');
       dispatch(resetLoginDetails({}));
       alert(logoutResponse?.status?.message);
+      window.location.reload()
       navigate('/');
     }
   };

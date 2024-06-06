@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMachine } from '../../store/actions/machine.action';
+import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesConfig';
 const MachineListing = () => {
+  const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const navigate = useNavigate()
   const dispatch = useDispatch()
   let machineList = useSelector(state => state?.machine?.machineList?.machines)
@@ -24,11 +26,11 @@ const MachineListing = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "30px" }}>
         <h3 style={{ margin: '0 auto' }}>All Machines</h3>
-        <Button variant="contained" color="primary" onClick={() => navigate("/addedit-machine")}>Add Machine</Button>
+        {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" onClick={() => navigate("/addedit-machine")}>Add Machine</Button>}
       </div>
       <TableComponent data={machineList}
         hiddenFields={["centerId", "createdAt", "deletedAt", "extra", "id", "lat", "location", "long", "products", "saturdayAvailability", "sundayAvailability", "thursdayAvailability", "tuesdayAvailability", "updatedAt", "wednesdayAvailability", "fridayAvailability", "mondayAvailability"]}
-        viewButton={<EditIcon />}
+        viewButton={hasAdminAndSuperAdminAccess(role)&&<EditIcon />}
         viewDetails={handleEdit}
       />
     </div>
