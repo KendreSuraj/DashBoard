@@ -198,7 +198,6 @@ export default function ViewUncheckedIncentive() {
                         hasAdminAndSuperAdminAccess(role)&&<button
                           type="submit"
                           className="incentive-edit-form-button button-green"
-                          disabled={hasAdminAndSuperAdminAccess(role)}
                         >
                           SUBMIT
                         </button>
