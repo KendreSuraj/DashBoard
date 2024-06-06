@@ -54,12 +54,14 @@ const MachineAnalytics = () => {
   }
 
   const timeSlots = [
+    '07:00-07:30','07:30-08:00',
     '08:00-08:30', '08:30-09:00', '10:00-10:30', '10:30-11:00',
     '11:00-11:30', '11:30-12:00', '12:00-12:30', '12:30-13:00',
     '13:00-13:30', '13:30-14:00', '14:00-14:30', '14:30-15:00',
     '15:00-15:30', '15:30-16:00', '16:00-16:30', '16:30-17:00',
     '17:00-17:30', '17:30-18:00', '18:00-18:30', '18:30-19:00',
-    '19:00-19:30', '19:30-20:00', '20:00-20:30', '20:30-21:00'
+    '19:00-19:30', '19:30-20:00', '20:00-20:30', '20:30-21:00',
+    '21:00-21:30','21:30-22:00'
   ];
 
   const renderSlots = (availability) => {
@@ -123,22 +125,6 @@ const MachineAnalytics = () => {
           ))}
         </Select>
       </FormControl>
-
-      {/* <FormControl fullWidth required sx={{ marginTop: '20px' }}>
-                <InputLabel id="day-label">Select Day</InputLabel>
-                <Select
-                    labelId="day-label"
-                    id="selectedDay"
-                    name="selectedDay"
-                    value={selectedDay}
-                    onChange={handleDayChange}
-                    label="Select Day"
-                >
-                    {daysOfWeek.map(day => (
-                        <MenuItem key={day} value={day.toLowerCase()}>{day}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl> */}
       <div style={{ textAlign: 'center', display: 'flex', marginTop: '20px', marginBottom: "20px" }}>
         <strong style={{ padding: '10px' }}>Choose Date:</strong>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -165,20 +151,20 @@ const MachineAnalytics = () => {
           ))}
         </ul>
       </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="therapist availability table">
+      <TableContainer component={Paper} sx={{ maxHeight: '550px', overflow: 'auto' }}>
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="therapist availability table">
           <TableHead>
             <TableRow >
-              <TableCell align="center" sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold' }}>Therapist&nbsp;Name</TableCell>
+              <TableCell align="center"  sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', position: 'sticky', left: 0, zIndex: 2 }}>Therapist&nbsp;Name</TableCell>
               {timeSlots.map((slot, index) => (
-                <TableCell key={index} align="center" sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', whiteSpace: "nowrap" }}>{slot}</TableCell>
+                <TableCell key={index} align="center" s sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', whiteSpace: "nowrap", top: 0, position: 'sticky', backgroundColor: 'white', zIndex: 1 }}>{slot}</TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {machines.map((therapist, index) => (
               <TableRow key={index}>
-                <TableCell component="th" scope="row" align="center" sx={{ borderRight: 1, borderColor: 'divider' }}>
+                <TableCell component="th" scope="row" align="center"  sx={{ borderRight: 1, borderColor: 'divider', position: 'sticky', left: 0, backgroundColor: 'white', zIndex: 1 }}>
                   {therapist.name}
                 </TableCell>
                 {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
