@@ -162,7 +162,6 @@ const TherapistAnalytics = () => {
                             ))}
                         </TableRow>
                     </TableHead>
-
                     <TableBody>
                         {therapists.map((therapist, index) => (
                             <TableRow key={index}>
