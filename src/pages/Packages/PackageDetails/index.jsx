@@ -38,7 +38,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [names, setNames] = useState([]);
   const [packageItems, setPackageItems] = useState([]);
   const [Radiovalue, setRadioValue] = React.useState('female');
-  const [discount, setDiscount] = useState('')
+  const [discount, setDiscount] = useState('flat')
   const [price, setPrice] = useState(0);
   const [discountValue, setDiscountValue] = useState(0)
   const [finalPrice, setFinalPrice] = useState(0);
@@ -251,7 +251,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           price: parseInt(price, 10),
           finalPrice: Math.ceil(finalPrice),
           packagePriceType: discount,
-          discount: discountPercent
+          discount: parseInt(discountPercent,10)
         };
         response = await axios.patch(
           `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
@@ -291,8 +291,9 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   const handleDiscountValue = (event) => {
     if (discount === "flat") {
+      
       setDiscountValue(event.target.value)
-      setDiscountPercent(parseInt((event.target.value / price) * 100))
+      setDiscountPercent(parseInt(event.target.value))
     }
     else {
       setDiscountValue((event.target.value * price) / 100)
