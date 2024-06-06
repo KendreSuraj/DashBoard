@@ -151,7 +151,6 @@ const TherapistAnalytics = () => {
                 </ul>
             </div>
             <Typography variant="h6" style={{ display: 'flex', marginTop: '10px', marginBottom: '20px' }}>Total No of Therapists: {therapists.length}</Typography>
-            <br />
             <TableContainer component={Paper} sx={{ maxHeight: '550px', overflow: 'auto' }}>
                 <Table stickyHeader sx={{ minWidth: 650 }} aria-label="therapist availability table">
                     <TableHead>
