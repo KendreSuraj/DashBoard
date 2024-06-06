@@ -15,8 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { getToken } from '../../components/common/userLocalStorageUtils';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 import moment from 'moment';
 import PaymentOtpModal from './PaymentOtpModal';
 
@@ -47,45 +45,37 @@ const AddAdvancePayments = () => {
     address: ""
   });
 
-  const [selectedProducts, setSelectedProducts] = useState("")
+  const [selectedProducts, setSelectedProducts] = useState("");
   const classes = useStyles();
   const navigate = useNavigate();
-  const [callersList, setCallersList] = useState([])
+  const [callersList, setCallersList] = useState([]);
   const [productList, setProductList] = useState([]);
-  const [selectedCaller, setSelectedCaller] = useState("")
+  const [selectedCaller, setSelectedCaller] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [showModal, setShowModal] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setValues({
       ...values,
       [name]: value,
     });
   };
 
-
   const fetchCaller = async () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/caller-list`, {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/caller-list`, {
         headers: {
           Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
           token: getToken(),
         },
-      })
-      .then(response => {
-        const callersList =
-          response.data && response.data.callers
-            ? response.data.callers
-            : [];
-
-
-        setCallersList(callersList);
-      })
-      .then(err => {
-        console.log("ERR: callersList......", err)
-      })
-  }
+      });
+      const callersList = response.data?.callers || [];
+      setCallersList(callersList);
+    } catch (err) {
+      console.log("ERR: callersList......", err);
+    }
+  };
 
   const fetchProdutsData = async () => {
     try {
@@ -95,10 +85,10 @@ const AddAdvancePayments = () => {
           token: getToken(),
         },
       });
-      const data = await res.data.productList;
+      const data = res.data.productList;
       setProductList(data);
     } catch (error) {
-      console.log("ERR: productList......", error)
+      console.log("ERR: productList......", error);
     }
   };
 
@@ -120,7 +110,7 @@ const AddAdvancePayments = () => {
         callerId: Number(selectedCaller.split(" - ")[0]),
         modeOfPayment: values.modeOfPayment,
         address: values.address,
-      }
+      };
 
       const reqBodyData = () => {
         const data = {};
@@ -131,7 +121,7 @@ const AddAdvancePayments = () => {
           }
         }
         return data;
-      }
+      };
 
       const reqBody = reqBodyData();
 
@@ -142,30 +132,28 @@ const AddAdvancePayments = () => {
             Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
             token: getToken(),
           },
-        })
+        });
 
       if (response?.status === 201 || response?.status === 200) {
         toast.success('Payment added successfully!');
         navigate("/advance-payments");
-        // setShowModal(true);
       }
 
     } catch (err) {
       toast.error(err?.response?.data?.status?.message || 'An error occurred while adding the payment.');
-    }
-    finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleImageChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, files } = e.target;
     if (name === 'image') {
       const file = files[0];
       const acceptedTypes = ["image/jpeg", "image/jpg", "image/png"];
       if (!acceptedTypes.includes(file.type)) {
         alert("Please select only image files (JPEG, JPG, PNG).");
-        window.location.reload()
+        window.location.reload();
         return;
       }
       const reader = new FileReader();
@@ -202,7 +190,6 @@ const AddAdvancePayments = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      // const parsedValue = name === 'paidAmount' ? +value : value;
       setValues({ ...values, [name]: value });
     }
   };
@@ -213,7 +200,15 @@ const AddAdvancePayments = () => {
 
   const handleProductChange = (event) => {
     setSelectedProducts(event.target.value);
-  }
+  };
+
+  useEffect(() => {
+    const hasReloaded = localStorage.getItem('hasReloaded');
+    if (!hasReloaded) {
+      localStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
 
   useEffect(() => {
     fetchCaller();
@@ -245,15 +240,12 @@ const AddAdvancePayments = () => {
                   name="gender"
                   value={values.gender}
                   onChange={handleInputChange}
-
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
                   <MenuItem value="others">Others</MenuItem>
                 </Select>
               </FormControl>
-
-
 
               <TextField
                 variant="outlined"
@@ -263,7 +255,6 @@ const AddAdvancePayments = () => {
                 value={values.city}
                 onChange={handleInputChange}
                 placeholder=""
-
               />
               <TextField
                 variant="outlined"
@@ -285,7 +276,6 @@ const AddAdvancePayments = () => {
                   name="caller"
                   value={selectedCaller}
                   onChange={handleCallerChange}
-
                 >
                   {callersList && callersList.length > 0 ? (
                     callersList.map((caller) => (
@@ -308,11 +298,9 @@ const AddAdvancePayments = () => {
                 label="Image: "
                 name="image"
                 accept=".jpeg, .jpg, .png"
-
                 onChange={handleImageChange}
                 required
               />
-
             </Grid>
 
             <Grid item xs={6}>
@@ -336,7 +324,6 @@ const AddAdvancePayments = () => {
                 labelWidth={100}
                 InputLabelProps={{ shrink: true }}
                 placeholder=""
-
               />
               <TextField
                 variant="outlined"
@@ -345,7 +332,6 @@ const AddAdvancePayments = () => {
                 name="address"
                 value={values.address}
                 onChange={handleInputChange}
-
               />
               <FormControl variant="outlined">
                 <InputLabel id="modeOfPayment-label">Payment Mode: </InputLabel>
@@ -367,8 +353,6 @@ const AddAdvancePayments = () => {
                 </Select>
               </FormControl>
 
-
-
               <FormControl variant="outlined">
                 <InputLabel id="discount-type-label">Products</InputLabel>
                 <Select
@@ -379,7 +363,6 @@ const AddAdvancePayments = () => {
                   name="product"
                   value={selectedProducts}
                   onChange={handleProductChange}
-
                 >
                   {productList && productList.length > 0 ? (
                     productList.map((product) => (
@@ -395,9 +378,6 @@ const AddAdvancePayments = () => {
                   )}
                 </Select>
               </FormControl>
-
-
-
             </Grid>
           </Grid>
 
@@ -427,7 +407,6 @@ const AddAdvancePayments = () => {
         </form>
       </Paper>
       <ToastContainer />
-      {/* {showModal && <PaymentOtpModal closeModal={() => setShowModal(false)} />} */}
     </>
   );
 };

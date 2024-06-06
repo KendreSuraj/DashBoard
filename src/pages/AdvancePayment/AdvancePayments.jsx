@@ -33,6 +33,11 @@ const AdvancePayments = () => {
         }
     }, [verificationUser])
 
+    const laodingCheck = localStorage.getItem('hasReloaded');
+    if (laodingCheck) {
+        localStorage.removeItem('hasReloaded')
+    }
+
 
     const handleEdit = (e) => {
         localStorage.setItem('packageEdit', e.id);
