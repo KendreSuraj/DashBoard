@@ -333,7 +333,8 @@ const BookingDetails = () => {
       clientLong: bookingData?.bookingDetail?.longitude,
       sessionScheduleId: bookingData?.bookingDetail?.sessionScheduleId,
       previousTherapistId: bookingData?.partnerDetail?.id,
-      previousMachineId: bookingData?.machineDetail?.id
+      previousMachineId: bookingData?.machineDetail?.id,
+      clientId:bookingData?.bookingDetail?.userId
     }
   }
  
