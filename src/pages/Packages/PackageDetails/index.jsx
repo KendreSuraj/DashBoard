@@ -44,6 +44,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [finalPrice, setFinalPrice] = useState(0);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [packageImage, setPackageImage] = useState();
+  const [initialContent, setInitialContent] = useState(""); 
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -104,6 +105,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         packageName: res.data.data.packageName,
         description: res.data.data.packageDescription,
       });
+      setInitialContent(res.data.data.packageDescription); 
       setPrice(res.data.data.price);
       setFinalPrice(res.data.data.finalPrice)
       setDiscountValue(res.data.data.packagePriceType === "flat" ? res.data.data.price - res.data.data.finalPrice : 0)
@@ -120,6 +122,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         description: res.data.data.packageDescription,
         noOfSession: res.data.data.numberOfSessions,
       });
+      setInitialContent(res.data.data.packageDescription);
       setPersonName(res.data.data.products.map(obj => `${obj.id}. ${obj.name}`));
       setParts(res.data.data.bodyParts)
       setDiscountPercent(res.data.data.discount)
@@ -399,6 +402,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       <Editor
         apiKey='1s2mvrmfdfu3iaw5yvt1n3mek2e2zds78tm3b2mzbihysqw0'
         onInit={(_evt, editor) => editorRef.current = editor}
+        initialValue={initialContent}
         init={{
           height: 500,
           menubar: false,
@@ -406,7 +410,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
-        onChange={log}
+        // onChange={log}
+        onEditorChange={(content) => setValues({ ...values, description: content })}
       />
       <div className="add-payment-form-group">
         <label className="add-payment-label" htmlFor="image">Package Image:</label>
