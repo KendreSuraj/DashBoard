@@ -50,7 +50,8 @@ const AllotDateV2 = (props) => {
                 city: clientInfo?.city,
                 productId: clientInfo?.productId,
                 clientLat: clientInfo?.clientLat,
-                clientLong: clientInfo?.clientLong
+                clientLong: clientInfo?.clientLong,
+                clientId:clientInfo?.clientId
             };
             const response = await getClientSlots(requestData);
             if (response?.status === 200) {
