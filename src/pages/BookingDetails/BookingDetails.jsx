@@ -344,7 +344,7 @@ const BookingDetails = () => {
     }
   }, [body])
   
-  const schedulerAllowedCity=["Delhi","Noida","Gurgaon","Pune","Mumbai"];
+  const schedulerAllowedCity=["Delhi","Noida","Gurgaon","Pune","Mumbai","Hyderabad"];
 
   return (
     <div>
