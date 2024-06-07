@@ -44,7 +44,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [finalPrice, setFinalPrice] = useState(0);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [packageImage, setPackageImage] = useState();
-  const [initialContent, setInitialContent] = useState(""); 
+  const [initialContent, setInitialContent] = useState("");
+  const [editImage, setEditImage] = useState(false);
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -105,13 +106,14 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         packageName: res.data.data.packageName,
         description: res.data.data.packageDescription,
       });
-      setInitialContent(res.data.data.packageDescription); 
+      setInitialContent(res.data.data.packageDescription);
       setPrice(res.data.data.price);
       setFinalPrice(res.data.data.finalPrice)
       setDiscountValue(res.data.data.packagePriceType === "flat" ? res.data.data.price - res.data.data.finalPrice : 0)
       setDiscountPercent(res.data.data.packagePriceType === "flat" ? res.data.data.price - res.data.data.finalPrice : res.data.data.discount)
       setDiscount(res.data.data.packagePriceType)
       setChecked(false);
+      setPackageImage(res.data.data.image)
     }
     else {
       setCustomState("custom");
@@ -126,6 +128,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       setPersonName(res.data.data.products.map(obj => `${obj.id}. ${obj.name}`));
       setParts(res.data.data.bodyParts)
       setDiscountPercent(res.data.data.discount)
+      setPackageImage(res.data.data.image)
+
     }
   };
 
@@ -133,7 +137,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     const {
       target: { innerHTML },
     } = event;
-    setPersonName([...personName, innerHTML.split('.')[0]]);
+    setPersonName([...personName, innerHTML]);
     setValues({
       ...values,
       "productId": [...personName, innerHTML.split(".")[0]],
@@ -203,6 +207,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           numberOfSessions: parseInt(values.noOfSession, 10),
           bodyParts: parts,
           discount: discountPercent,
+          image: packageImage,
+
         };
         response = await axios.post(
           `${apiUrl}/api/v1/admin/package/create-custom-package`, body, {
@@ -254,7 +260,9 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           price: parseInt(price, 10),
           finalPrice: Math.ceil(finalPrice),
           packagePriceType: discount,
-          discount: parseInt(discountPercent,10)
+          discount: parseInt(discountPercent, 10),
+          image: packageImage,
+
         };
         response = await axios.patch(
           `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
@@ -272,6 +280,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           numberOfSessions: parseInt(values.noOfSession, 10),
           bodyParts: parts,
           discount: parseInt(discountPercent, 10),
+          image: packageImage,
         };
 
         response = await axios.patch(
@@ -294,7 +303,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   const handleDiscountValue = (event) => {
     if (discount === "flat") {
-      
+
       setDiscountValue(event.target.value)
       setDiscountPercent(parseInt(event.target.value))
     }
@@ -415,7 +424,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       />
       <div className="add-payment-form-group">
         <label className="add-payment-label" htmlFor="image">Package Image:</label>
-        <input
+        {packageType !== "edit" && <input
           className="add-payment-input"
           type="file"
           id="image"
@@ -424,7 +433,24 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           accept=".jpeg, .jpg, .png"
           onChange={handleImageChange}
           required
-        />
+        />}
+
+        {!editImage && packageType === "edit" &&
+          <div style={{ display: "flex", flexDirection: "column", width: "max-content", gap: "10px" }}>
+            <img src={packageImage} alt={values.packageName} width={200} height={200} />
+            <button type='button' onClick={() => { setEditImage(true); }}>Remove Image</button>
+          </div>}
+
+          {editImage && packageType === "edit" && <input
+          className="add-payment-input"
+          type="file"
+          id="image"
+          name="image"
+          // accept="image/*"
+          accept=".jpeg, .jpg, .png"
+          onChange={handleImageChange}
+          required
+        />}
       </div>
       <div>
         <FormControlLabel control={
