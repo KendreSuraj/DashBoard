@@ -57,7 +57,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
                 onChange={handleSessionsChange}
                 required
             />
-            <p style={{ fontSize: "20px",paddingTop:"10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>
+            {productSession&&<p style={{ fontSize: "20px",paddingTop:"10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>}
         </div>
     );
 };
