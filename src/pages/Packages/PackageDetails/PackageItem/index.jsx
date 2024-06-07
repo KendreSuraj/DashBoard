@@ -27,7 +27,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
         if (sessions === '0') {
             alert("Sessions should be greater than or equal to 1");
         } else {
-            setPrice(parseInt(price,10) + parseInt(productSession[sessions - 1]?.price, 10))
+            setPrice(parseInt(price, 10) + parseInt(productSession[sessions - 1]?.price, 10))
             onChange(index, { ...rule, sessions });
         }
 
@@ -57,6 +57,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
                 onChange={handleSessionsChange}
                 required
             />
+            <p style={{ fontSize: "20px",paddingTop:"10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>
         </div>
     );
 };
