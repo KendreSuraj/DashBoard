@@ -7,6 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [productSession, setProductSession] = useState();
+    const [previousSession, setPreviousSession] = useState();
 
     const handleProductChange = async (event) => {
         if (event.target.innerHTML !== "") {
@@ -26,9 +27,20 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
         const sessions = event.target.value;
         if (sessions === '0') {
             alert("Sessions should be greater than or equal to 1");
-        } else {
+        } else if (sessions > productSession.length) {
+            alert(`Sessions should be less than or equal to ${productSession.length}`);
+        }
+        else if (sessions < 1) {
+            console.log(price)
+            console.log(productSession[sessions - 1]?.price)
+            setPrice(parseInt(price, 10) - parseInt(productSession[previousSession - 1]?.price, 10))
+            onChange(index, { ...rule, sessions });
+
+        }
+        else {
             setPrice(parseInt(price, 10) + parseInt(productSession[sessions - 1]?.price, 10))
             onChange(index, { ...rule, sessions });
+            setPreviousSession(sessions)
         }
 
     };
@@ -57,7 +69,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
                 onChange={handleSessionsChange}
                 required
             />
-            {productSession&&<p style={{ fontSize: "20px",paddingTop:"10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>}
+            {productSession && <p style={{ fontSize: "20px", paddingTop: "10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>}
         </div>
     );
 };
