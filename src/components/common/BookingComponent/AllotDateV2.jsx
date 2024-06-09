@@ -43,7 +43,6 @@ const AllotDateV2 = (props) => {
     clientLat: '',
     clientLong: '',
     sessionScheduleId: '',
-    isDashboard: true,
   });
   const getTimeSlots = async (date, index) => {
     try {
@@ -58,6 +57,7 @@ const AllotDateV2 = (props) => {
         clientLat: clientInfo?.clientLat,
         clientLong: clientInfo?.clientLong,
         clientId: clientInfo?.clientId,
+        isDashboard: true,
       };
       const response = await getClientSlots(requestData);
       if (response?.status === 200) {
