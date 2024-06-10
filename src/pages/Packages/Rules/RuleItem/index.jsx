@@ -49,6 +49,7 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames 
                         </MenuItem>
                     ))}
                 </Select>
+
             </FormControl>
             <FormControl style={{ width: "900px" }}>
                 <InputLabel id={`not-included-products-${index}-label`}>Not Included ProductIds*</InputLabel>

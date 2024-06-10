@@ -3,7 +3,7 @@ import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAvailableMachine, fetchMachine, manualAllocateMachine, reAllocateMachine } from '../../../store/actions/machine.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
-
+import CircularProgress from '@mui/material/CircularProgress';
 const AllotMachine = ({ body,isDisabled }) => {
    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
@@ -11,6 +11,7 @@ const AllotMachine = ({ body,isDisabled }) => {
     const availableMachine = [...availableMachines, body?.previousMachineId]
     const allMachine = useSelector(state => state.machine?.machineList?.machines)
     const [selectedMachine, setSelectedMachine] = useState('')
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     useEffect(() => {
         dispatch(fetchMachine())
         setSelectedMachine(body?.previousMachineId || '')
@@ -27,6 +28,7 @@ const AllotMachine = ({ body,isDisabled }) => {
           e.preventDefault();
           const isConfirmed = window.confirm('Are you sure you want to submit?');
           if (isConfirmed) {
+            setIsButtonDisabled(true);
             const newBody = {
               ...body,
               newMachineId: selectedMachine
@@ -37,9 +39,11 @@ const AllotMachine = ({ body,isDisabled }) => {
               window.location.reload();
             }else{
                 alert("An error occurred while Allocating Machine.")
+                setIsButtonDisabled(fasle);
             }
           }
         } catch (error) {
+          setIsButtonDisabled(fasle);
           console.error('An error occurred while handling the submission:', error);
         }
       };
@@ -49,16 +53,18 @@ const AllotMachine = ({ body,isDisabled }) => {
         try {
           const isConfirmed = window.confirm('Are you sure you want to Reallocate Machine?');
           if (isConfirmed) {
+            setIsButtonDisabled(true);
             const res = await reAllocateMachine(body);
             if (res?.status === 200) {
               alert(res.data?.status?.message);
               window.location.reload();
             } else {
               alert("An error occurred while Reallocating the machine.");
+              setIsButtonDisabled(false);
             }
           }
         } catch (error) {
-          console.error('An error occurred while reallocating the machine:', error);
+          setIsButtonDisabled(false)
           alert('An error occurred while reallocating the machine. Please try again later.');
         }
       };
@@ -71,9 +77,13 @@ const AllotMachine = ({ body,isDisabled }) => {
                {hasAdminAndSuperAdminAccess(role)&&<Button 
                   variant="contained"
                   color="primary"
-                  disabled={isDisabled}
+                  disabled={isDisabled || isButtonDisabled}
                  style={{ float: 'right', textTransform: 'none' }} onClick={() => reAllocateMachineManual()}>
-                    Re Allocate Machine
+                    {isButtonDisabled ? (
+                      <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          'Re Allocate Machine'
+                        )}
                 </Button>}
                 <form>
                     <Grid container spacing={2} alignItems="center">
@@ -107,9 +117,13 @@ const AllotMachine = ({ body,isDisabled }) => {
                                 color="primary"
                                 type="submit"
                                 onClick={handleSubmit}
-                                disabled={isDisabled}
+                                disabled={isDisabled || isButtonDisabled}
                             >
-                                Submit
+                                {isButtonDisabled ? (
+                               <CircularProgress size={24} color="inherit" />
+                                   ) : (
+                                      'Submit'
+                                    )}
                             </Button>}
                         </Grid>
                     </Grid>

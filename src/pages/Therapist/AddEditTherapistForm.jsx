@@ -184,34 +184,34 @@ const AddEditTherapistForm = () => {
             products: JSON.stringify(formData.products),
             isRockstar: isRockstarBoolean,
             gender: formData.gender,
-            mondayAvailability: {
-                startTime: formData?.schedule?.Monday?.startTime,
-                endTime: formData?.schedule?.Monday?.endTime
-            },
-            tuesdayAvailability: {
-                startTime: formData?.schedule?.Tuesday?.startTime,
-                endTime: formData?.schedule?.Tuesday?.endTime
-            },
-            wednesdayAvailability: {
-                startTime: formData?.schedule?.Wednesday?.startTime,
-                endTime: formData?.schedule?.Wednesday?.endTime
-            },
-            thursdayAvailability: {
-                startTime: formData?.schedule?.Thursday?.startTime,
-                endTime: formData?.schedule?.Thursday?.endTime
-            },
-            fridayAvailability: {
-                startTime: formData?.schedule?.Friday?.startTime,
-                endTime: formData?.schedule?.Friday?.endTime
-            },
-            saturdayAvailability: {
-                startTime: formData?.schedule?.Saturday?.startTime,
-                endTime: formData?.schedule?.Saturday?.endTime
-            },
-            sundayAvailability: {
-                startTime: formData?.schedule?.Sunday?.startTime,
-                endTime: formData?.schedule?.Sunday?.endTime
-            },
+            // mondayAvailability: {
+            //     startTime: formData?.schedule?.Monday?.startTime,
+            //     endTime: formData?.schedule?.Monday?.endTime
+            // },
+            // tuesdayAvailability: {
+            //     startTime: formData?.schedule?.Tuesday?.startTime,
+            //     endTime: formData?.schedule?.Tuesday?.endTime
+            // },
+            // wednesdayAvailability: {
+            //     startTime: formData?.schedule?.Wednesday?.startTime,
+            //     endTime: formData?.schedule?.Wednesday?.endTime
+            // },
+            // thursdayAvailability: {
+            //     startTime: formData?.schedule?.Thursday?.startTime,
+            //     endTime: formData?.schedule?.Thursday?.endTime
+            // },
+            // fridayAvailability: {
+            //     startTime: formData?.schedule?.Friday?.startTime,
+            //     endTime: formData?.schedule?.Friday?.endTime
+            // },
+            // saturdayAvailability: {
+            //     startTime: formData?.schedule?.Saturday?.startTime,
+            //     endTime: formData?.schedule?.Saturday?.endTime
+            // },
+            // sundayAvailability: {
+            //     startTime: formData?.schedule?.Sunday?.startTime,
+            //     endTime: formData?.schedule?.Sunday?.endTime
+            // },
         }
         const res = data ? await UpdateTherapist(data?.id, upadteBody) : await addTherapist(addBody)
         if (res?.status === 200) {

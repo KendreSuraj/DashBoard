@@ -34,7 +34,7 @@ const PackagesSteps = () => {
     }
 
     return (
-        <div className='container'>
+        <div className='container1'>
             <h3>Packages Steps</h3>
             <div className='wrapper'>
                 <Button
@@ -53,14 +53,6 @@ const PackagesSteps = () => {
                 >
                     Add Rules
                 </Button>
-                {/* <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={!packagesubmitted}
-                    onClick={()=>handleClick("offer")}
-                >
-                    Add Offers
-                </Button> */}
             </div>
             {packageDetails && !packagesubmitted && <PackageDetails setPackagesSubmitted={setPackagesSubmitted} />}
             {(packagesubmitted || rules) && <RulesStep />}
