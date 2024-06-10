@@ -19,6 +19,7 @@ const AllotDateV2 = (props) => {
   const clientInfo = props?.body;
   const [timeSlot, setTimeSlot] = useState([]);
   const params = useParams();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   useEffect(() => {
     setBooking((prevBooking) => ({
       ...prevBooking,
@@ -98,16 +99,38 @@ const AllotDateV2 = (props) => {
       },
     }));
   };
-  const handleSlotConfirmation = async () => {
-    if (!booking?.newSlotTime.startTime) {
-      alert('Please Select Booking time ');
+//   const handleSlotConfirmation = async () => {
+//     if (!booking?.newSlotTime.startTime) {
+//       alert('Please Select Booking time ');
+//     }
+//     const res = await confirmClientSlots(booking);
+//     if (res.status === 200) {
+//       alert(res.data?.status?.message);
+//       window.location.reload();
+//     }
+//   };
+
+const handleSlotConfirmation = async () => {
+    if (!booking?.newSlotTime?.startTime) {
+        alert("Please Select Booking time ");
+        return;
     }
-    const res = await confirmClientSlots(booking);
-    if (res.status === 200) {
-      alert(res.data?.status?.message);
-      window.location.reload();
+    const isConfirmed = window.confirm('Are you sure you want to Confirm slot?');
+    if (isConfirmed) {
+        try {
+            setIsButtonDisabled(true);
+            const res = await confirmClientSlots(booking);
+            if (res.status === 200) {
+                alert(res.data?.status?.message);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('An error occurred while handling the submission:', error);
+            setIsButtonDisabled(false);
+        }
     }
-  };
+};
+
 
   return (
     <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
@@ -183,7 +206,12 @@ const AllotDateV2 = (props) => {
                   }}
                   onClick={handleSlotConfirmation}
                 >
-                  Confirm your slot
+                  {/* Confirm your slot */}
+                  {isButtonDisabled ? (
+                 <CircularProgress size={24} color="inherit" />
+                 ) : (
+                'Confirm your slot'
+                    )}
                 </button>
               )}
             </>
