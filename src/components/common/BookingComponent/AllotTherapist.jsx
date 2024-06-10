@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AllotTherapistBox = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
@@ -17,7 +18,7 @@ const AllotTherapistBox = (props) => {
   const [selectSecondTherapist, setSelectSecondTherapist] = useState('');
   const therapist1 = props.therapist
   const availableTherapist = useSelector(state => state?.therapist?.availableTherapist)
-
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [startTime, setStartTime] = useState({
     hour: '',
@@ -79,6 +80,7 @@ const AllotTherapistBox = (props) => {
       };
       const isConfirmed = window.confirm('Are you sure you want to submit?');
       if (isConfirmed) {
+        setIsButtonDisabled(true);
         const res = await manualTherapistAllocation(reAllocateBodyWithId);
         if (res?.status === 200) {
           if (selectSecondTherapist) {
@@ -91,10 +93,12 @@ const AllotTherapistBox = (props) => {
           alert(res.data?.status?.message);
           window.location.reload()
         }else{
+          setIsButtonDisabled(false);
           alert('An error occurred while submission')
         }
       }
     } catch (error) {
+      setIsButtonDisabled(false);
       console.error('An error occurred while handling the submission:', error);
     }
   };
@@ -123,16 +127,19 @@ const AllotTherapistBox = (props) => {
     try {
       const isConfirmed = window.confirm('Are you sure you want to Reallocate Therapist?');
       if (isConfirmed) {
+        setIsButtonDisabled(true);
         const res = await reAllocateTherapist(reAllocateBody);
         if (res?.status === 200) {
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
+          setIsButtonDisabled(false);
           alert('An error occurred while reallocating therapist. Please try again later.');
           return res;
         }
       }
     } catch (error) {
+      setIsButtonDisabled(false);
       alert('An error occurred while reallocating therapist. Please try again later.');
     }
   };
@@ -145,10 +152,14 @@ const AllotTherapistBox = (props) => {
         {hasAdminAndSuperAdminAccess(role)&&<Button
           variant="contained"
           color="primary"
-          disabled={props.isDisabled}
+          disabled={props.isDisabled || isButtonDisabled}
           style={{ float: 'right', textTransform: 'none' }}
           onClick={(() => reAllocateAvailableTherapist())}>
-          Re Allocate Therapist
+          {isButtonDisabled ? (
+                 <CircularProgress size={24} color="inherit" />
+                 ) : (
+                'Re Allocate Therapist'
+                    )}
         </Button>}
         <form>
           <Grid container spacing={2} alignItems="center">
@@ -218,9 +229,13 @@ const AllotTherapistBox = (props) => {
                 color="primary"
                 type="submit"
                 onClick={handleSubmit}
-                disabled={props.isDisabled}
+                disabled={props.isDisabled || isButtonDisabled}
               >
-                Submit
+                {isButtonDisabled ? (
+                 <CircularProgress size={24} color="inherit" />
+                 ) : (
+                'Submit'
+                    )}
               </Button>}
             </Grid>
           </Grid>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { autoAllocateTherapistAndMachine, cancelBooking } from '../../../store/actions/therapist.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
-
+import CircularProgress from '@mui/material/CircularProgress';
 const UpdateStatusComponentV2 = (props) => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -11,10 +11,11 @@ const UpdateStatusComponentV2 = (props) => {
         setSelectedStatus(event.target.value);
     };
     const body = props?.body
-    console.log("see body", body)
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsButtonDisabled(true)
         if (selectedStatus.length < 1) {
             alert("Please select a status")
             return
@@ -33,8 +34,6 @@ const UpdateStatusComponentV2 = (props) => {
             if (res?.status === 200) {
                 alert(res.data?.status?.message);
                 window.location.reload()
-            }else{
-                alert()
             }
         } else if (props?.selectedStatus === "CANCELLED" && selectedStatus === "SCHEDULED") {
             const res = await autoAllocateTherapistAndMachine(body)
@@ -46,7 +45,6 @@ const UpdateStatusComponentV2 = (props) => {
         else {
             props.updateStatusHandler(selectedStatus)
         }
-
     };
 
     useEffect(() => {
@@ -75,8 +73,14 @@ const UpdateStatusComponentV2 = (props) => {
                             {/* <MenuItem value="SESSION_END" disabled>SESSION_END</MenuItem> */}
                         </Select>
                     </FormControl>
-                    {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
-                        Submit
+                    {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}
+                    disabled={isButtonDisabled}
+                    >
+                  {isButtonDisabled ? (
+                    <CircularProgress size={24} color="inherit" />
+                    ) : (
+                    'Submit'
+                    )}
                     </Button>}
                 </form>
             </Paper>

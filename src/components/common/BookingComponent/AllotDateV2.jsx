@@ -197,7 +197,7 @@ const handleSlotConfirmation = async () => {
                   style={{
                     padding: '10px 20px',
                     fontSize: '16px',
-                    backgroundColor: !props?.isDisabled ? 'blue' : 'gray',
+                    backgroundColor: props?.isDisabled ||isButtonDisabled ?'gray':'blue',
                     color: 'white',
                     border: 'none',
                     borderRadius: '5px',
