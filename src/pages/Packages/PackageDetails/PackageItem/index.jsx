@@ -4,10 +4,11 @@ import axios from 'axios';
 import { getToken } from '../../../../components/common/userLocalStorageUtils';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
+const PackageItem = ({ index, rule, names, onChange, setPrice, price,onDelete }) => {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [productSession, setProductSession] = useState();
     const [previousSession, setPreviousSession] = useState();
+    const packageType = localStorage.getItem('packageDetail');
 
     const handleProductChange = async (event) => {
         if (event.target.innerHTML !== "") {
@@ -56,6 +57,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
                     value={names[productID - 1]}
                     onChange={handleProductChange}
                     sx={{ width: 400 }}
+                    disabled={packageType === "edit" && rule.sessions}
                     renderInput={(params) => <TextField {...params} label="Products" />}
                 />
             </FormControl>
@@ -66,10 +68,20 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price }) => {
                 name="sessions"
                 type='number'
                 value={rule.sessions}
+                disabled={packageType === "edit" && rule.sessions}
                 onChange={handleSessionsChange}
                 required
             />
-            {productSession && <p style={{ fontSize: "20px", paddingTop: "10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>}
+            {productSession  && !rule.sessions&& <p style={{ fontSize: "20px", paddingTop: "10px" }}>Max number of Sessions Allowed: {productSession?.length}</p>}
+            {packageType === "edit"&& rule.sessions && <button style={{
+                backgroundColor: "rgb(215, 0, 64)",
+                borderColor: "rgb(215, 0, 64)",
+                color: "white",
+                cursor: "pointer",
+                width: "100px",
+                borderRadius: "10px"
+            }}
+            onClick={onDelete}>DELETE</button>}
         </div>
     );
 };

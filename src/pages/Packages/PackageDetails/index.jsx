@@ -46,6 +46,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [packageImage, setPackageImage] = useState();
   const [initialContent, setInitialContent] = useState("");
   const [editImage, setEditImage] = useState(false);
+  const [deletedProduct, setDeleteProduct] = useState([])
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -53,6 +54,8 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   const handleDiscountChange = (event) => {
     setDiscount(event.target.value);
+    setDiscountValue(0)
+      setDiscountPercent(0)
   };
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -133,22 +136,37 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     }
   };
 
-  const handleChange = (event) => {
-    const {
-      target: { innerHTML },
-    } = event;
-    setPersonName([...personName, innerHTML]);
+  // const handleChange = (event) => {
+  //   const {
+  //     target: { innerHTML },
+  //   } = event;
+  //   setPersonName([...personName, innerHTML]);
+  //   setValues({
+  //     ...values,
+  //     "productId": [...personName, innerHTML.split(".")[0]],
+  //   });
+  // };
+
+  const handleChange = (event, value) => {
+    setPersonName(value);
     setValues({
       ...values,
-      "productId": [...personName, innerHTML.split(".")[0]],
+      productId: value.map(item => item.split(".")[0]),
     });
   };
 
-  const handleBodyParts = (event) => {
-    const {
-      target: { innerHTML },
-    } = event;
-    setParts([...new Set(parts), innerHTML]);
+  // const handleBodyParts = (event) => {
+  //   const {
+  //     target: { innerHTML },
+  //   } = event;
+  //   setParts([...new Set(parts), innerHTML]);
+  //   setValues({
+  //     ...values,
+  //   });
+  // }
+
+  const handleBodyParts = (event, value) => {
+    setParts(value);
     setValues({
       ...values,
     });
@@ -208,8 +226,9 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           bodyParts: parts,
           discount: discountPercent,
           image: packageImage,
-
         };
+
+        console.log(body)
         response = await axios.post(
           `${apiUrl}/api/v1/admin/package/create-custom-package`, body, {
           headers: {
@@ -262,7 +281,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           packagePriceType: discount,
           discount: parseInt(discountPercent, 10),
           image: packageImage,
-
+          removedProducts: deletedProduct
         };
         response = await axios.patch(
           `${apiUrl}/api/v1/admin/package/fix/${packageId}`, body, {
@@ -303,7 +322,6 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   const handleDiscountValue = (event) => {
     if (discount === "flat") {
-
       setDiscountValue(event.target.value)
       setDiscountPercent(parseInt(event.target.value))
     }
@@ -359,15 +377,20 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
     reader.readAsDataURL(file);
   }
 
-  const editorRef = useRef(null);
-  const log = () => {
-    if (editorRef.current) {
-      setValues({
-        ...values,
-        description: editorRef.current.getContent(),
-      });
-    }
+  const handleRuleDelete = async (index) => {
+    setDeleteProduct([...deletedProduct, parseInt(packageItems[index].productId.split('.')[0])])
+    const productSessions = await axios.get(`${apiUrl}/api/v1/admin/product/session/${parseInt(packageItems[index].productId.split('.')[0], 10)}`, {
+      headers: {
+        Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+        token: getToken(),
+      },
+    });
+    setPrice(parseInt(price, 10) - parseInt(productSessions.data.productSessions[packageItems[index].sessions - 1].price, 10))
+    const updatedRules = packageItems.filter((_, i) => i !== index);
+    setPackageItems(updatedRules);
   };
+
+  const editorRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -380,7 +403,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   }, [packageType]);
 
   useEffect(() => {
-    if (price - discountValue < 0) {
+    if (price - discountValue < 0 && customState!=='custom') {
       alert("Please Enter valid Discount")
     } else {
       setFinalPrice(price - discountValue)
@@ -419,7 +442,6 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
-        // onChange={log}
         onEditorChange={(content) => setValues({ ...values, description: content })}
       />
       <div className="add-payment-form-group">
@@ -441,7 +463,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
             <button type='button' onClick={() => { setEditImage(true); }}>Remove Image</button>
           </div>}
 
-          {editImage && packageType === "edit" && <input
+        {editImage && packageType === "edit" && <input
           className="add-payment-input"
           type="file"
           id="image"
@@ -452,16 +474,23 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           required
         />}
       </div>
-      <div>
+      {packageType !== "edit" && <div>
         <FormControlLabel control={
           <Checkbox
             checked={checked}
             onChange={handleCheckBoxChange}
             inputProps={{ 'aria-label': 'controlled' }}
           />} label="Custom" />
-      </div>
+      </div>}
 
-      <FormControl>
+      {packageType === "edit" && <p
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+        }}
+      >Package Type: {customState === "custom" ? "Custom" : "Fix"}</p>}
+
+      {packageType !== "edit" && <FormControl>
         <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: "black" }}>Select Gender</FormLabel>
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
@@ -472,7 +501,13 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           <FormControlLabel value="female" control={<Radio />} label="Female" />
           <FormControlLabel value="male" control={<Radio />} label="Male" />
         </RadioGroup>
-      </FormControl>
+      </FormControl>}
+
+      {packageType === "edit" && <p style={{
+        fontSize: "24px",
+        fontWeight: "bold",
+        marginBottom: "20px"
+      }}>Gender: {Radiovalue.slice(0, 1).toUpperCase()}{Radiovalue.slice(1)}</p>}
 
       {!checked && packageItems.map((item, index) => (
         <PackageItem
@@ -483,6 +518,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           onChange={handlePackageItemChange}
           price={price}
           setPrice={setPrice}
+          onDelete={() => handleRuleDelete(index)}
         />
       ))}
 
@@ -514,7 +550,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
                 value={personName}
                 onChange={handleChange}
                 multiple
-                renderInput={(params) => <TextField {...params} label="Products" />}
+                renderInput={(params) => <TextField variant="outlined" {...params} label="Products" />}
               />
             </FormControl>
             <FormControl sx={{ width: "330px" }}>
@@ -525,7 +561,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
                 value={parts}
                 onChange={handleBodyParts}
                 multiple
-                renderInput={(params) => <TextField {...params} label="Body Parts" />}
+                renderInput={(params) => <TextField {...params} variant="outlined" label="Body Parts" />}
               />
             </FormControl>
           </div>
@@ -581,6 +617,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           value={discountPercent}
           required />}
       </div>
+
       <Button
         type="submit"
         variant="contained"

@@ -132,7 +132,7 @@ const TableComponent = ({
                               onClick={() => window.open(row[key], '_blank')}
                               style={{ maxWidth: '100px', maxHeight: '100px', cursor: 'pointer' }}
                               alt="img"
-                            /> : row[key]
+                            /> : key==="packageDescription"? <div dangerouslySetInnerHTML={{ __html: row[key] }} />:row[key]
                           )}
                         </TableCell>
                       );
