@@ -31,12 +31,12 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price,onDelete })
         } else if (sessions > productSession.length) {
             alert(`Sessions should be less than or equal to ${productSession.length}`);
         }
+        else if(sessions<0){
+            alert("Cannot add negative values")
+        }
         else if (sessions < 1) {
-            console.log(price)
-            console.log(productSession[sessions - 1]?.price)
             setPrice(parseInt(price, 10) - parseInt(productSession[previousSession - 1]?.price, 10))
             onChange(index, { ...rule, sessions });
-
         }
         else {
             setPrice(parseInt(price, 10) + parseInt(productSession[sessions - 1]?.price, 10))
@@ -66,7 +66,8 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price,onDelete })
                 variant="outlined"
                 label="No of sessions"
                 name="sessions"
-                type='number'
+                type='tel'
+                className="hide-spinner"
                 value={rule.sessions}
                 disabled={packageType === "edit" && rule.sessions}
                 onChange={handleSessionsChange}
