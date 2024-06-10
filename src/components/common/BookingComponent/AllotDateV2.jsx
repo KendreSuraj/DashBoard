@@ -193,7 +193,7 @@ const handleSlotConfirmation = async () => {
               </ul>
               {hasAdminAndSuperAdminAccess(role) && (
                 <button
-                  disabled={props?.isDisabled}
+                  disabled={props?.isDisabled || isButtonDisabled}
                   style={{
                     padding: '10px 20px',
                     fontSize: '16px',
