@@ -59,8 +59,8 @@ const TableComponent = ({
   return (
     <div className="table-container">
       {data && data.length > 0 ? (
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} style={{ maxHeight: 600, overflowY: 'auto' }}>
+          <Table stickyHeader>
             <TableHead>
               <TableRow className="table-header">
                 {Object.keys(data[0]).map((key, index) => {
@@ -85,7 +85,7 @@ const TableComponent = ({
                   return null;
                 })}
                 {viewButton && (
-                  <TableCell className="table-cell">view</TableCell>
+                  <TableCell className="table-cell">View</TableCell>
                 )}
                 {showUpdateButton && (
                   <TableCell className="table-cell">Actions</TableCell>
