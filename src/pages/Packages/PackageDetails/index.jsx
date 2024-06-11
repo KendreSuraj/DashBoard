@@ -19,7 +19,7 @@ import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
 
 
-const bodyparts = ["Hands", "Chest", "Legs", "Abdomen", "Head"];
+const bodyparts = ["Hands", "Chest", "Legs", "Abdomen", "Head","Face"];
 
 const PackageDetails = ({ setPackagesSubmitted }) => {
   const packageType = localStorage.getItem('packageDetail');
