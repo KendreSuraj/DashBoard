@@ -79,7 +79,7 @@ const Packages = () => {
       </Button>
 
       <TableComponent
-        hiddenFields={["products"]}
+        hiddenFields={["products", "packageFinalPrice", "packagePrice", "numberOfSessions"]}
         data={packageList}
         viewButton={'Edit'}
         viewDetails={handleEdit}
