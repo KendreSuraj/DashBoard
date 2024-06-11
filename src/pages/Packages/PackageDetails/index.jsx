@@ -538,7 +538,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
             variant="outlined"
             label="Number Of Sessions"
             name="noOfSession"
-            type='number'
+            type='tel'
             value={values.noOfSession}
             onChange={handleInputChange}
           />
