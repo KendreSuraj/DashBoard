@@ -106,9 +106,9 @@ const MachineAnalytics = () => {
       </TableCell>
     ));
   }
-  const handlemarkFreeMachine=async(id)=>{
+  const handlemarkFreeMachine=async(id,machine)=>{
     try {
-      const isConfirmed = window.confirm('Are you sure you want to mark free?');
+      const isConfirmed = window.confirm(`Are you sure you want to Mark ${machine} free on ${selectedDate}?`);
       if (isConfirmed) {
         setIsButtonDisabled(true);
         const body = {
@@ -203,7 +203,7 @@ const MachineAnalytics = () => {
                     padding:'5px',
                   }}
                     disabled={isButtonDisabled}
-                    onClick={()=>handlemarkFreeMachine(therapist.id)}
+                    onClick={()=>handlemarkFreeMachine(therapist.id,therapist.name)}
                   >
                    Mark Free
                   </Button>}
