@@ -144,3 +144,12 @@ export const addTherapistUnavailabilityAndLeave = async (
     return err.response.data.status.message;
   }
 };
+
+export const markTherapistFree = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/mark-therapist-available`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

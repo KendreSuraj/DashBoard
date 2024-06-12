@@ -4,8 +4,9 @@ import { fetchCenter } from '../../store/actions/center.action';
 import { fetchMachineAvailability } from '../../store/actions/SchedulerAnalytics.action';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
-
+import { Button } from 'react-bootstrap';
+import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { markMachineFree } from '../../store/actions/machine.action';
 
 const MachineAnalytics = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,8 @@ const MachineAnalytics = () => {
   const centerList = useSelector(state => state.center?.centerList?.centers || []);
   const machines = useSelector(state => state.schedulerAnalytics?.machineAnalytics?.machines || []);
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
   useEffect(() => {
     dispatch(fetchCenter());
   }, [dispatch]);
@@ -48,9 +50,10 @@ const MachineAnalytics = () => {
     }
     return dates;
   }
-  const handleActive = (index, item) => {
+  const handleActive = (index, item,date) => {
     setActiveOption(index);
     setSelectedDay(item);
+    setSelectedDate(date)
   }
 
   const timeSlots = [
@@ -103,6 +106,29 @@ const MachineAnalytics = () => {
       </TableCell>
     ));
   }
+  const handlemarkFreeMachine=async(id,machine)=>{
+    try {
+      const isConfirmed = window.confirm(`Are you sure you want to Mark ${machine} free on ${selectedDate}?`);
+      if (isConfirmed) {
+        setIsButtonDisabled(true);
+        const body = {
+          date: selectedDate,
+          machineId:id
+        };
+        const res = await markMachineFree(body);
+        if (res?.status === 200) {
+          alert(res.data?.status?.message);
+          window.location.reload();
+        }else{
+            alert("An error occurred while mark free.")
+            setIsButtonDisabled(false);
+        }
+      }
+    } catch (error) {
+      setIsButtonDisabled(false);
+      console.error('An error occurred', error);
+    }
+  }
   return (
     <Box sx={{ width: '100%', padding: '20px' }}>
       <FormControl fullWidth required>
@@ -141,7 +167,7 @@ const MachineAnalytics = () => {
                 fontWeight: 'bold',
                 border: '1px solid #ccc'
               }}
-              onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'))}
+              onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'),item.date)}
             >
               <span>
                 {/* {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)} */}
@@ -165,7 +191,22 @@ const MachineAnalytics = () => {
             {machines.map((therapist, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" align="center"  sx={{ borderRight: 1, borderColor: 'divider', position: 'sticky', left: 0, backgroundColor: 'white', zIndex: 1 }}>
-                  {therapist.name}
+                  {therapist.name}<br/>
+                  {therapist?.[`${selectedDay.toLowerCase()}Availability`].some(slot => slot.status === "REPAIR" || slot.status === "UNAVAILABLE") && 
+                  <Button
+                   style={{
+                    fontWeight: 'bold',
+                    marginTop: '5px',
+                    backgroundColor: 'pink',
+                    borderRadius: "10px",
+                    cursor:'pointer',
+                    padding:'5px',
+                  }}
+                    disabled={isButtonDisabled}
+                    onClick={()=>handlemarkFreeMachine(therapist.id,therapist.name)}
+                  >
+                   Mark Free
+                  </Button>}
                 </TableCell>
                 {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
               </TableRow>
