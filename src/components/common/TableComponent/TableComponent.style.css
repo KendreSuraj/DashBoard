@@ -1,8 +1,6 @@
 .table-container {
   max-width: 100%;
   overflow-x: auto;
-  max-height: 800px;
-  overflow-y: auto;
 }
 
 .table-header {
@@ -25,11 +23,3 @@
   max-height: 100%;
   border: 2px solid black;
 }
-
-.table-header .table-cell {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1;
-}
-
