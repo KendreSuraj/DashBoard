@@ -46,7 +46,7 @@ const TableComponent = ({
     bookingDetails(details);
   };
   const handlePackagesDetails = () => {
-
+    
   }
 
   const stringifiedUser = localStorage.getItem('userData');
@@ -59,10 +59,10 @@ const TableComponent = ({
   return (
     <div className="table-container">
       {data && data.length > 0 ? (
-        <TableContainer component={Paper} style={{ maxHeight: 600, overflowY: 'auto' }}>
+        <TableContainer component={Paper} style={{ maxHeight: 570, overflowY: 'auto' }}>
           <Table stickyHeader>
-            <TableHead>
-              <TableRow className="table-header">
+            <TableHead className="table-header">
+              <TableRow >
                 {Object.keys(data[0]).map((key, index) => {
                   if (!hiddenFields || !hiddenFields.includes(key)) {
                     if (key == 'sessionSchedulesId') {
