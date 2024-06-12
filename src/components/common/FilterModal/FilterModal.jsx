@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DropdownWithCheckBox from '../DropdownWithCheckBox/DropdownWithCheckBox';
 import './FilterModal.style.css';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCityList,
   fetchProductList,
 } from '../../../store/actions/booking.action';
+import { fetchTherapist } from '../../../store/actions/therapist.action';
+import { 
+  setSelectedCities, 
+  setSelectedServices, 
+  setSelectedStatus, 
+  setSelectedPartners 
+} from '../../../store/slices/dashboardStateSlice';
 
 const style = {
   position: 'absolute',
@@ -47,11 +54,7 @@ const newCityList=[
   {"title":"Ludhiana"}
 ]
 
-export default function FilterModal({
-  setSelectedCities,
-  setSelectedServices,
-  setSelectedStatus,
-}) {
+export default function FilterModal() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,11 +64,16 @@ export default function FilterModal({
   useEffect(() => {
     dispatch(fetchCityList());
     dispatch(fetchProductList());
+    dispatch(fetchTherapist());
   }, [dispatch]);
 
   const cityList = useSelector((state) => state.booking.cityList);
   const productList = useSelector((state) => state.booking.productList);
-
+  const therapistList = useSelector((state) => state.therapist.therapistList?.therapists);
+  const selectedCities = useSelector((state) => state.dashboard.selectedCities);
+  const selectedServices = useSelector((state) => state.dashboard.selectedServices);
+  const selectedStatus = useSelector((state) => state.dashboard.selectedStatus);
+  const selectedPartners = useSelector((state) => state.dashboard.selectedPartners);
   return (
     <div>
       <Button onClick={handleOpen} variant="contained">
@@ -87,8 +95,9 @@ export default function FilterModal({
             </Typography>
             <DropdownWithCheckBox
               dropdownLabel={'Select status'}
-              data={serviceStatusData}
-              setSelectedValues={setSelectedStatus}
+              data={Array.isArray(serviceStatusData) ? serviceStatusData : []}
+              setSelectedValues={(values) => dispatch(setSelectedStatus(values))}
+              selectedValues={selectedStatus}
             />
           </div>
 
@@ -98,8 +107,21 @@ export default function FilterModal({
             </Typography>
             <DropdownWithCheckBox
               dropdownLabel={'Select Centers'}
-              data={newCityList}
-              setSelectedValues={setSelectedCities}
+              data={Array.isArray(newCityList) ? newCityList : []}
+              setSelectedValues={(values) => dispatch(setSelectedCities(values))}
+              selectedValues={selectedCities}
+            />
+          </div>
+
+          <div>
+            <Typography id="modal-modal-description" sx={{ mt: 4, mb: 1 }}>
+              Select Partner
+            </Typography>
+            <DropdownWithCheckBox
+              dropdownLabel={'Select Partner'}
+              data={Array.isArray(therapistList) ? therapistList : []}
+              setSelectedValues={(values) => dispatch(setSelectedPartners(values))}
+              selectedValues={selectedPartners}
             />
           </div>
 
@@ -109,8 +131,9 @@ export default function FilterModal({
             </Typography>
             <DropdownWithCheckBox
               dropdownLabel={'Select services'}
-              data={productList}
-              setSelectedValues={setSelectedServices}
+              data={Array.isArray(productList) ? productList : []}
+              setSelectedValues={(values) => dispatch(setSelectedServices(values))}
+              selectedValues={selectedServices}
             />
           </div>
 

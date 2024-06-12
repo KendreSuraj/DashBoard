@@ -15,6 +15,7 @@ import therapistSlice from './slices/therapistSlice';
 import packagesSlice from './slices/packagesSlice';
 import advancePaymentSlice from './slices/advancePaymentSlice';
 import schedulerAnalyticsSlice from "./slices/SchedulerAnalyticsSlice"
+import dashboardStateSlice from './slices/dashboardStateSlice';
 
 const store = configureStore({
   reducer: {
@@ -33,7 +34,8 @@ const store = configureStore({
     therapist: therapistSlice,
     packages: packagesSlice,
     advancePayments: advancePaymentSlice,
-    schedulerAnalytics: schedulerAnalyticsSlice
+    schedulerAnalytics: schedulerAnalyticsSlice,
+    dashboard:dashboardStateSlice
   },
 });
 export default store;

@@ -7,8 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
 
-const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames }) => {
-
+const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames,allRules }) => {
     const handleProductChange = (event) => {
         const productId = event.target.value;
         setProductNames(names.filter(item => item !== productId));
@@ -28,6 +27,13 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames 
         },
     };
 
+    const selectedProductIds = allRules
+        .filter((_, i) => i !== index)
+        .map(r => r.productId);
+
+    // Filter available product names to exclude already selected product IDs
+    const filteredProductNames = names.filter(name => !selectedProductIds.includes(name));
+
     return (
         <div style={{ display: "flex", gap: "20px" }}>
             <FormControl style={{ width: "200px" }}>
@@ -39,7 +45,7 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames 
                     label="Age"
                     onChange={handleProductChange}
                 >
-                    {names?.map((name) => (
+                    {filteredProductNames?.map((name) => (
                         <MenuItem
                             key={name}
                             value={name}

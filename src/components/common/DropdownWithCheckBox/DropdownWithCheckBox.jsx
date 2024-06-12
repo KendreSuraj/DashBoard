@@ -12,6 +12,7 @@ export default function DropdownWithCheckBox({
   dropdownLabel,
   data,
   setSelectedValues,
+  selectedValues
 }) {
   return (
     <Autocomplete
@@ -20,7 +21,8 @@ export default function DropdownWithCheckBox({
       id="checkboxes-tags-demo"
       options={data}
       disableCloseOnSelect
-      getOptionLabel={(option) => option.title}
+      getOptionLabel={(option) => option.title?option.title:option.name}
+      value={selectedValues}
       renderOption={(props, option, { selected }) => (
         <li {...props}>
           <Checkbox
@@ -29,7 +31,7 @@ export default function DropdownWithCheckBox({
             style={{ marginRight: 8 }}
             checked={selected}
           />
-          {option.title}
+          {option.title?option.title:option.name}
         </li>
       )}
       style={{ width: 500 }}
