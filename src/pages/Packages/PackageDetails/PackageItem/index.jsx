@@ -11,8 +11,8 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
     const [productSession, setProductSession] = useState();
     const [previousSession, setPreviousSession] = useState();
     const packageType = localStorage.getItem('packageDetail');
-    const [addBodyParts, setAddBodyParts] = useState(false);
-    const [parts, setParts] = useState([]);
+    // const [addBodyParts, setAddBodyParts] = useState(false);
+    // const [parts, setParts] = useState([]);
 
     const handleProductChange = async (event) => {
         if (event.target.innerHTML !== "") {
@@ -51,13 +51,13 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
     };
     const productID = parseInt(rule.productId);
 
-    const handleCheckboxChange = (event) => {
-        setAddBodyParts(event.target.checked);
-    };
+    // const handleCheckboxChange = (event) => {
+    //     setAddBodyParts(event.target.checked);
+    // };
 
-    const handleBodyParts = (event, value) => {
-        setParts(value);
-    }
+    // const handleBodyParts = (event, value) => {
+    //     setParts(value);
+    // }
 
     return (
         <div style={{ display: "flex", gap: "20px" }}>
@@ -88,7 +88,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
                 onChange={handleSessionsChange}
                 required
             />
-            {!rule.sessions &&
+            {/* {!rule.sessions &&
                 <>
                     <FormControlLabel
                         control={<Checkbox checked={addBodyParts} onChange={handleCheckboxChange} />}
@@ -109,7 +109,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
                         </FormControl>
                     )}
                 </>
-            }
+            } */}
             {packageType === "edit" && rule.sessions && <button style={{
                 backgroundColor: "rgb(215, 0, 64)",
                 borderColor: "rgb(215, 0, 64)",
