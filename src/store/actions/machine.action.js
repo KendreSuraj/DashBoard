@@ -94,3 +94,13 @@ export const manualAllocateMachine = async (data) => {
     return error;
   }
 }
+
+
+export const markMachineFree = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/mark-machine-available`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

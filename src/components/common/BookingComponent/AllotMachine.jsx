@@ -39,11 +39,11 @@ const AllotMachine = ({ body,isDisabled }) => {
               window.location.reload();
             }else{
                 alert("An error occurred while Allocating Machine.")
-                setIsButtonDisabled(fasle);
+                setIsButtonDisabled(false);
             }
           }
         } catch (error) {
-          setIsButtonDisabled(fasle);
+          setIsButtonDisabled(false);
           console.error('An error occurred while handling the submission:', error);
         }
       };

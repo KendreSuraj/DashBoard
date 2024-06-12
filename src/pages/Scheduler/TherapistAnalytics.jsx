@@ -5,6 +5,8 @@ import { fetchTherapistAvailability } from '../../store/actions/SchedulerAnalyti
 import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 import moment from 'moment';
+import { Button } from 'react-bootstrap';
+import { markTherapistFree } from '../../store/actions/therapist.action';
 
 const TherapistAnalytics = () => {
     const dispatch = useDispatch();
@@ -15,7 +17,8 @@ const TherapistAnalytics = () => {
     const centerList = useSelector(state => state.center?.centerList?.centers || []);
     const therapists = useSelector(state => state.schedulerAnalytics?.therapistAnalytics?.therapists || []);
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
     useEffect(() => {
         dispatch(fetchCenter());
     }, [dispatch]);
@@ -48,10 +51,34 @@ const TherapistAnalytics = () => {
         return dates;
     }
 
-    const handleActive = (index, item) => {
+    const handleActive = (index, item,date) => {
         setActiveOption(index);
         setSelectedDay(item);
+        setSelectedDate(date)
     };
+    const handleMarkFreeTherapist=async(id)=>{
+        try {
+            const isConfirmed = window.confirm('Are you sure you want to Mark free?');
+            if (isConfirmed) {
+              setIsButtonDisabled(true);
+              const body = {
+                date:selectedDate,
+                therapistId:id
+              };
+              const res = await markTherapistFree(body);
+              if (res?.status === 200) {
+                alert(res.data?.status?.message);
+                window.location.reload();
+              }else{
+                  alert("An error occurred while Allocating Machine.")
+                  setIsButtonDisabled(false);
+              }
+            }
+          } catch (error) {
+            setIsButtonDisabled(false);
+            console.error('An error occurred while handling the submission:', error);
+          }
+    }
 
     const timeSlots = [
         '07:00-07:30', '07:30-08:00',
@@ -141,7 +168,7 @@ const TherapistAnalytics = () => {
                                 fontWeight: 'bold',
                                 border: '1px solid #ccc'
                             }}
-                            onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'))}
+                            onClick={() => handleActive(index, moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'),item.date)}
                         >
                             <span>
                                 {/* {moment(item.date, "YYYY-MM-DDT.SSS[Z]").format(`ddd DD`)} */}
@@ -167,6 +194,23 @@ const TherapistAnalytics = () => {
                             <TableRow key={index}>
                                 <TableCell component="th" scope="row" align="center" sx={{ borderRight: 1, borderColor: 'divider', position: 'sticky', left: 0, backgroundColor: 'white', zIndex: 1 }}>
                                     {therapist.name}
+                                    {therapist?.[`${selectedDay.toLowerCase()}Availability`].some(slot => slot.status === "LEAVE" || slot.status === "REPAIR" || slot.status === "UNAVAILABLE")&&
+                                    <Button
+                                        style={{
+                                          fontWeight: 'bold',
+                                          marginTop: '5px',
+                                          backgroundColor: 'pink',
+                                          borderRadius: "10px",
+                                          cursor:'pointer',
+                                          padding:'5px',
+                                        }}
+                                        disabled={isButtonDisabled}
+                                        onClick={()=>handleMarkFreeTherapist(therapist.id)}
+                                    >
+                                        Mark Free
+                                    </Button>}
+
+                                    {/* <Button color='primary' sx={{fontWeight: 'bold'}}>Mark Free</Button> */}
                                 </TableCell>
                                 {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
                             </TableRow>
