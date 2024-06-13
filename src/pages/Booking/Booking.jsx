@@ -13,14 +13,22 @@ import FilterModal from '../../components/common/FilterModal/FilterModal';
 import { Button } from '@mui/material';
 
 const Booking = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchType, setSearchType] = useState('phoneNumber');
-  const [searchBtnPressed, setSearchBtnPressed] = useState(false);
-  const [selectedCities, setSelectedCities] = useState([]);
-  const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState([]);
-  const [filterString, setFilterString] = useState('');
 
+  const selectedCities = useSelector((state) => state.dashboard.selectedCities);
+  const selectedServices = useSelector((state) => state.dashboard.selectedServices);
+  const selectedStatus = useSelector((state) => state.dashboard.selectedStatus);
+  const selectedPartners = useSelector((state) => state.dashboard.selectedPartners);
+  console.log("asdfghyju ________>>>>>>>>>",selectedPartners)
+  console.log("------------>>>>>>>>>",selectedStatus)
+  // const [searchText, setSearchText] = useState('');
+  // const [searchType, setSearchType] = useState('phoneNumber');
+  const [searchBtnPressed, setSearchBtnPressed] = useState(false);
+  // const [selectedCities, setSelectedCities] = useState([]);
+  // const [selectedServices, setSelectedServices] = useState([]);
+  // const [selectedStatus, setSelectedStatus] = useState([]);
+  const [filterString, setFilterString] = useState('');
+  const { searchText, searchType } = useSelector((state) => state.dashboard);
+//  console.log("Hi bros its testingf-________>>>>>>>>>",searchText, searchBtnPressed)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
@@ -191,6 +199,18 @@ const Booking = () => {
       obj.statusFilter = statusFilter;
     }
 
+    if(selectedPartners.length>0){
+      let partnerFiletr='';
+      for(let partner=0;partner<selectedPartners.length;partner++){
+        if(partner == selectedPartners.length-1){
+         partnerFiletr += `'${selectedPartners[partner].name}'`;
+        }else{
+          partnerFiletr += `'${selectedPartners[partner].name}'`;
+        }
+      }
+      obj.partnerFiletr = partnerFiletr;
+    }
+
     dispatch(fetchBookings(obj));
   }, [
     dispatch,
@@ -198,11 +218,13 @@ const Booking = () => {
     endDate,
     page,
     searchBtnPressed,
-    searchText,
-    searchType,
+    // searchText,
+    // searchType,
     selectedCities,
     selectedServices,
     selectedStatus,
+    selectedPartners
+    // searchText.trim().length===0
   ]);
 
   useEffect(() => {
@@ -218,9 +240,12 @@ const Booking = () => {
     for (let i = 0; i < selectedStatus.length; i++) {
       demoFilterString += `${selectedStatus[i].title},`;
     }
+    for (let i = 0; i < selectedPartners.length; i++) {
+      demoFilterString += `${selectedPartners[i].name},`;
+    }
 
     setFilterString(demoFilterString);
-  }, [selectedCities, selectedServices, selectedStatus]);
+  }, [selectedCities, selectedServices, selectedStatus,selectedPartners]);
 
   return (
     <div>
@@ -230,8 +255,8 @@ const Booking = () => {
           <SearchComponent
             searchText={searchText}
             searchType={searchType}
-            setSearchText={setSearchText}
-            setSearchType={setSearchType}
+            // setSearchText={setSearchText}
+            // setSearchType={setSearchType}
             setSearchBtnPressed={setSearchBtnPressed}
             searchBtnPressed={searchBtnPressed}
             setStartDate={setStartDate}
@@ -240,9 +265,14 @@ const Booking = () => {
         </div>
         <div>
           <FilterModal
-            setSelectedCities={setSelectedCities}
-            setSelectedServices={setSelectedServices}
-            setSelectedStatus={setSelectedStatus}
+            // setSelectedCities={setSelectedCities}
+            // setSelectedServices={setSelectedServices}
+            // setSelectedStatus={setSelectedStatus}
+
+            setSelectedCities
+            setSelectedServices
+            setSelectedStatus
+            selectedPartners
           />
         </div>
 

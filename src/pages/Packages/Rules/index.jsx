@@ -128,6 +128,7 @@ const RulesStep = () => {
                 names={names}
                 productNames={productNames}
                 setProductNames={setProductNames}
+                allRules={rules}
               />
             ))}
           </div>
