@@ -56,9 +56,9 @@ const TherapistAnalytics = () => {
         setSelectedDay(item);
         setSelectedDate(date)
     };
-    const handleMarkFreeTherapist=async(id)=>{
+    const handleMarkFreeTherapist=async(id,name)=>{
         try {
-            const isConfirmed = window.confirm('Are you sure you want to Mark free?');
+            const isConfirmed = window.confirm(`Are you sure you want to Mark ${name} free on ${selectedDate}?`);
             if (isConfirmed) {
               setIsButtonDisabled(true);
               const body = {
@@ -205,7 +205,7 @@ const TherapistAnalytics = () => {
                                           padding:'5px',
                                         }}
                                         disabled={isButtonDisabled}
-                                        onClick={()=>handleMarkFreeTherapist(therapist.id)}
+                                        onClick={()=>handleMarkFreeTherapist(therapist.id,therapist.name)}
                                     >
                                         Mark Free
                                     </Button>}
