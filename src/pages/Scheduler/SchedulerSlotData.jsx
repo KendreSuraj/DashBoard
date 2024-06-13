@@ -2,19 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchSlotData } from '../../store/actions/SchedulerAnalytics.action';
+import { centerAction } from '../../store/slices/centerSlice';
 import moment from 'moment';
 import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 const SchedulerSlotData = () => {
   const dispatch = useDispatch();
   const [activeOption, setActiveOption] = useState(0);
-  const [centerId, setCenterId] = useState(4);
-  const [selectedDay, setSelectedDay] = useState(moment().format('YYYY-MM-DD'));
   const centerList = useSelector(state => state.center?.centerList?.centers || []);
+  const selectedId = useSelector(state => state.center?.centerId);
+  const selectDate = useSelector(state => state.center?.selectDate);
+  const [selectedDay, setSelectedDay] = useState(selectDate.date);
+  const [centerId, setCenterId] = useState(selectedId);
   const slotData = useSelector(state => state.schedulerAnalytics?.schedulerSlotData);
+
+ 
 
   useEffect(() => {
     dispatch(fetchCenter());
+    setCenterId(selectedId);
+    setActiveOption(selectDate.index);
+    setSelectedDay(selectDate.date);
   }, [dispatch]);
 
   useEffect(() => {
@@ -26,6 +34,7 @@ const SchedulerSlotData = () => {
   const handleChange = (event) => {
     const selectedCenterId = event.target.value;
     setCenterId(selectedCenterId);
+    dispatch(centerAction.addCenterId(selectedCenterId));
 
   };
 
@@ -40,9 +49,10 @@ const SchedulerSlotData = () => {
     return dates;
   };
 
-  const handleActive = (index, item) => {
+  const handleActive = (index, item, day) => {
     setActiveOption(index);
     setSelectedDay(item);
+    dispatch(centerAction.addDate({index, date: item, day}))
   };
 const allCenter={
   1:"Pune Center",
@@ -53,7 +63,8 @@ const allCenter={
   6:"Mumbai Center",
   7:"Noida Center",
   8:"Ludhiana Center",
-  9:"Hyderabad Center"
+  9:"Hyderabad Center",
+  10: "Pitampura Center",
 }
   return (
     <div>
@@ -95,7 +106,7 @@ const allCenter={
                   fontWeight: 'bold',
                   border: '1px solid #ccc'
                 }}
-                onClick={() => handleActive(index, moment(item.date).format('YYYY-MM-DD'))}
+                onClick={() => handleActive(index, moment(item.date).format('YYYY-MM-DD'), moment(item.date, "YYYY-MM-DDT.SSS[Z]").format('dddd'))}
               >
                 <span>
                   {moment(item.date).format('MMMM ddd DD')}
