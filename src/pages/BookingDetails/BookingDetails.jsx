@@ -399,6 +399,7 @@ const BookingDetails = () => {
 
   const schedulerAllowedCity = ["Delhi", "Noida", "Gurgaon", "Pune", "Mumbai", "Hyderabad"];
 
+
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
@@ -410,7 +411,7 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? <Grid item xs={6}>
+          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? <Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
@@ -449,7 +450,7 @@ const BookingDetails = () => {
               />
             </Grid>
           }
-          {bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
+          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
             <Grid item xs={12} md={6}>
               <AllotMachine body={body}
                 isDisabled={
