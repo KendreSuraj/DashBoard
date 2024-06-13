@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchMachineAvailability } from '../../store/actions/SchedulerAnalytics.action';
+import { centerAction } from '../../store/slices/centerSlice';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
@@ -13,24 +14,31 @@ const MachineAnalytics = () => {
   const navigate = useNavigate();
   const [activeOption, setActiveOption] = useState(0);
   const [centerId, setCenterId] = useState(4);
-  const [selectedDay, setSelectedDay] = useState(new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase());
   const centerList = useSelector(state => state.center?.centerList?.centers || []);
+  const selectedId = useSelector(state => state.center?.centerId);
+  const selectDate = useSelector(state => state.center?.selectDate);
+  const [selectedDay, setSelectedDay] = useState(selectDate.day);
   const machines = useSelector(state => state.schedulerAnalytics?.machineAnalytics?.machines || []);
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
   useEffect(() => {
     dispatch(fetchCenter());
+    setCenterId(selectedId)
+    setActiveOption(selectDate.index);
+    setSelectedDay(selectDate.day)
+    
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchMachineAvailability(centerId));
-  }, [centerId, dispatch]);
+    dispatch(fetchMachineAvailability(selectedId));
+  }, [selectedId, dispatch]);
 
   const handleChange = (event) => {
     const selectedCenterId = event.target.value;
     setCenterId(selectedCenterId);
     dispatch(fetchMachineAvailability(selectedCenterId));
+    dispatch(centerAction.addCenterId(selectedCenterId));
   };
 
   const handleDayChange = (event) => {
@@ -54,6 +62,7 @@ const MachineAnalytics = () => {
     setActiveOption(index);
     setSelectedDay(item);
     setSelectedDate(date)
+    dispatch(centerAction.addDate({index, day: item, date}))
   }
 
   const timeSlots = [

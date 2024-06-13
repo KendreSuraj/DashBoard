@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCenter, fetchCity ,fetchAdmin} from "../actions/center.action";
+import moment from "moment";
 
 const initialState = {
     centerList: [],
@@ -7,12 +8,49 @@ const initialState = {
     adminList:[],
     isLoading: false,
     error: null,
+    centerId: 4,
+    selectDate: {
+    index: 0,
+    date: moment().format('YYYY-MM-DD'),
+    day: new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase(),
+    }
 };
 
 const centerSlice = createSlice({
     name: 'center',
     initialState,
-    reducers: {},
+    reducers: {
+
+        addCenterId(state, action){
+            state.centerId = action.payload;
+        },
+        
+        addDay(state, action){
+            console.log(action.payload)
+           
+           
+            state.selectDate = {
+                ...state.selectDate,
+                index: action.payload.index,
+                day: action.payload.day,
+                date: action.payload.date,
+            }
+            console.log(state.selectDate);
+        },
+
+        addDate(state, action){
+            console.log(action.payload)
+            console.log(new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase());
+           
+            state.selectDate = {
+                ...state.selectDate,
+                index: action.payload.index,
+                day: action.payload.day,
+                date: action.payload.date,
+            }
+            console.log(state.selectDate);
+        }
+    },
 
     extraReducers: (builder) => {
         builder.addCase(fetchCenter.pending, (state) => {
@@ -53,4 +91,6 @@ const centerSlice = createSlice({
     },
 });
 
+
+export const centerAction = centerSlice.actions;
 export default centerSlice.reducer;
