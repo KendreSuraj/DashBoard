@@ -9,8 +9,9 @@ import './Incentive.style.css';
 import SearchComponent from '../../components/common/SearchComponent/SearchComponent';
 
 const CheckedIncentive = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchType, setSearchType] = useState('phoneNumber');
+  // const [searchText, setSearchText] = useState('');
+  // const [searchType, setSearchType] = useState('phoneNumber');
+  const { searchText, searchType } = useSelector((state) => state.dashboard);
   const [searchBtnPressed, setSearchBtnPressed] = useState(false);
 
   const navigate = useNavigate();
@@ -96,8 +97,8 @@ const CheckedIncentive = () => {
           <SearchComponent
             searchText={searchText}
             searchType={searchType}
-            setSearchText={setSearchText}
-            setSearchType={setSearchType}
+            // setSearchText={setSearchText}
+            // setSearchType={setSearchType}
             setSearchBtnPressed={setSearchBtnPressed}
             searchBtnPressed={searchBtnPressed}
           />
