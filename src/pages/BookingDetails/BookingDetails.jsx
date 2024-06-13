@@ -21,6 +21,7 @@ import UpdateStatusComponentV2 from '../../components/common/BookingComponent/Up
 import AllotDateV2 from '../../components/common/BookingComponent/AllotDateV2';
 import AllotTherapistV1 from '../../components/common/BookingComponent/AllotTherapistV1';
 import { addHoursToTime, subtractHoursFromTime } from '..';
+import UpdateStatusComponentPackage from '../../components/common/BookingComponent/UpdateStatusComponentPackage';
 
 
 const BookingDetails = () => {
@@ -40,6 +41,8 @@ const BookingDetails = () => {
   })
   const [machineDetail, setMachineDetail] = useState({})
   const [userLogs, setUserLogs] = useState([])
+  const [isPackage, setIsPackage] = useState(false)
+  const [packageSessionData, setPackageSessionData] = useState(null)
 
   const params = useParams();
 
@@ -81,6 +84,31 @@ const BookingDetails = () => {
       })
       .catch((err) => console.log(err));
   };
+
+
+  const updatePackageSessionStatus = (data) => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/update-package-session-status`,
+          data,
+          {
+            headers: {
+              Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+              token: getToken(),
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response.data);
+          window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    } catch (err) {
+      console.log("ERR while updating the status of packages", err)
+      alert("ERR while updating the status of packages")
+    }
+  }
 
   const handleStatusUpdate = (data) => {
     const reqBody = {
@@ -134,6 +162,8 @@ const BookingDetails = () => {
           bookingDetail && bookingDetail.appointmentAt
             ? splitDateTime(bookingDetail.appointmentAt)
             : '-';
+        const isPackage = bookingDetail && bookingDetail.isPackage
+        setIsPackage(isPackage)
         const detailObj = {
           Name: bookingDetail && bookingDetail.name ? bookingDetail.name : '-',
           Phone:
@@ -145,9 +175,11 @@ const BookingDetails = () => {
               ? bookingDetail.addressArea
               : '',
           Service:
-            bookingDetail && bookingDetail.productName
-              ? bookingDetail.productName
-              : '-',
+            bookingDetail
+              ? bookingDetail.isPackage
+                ? bookingDetail.productNames // if isPackage is true, use productNames
+                : bookingDetail.productName // if isPackage is false, use productName
+              : '-', // if bookingDetail is not present, use '-'
           'Booking Date': formattedDateAndTime?.date,
           'Booking Time': formattedDateAndTime?.time,
           Status:
@@ -250,6 +282,25 @@ const BookingDetails = () => {
 
   }
 
+  useEffect(() => {
+    if (isPackage) {
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/get-package-session-status/${params.sessionScheduleId}`,
+          {
+            headers: {
+              Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+              token: getToken(),
+            },
+          },
+        )
+        .then((response) => {
+          setPackageSessionData(response?.data?.packageSessionData)
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [isPackage])
+
   const deleteFirstTherapistHandler = (data) => {
     const body = {
       sessionScheduleId: params.sessionScheduleId,
@@ -313,19 +364,19 @@ const BookingDetails = () => {
     return formattedTime;
   }
   var body
-  if( userDataObject?.["Booking Time"]){
-     body = {
+  if (userDataObject?.["Booking Time"]) {
+    body = {
       slotDate: userDataObject?.["Booking Date"],
       slotTime: {
         startTime: userDataObject?.["Booking Time"],
-        endTime:addHoursToTime(userDataObject?.["Booking Time"],0,30)
+        endTime: addHoursToTime(userDataObject?.["Booking Time"], 0, 30)
         // endTime: operateOnTimes(userDataObject?.["Booking Time"], "01:00")
       },
       blockedSlotTime: {
-        startTime: subtractHoursFromTime(userDataObject?.["Booking Time"],1,0),
+        startTime: subtractHoursFromTime(userDataObject?.["Booking Time"], 1, 0),
         // startTime: operateOnTimes(userDataObject?.["Booking Time"], "-01:00"),
         // endTime: userDataObject?.["Booking Time"]
-        endTime: subtractHoursFromTime(userDataObject?.["Booking Time"],0,30)
+        endTime: subtractHoursFromTime(userDataObject?.["Booking Time"], 0, 30)
       },
       city: bookingData?.bookingDetail?.addressCity,
       productId: bookingData?.bookingDetail?.productId,
@@ -334,19 +385,20 @@ const BookingDetails = () => {
       sessionScheduleId: bookingData?.bookingDetail?.sessionScheduleId,
       previousTherapistId: bookingData?.partnerDetail?.id,
       previousMachineId: bookingData?.machineDetail?.id,
-      clientId:bookingData?.bookingDetail?.userId,
-      therapistId:bookingData?.partnerDetail?.id,
-      machineId:bookingData?.machineDetail?.id
+      clientId: bookingData?.bookingDetail?.userId,
+      therapistId: bookingData?.partnerDetail?.id,
+      machineId: bookingData?.machineDetail?.id
     }
   }
- 
+
   useEffect(() => {
     if (body?.slotTime?.startTime) {
       dispatch(fetchAvailableTherapist(body))
     }
   }, [body])
-  
-  const schedulerAllowedCity=["Delhi","Noida","Gurgaon","Pune","Mumbai","Hyderabad"];
+
+  const schedulerAllowedCity = ["Delhi", "Noida", "Gurgaon", "Pune", "Mumbai", "Hyderabad"];
+
 
   return (
     <div>
@@ -359,7 +411,7 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? <Grid item xs={6}>
+          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? <Grid item xs={6}>
             <AllotTherapistComponent
               handleAllotTherapist={handleSubmitAllotTherapist}
               partnerNameStr={partnerNameStr ? partnerNameStr : ''}
@@ -369,7 +421,7 @@ const BookingDetails = () => {
               endTime={endTime ? endTime : ''}
               isDisabled={
                 userDataObject.Status === 'COMPLETED' ||
-                userDataObject.Status === 'PAID'||
+                userDataObject.Status === 'PAID' ||
                 userDataObject.Status === 'CANCELLED'
               }
               deleteFirstTherapistHandler={deleteFirstTherapistHandler}
@@ -398,7 +450,7 @@ const BookingDetails = () => {
               />
             </Grid>
           }
-          {bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
+          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
             <Grid item xs={12} md={6}>
               <AllotMachine body={body}
                 isDisabled={
@@ -437,7 +489,7 @@ const BookingDetails = () => {
           {/* <Grid item xs={12} md={6}>
             <CommentBox />
           </Grid> */}
-          {bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ?
+          {/* {bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ?
             <Grid item xs={12} md={6}>
               <UpdateStatusComponentV2
                 updateStatusHandler={handleStatusUpdate}
@@ -451,7 +503,84 @@ const BookingDetails = () => {
                 selectedStatus={selectedStatus}
                 body={body}
               />
-            </Grid>}
+            </Grid>} */}
+          {/* {bookingData?.bookingDetail?.isPackage ?
+
+            <>
+              <Grid item xs={12} md={6}>
+                <UpdateStatusComponentPackage
+                  updateStatusHandler={updatePackageSessionStatus}
+                  packageSessionData={packageSessionData}
+                  sessionScheduleId={params.sessionScheduleId}
+                />
+              </Grid>
+            </>
+            : (
+              bookingData?.bookingDetail?.latitude !== "" &&
+                bookingData?.bookingDetail?.longitude !== "" &&
+                bookingData?.bookingDetail?.longitude &&
+                bookingData?.bookingDetail?.latitude &&
+                schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? (
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponentV2
+                    updateStatusHandler={handleStatusUpdate}
+                    selectedStatus={selectedStatus}
+                    body={body}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponent
+                    updateStatusHandler={handleStatusUpdate}
+                    selectedStatus={selectedStatus}
+                    body={body}
+                  />
+                </Grid>
+              )
+            )} */}
+          {
+            bookingData?.bookingDetail?.isPackage ? (
+              <>
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponentPackage
+                    updateStatusHandler={updatePackageSessionStatus}
+                    packageSessionData={packageSessionData}
+                    sessionScheduleId={params.sessionScheduleId}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponent
+                    updateStatusHandler={handleStatusUpdate}
+                    selectedStatus={selectedStatus}
+                    body={body}
+                  />
+                </Grid>
+              </>
+            ) : (
+              bookingData?.bookingDetail?.latitude !== "" &&
+                bookingData?.bookingDetail?.longitude !== "" &&
+                bookingData?.bookingDetail?.longitude &&
+                bookingData?.bookingDetail?.latitude &&
+                schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? (
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponentV2
+                    updateStatusHandler={handleStatusUpdate}
+                    selectedStatus={selectedStatus}
+                    body={body}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} md={6}>
+                  <UpdateStatusComponent
+                    updateStatusHandler={handleStatusUpdate}
+                    selectedStatus={selectedStatus}
+                    body={body}
+                  />
+                </Grid>
+              )
+            )
+          }
+
         </Grid>
 
       </Grid>
