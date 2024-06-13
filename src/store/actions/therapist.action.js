@@ -153,3 +153,13 @@ export const markTherapistFree = async (data) => {
     return error;
   }
 }
+
+
+export const deAllocateTherapist = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/deallocate-therapist`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}

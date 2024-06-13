@@ -5,7 +5,7 @@ import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
 import { getMinutesList } from '../../../utils';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
+import { deAllocateTherapist, manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -144,6 +144,33 @@ const AllotTherapistBox = (props) => {
     }
   };
 
+  const deAllocateTherapistForBooking = async () => {
+    try {
+      const isConfirmed = window.confirm('Are you sure you want to Deallocate Therapist?');
+      if (isConfirmed) {
+        setIsButtonDisabled(true);
+        const reqBody={
+            sessionScheduleId: reAllocateBody?.sessionScheduleId,
+            date:reAllocateBody?.slotDate,
+            therapistId:reAllocateBody?.therapistId
+        }
+        const res = await deAllocateTherapist(reqBody);
+        console.log("seeee",res)
+        if (res?.status === 200) {
+          alert(res.data?.status?.message);
+          window.location.reload();
+        } else {
+          setIsButtonDisabled(false);
+          alert('An error occurred while Deallocating therapist. Please try again later.');
+          return res;
+        }
+      }
+    } catch (error) {
+      setIsButtonDisabled(false);
+      alert('An error occurred while Deallocating therapist. Please try again later.');
+    }
+  };
+
 
   return (
     <div>
@@ -189,9 +216,9 @@ const AllotTherapistBox = (props) => {
                 )}
               </TextField>
             </Grid>
-            {/* <Grid item xs={1}>
-              <DeleteIcon onClick={deleteFisrtTherapist} />
-            </Grid> */}
+            <Grid item xs={1}>
+              {reAllocateBody?.therapistId&&<DeleteIcon onClick={()=>deAllocateTherapistForBooking()} />}
+            </Grid>
 
             {/* Second Therapist */}
             <Grid item xs={11}>
