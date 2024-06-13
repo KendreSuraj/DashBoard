@@ -334,7 +334,9 @@ const BookingDetails = () => {
       sessionScheduleId: bookingData?.bookingDetail?.sessionScheduleId,
       previousTherapistId: bookingData?.partnerDetail?.id,
       previousMachineId: bookingData?.machineDetail?.id,
-      clientId:bookingData?.bookingDetail?.userId
+      clientId:bookingData?.bookingDetail?.userId,
+      therapistId:bookingData?.partnerDetail?.id,
+      machineId:bookingData?.machineDetail?.id
     }
   }
  

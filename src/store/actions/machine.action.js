@@ -103,3 +103,12 @@ export const markMachineFree = async (data) => {
     return error;
   }
 }
+
+export const deAllocateMachine = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/deallocate-machine`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
