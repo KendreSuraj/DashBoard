@@ -39,11 +39,11 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
             alert("Cannot add negative values")
         }
         else if (sessions < 1) {
-            setPrice(parseInt(price, 10) - parseInt(productSession[previousSession - 1]?.price, 10))
+            setPrice(parseInt(price, 10) - parseInt(productSession[previousSession - 1]?.finalPrice, 10))
             onChange(index, { ...rule, sessions });
         }
         else {
-            setPrice(parseInt(price, 10) + parseInt(productSession[sessions - 1]?.price, 10))
+            setPrice(parseInt(price, 10) + parseInt(productSession[sessions - 1]?.finalPrice, 10))
             onChange(index, { ...rule, sessions });
             setPreviousSession(sessions)
         }
