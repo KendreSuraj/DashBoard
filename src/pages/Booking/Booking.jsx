@@ -39,7 +39,7 @@ const Booking = () => {
   );
   bookingList = bookingList?.map((data) => {
     const formattedDate = splitDateTime(data.appointmentAt);
-    const bookingDate=splitDateTime(data?.bookingAt)
+    const bookingDate = splitDateTime(data?.bookingAt)
 
     let mappedCity = data.city;
     if (['Ghaziabad', 'Greater Noida'].includes(data.city)) {
@@ -49,9 +49,9 @@ const Booking = () => {
     } else if (data.city === 'Faridabad') {
       mappedCity = 'Gurgaon';
     }
-    else if (['Delhi', "New Delhi"].includes(data.city)){
+    else if (['Delhi', "New Delhi"].includes(data.city)) {
       mappedCity = "Delhi";
-      }
+    }
 
     return {
       'Service Id': data?.sessionSchedulesId,
@@ -60,9 +60,9 @@ const Booking = () => {
       'Client Id': data?.clientId,
       Gender: data?.gender,
       'Phone Number': data.phoneNumber,
-       City: data.city ? data.city : '',
+      City: data.city ? data.city : '',
       // MappedCity: mappedCity,
-      'Service Name': data.productName ? data.productName : '',
+      'Service Name': data.productNames ? data.productNames : data.productName ? data.productName : '',
       'Service Date': formattedDate.date,
       'Service Time': formattedDate.time,
       Address: data.formattedAddress ? data.formattedAddress : '',
@@ -76,8 +76,8 @@ const Booking = () => {
       "Comment": data.comment ? data.comment : "",
       "Caller Name": data.callerName ? data.callerName : "-",
       "Caller Phone": data.callerPhone ? data.callerPhone : "-",
-      "Booking Date":bookingDate?.date,
-      "Booking Time":data?.bookingTime
+      "Booking Date": bookingDate?.date,
+      "Booking Time": data?.bookingTime,
     };
   });
 
@@ -247,6 +247,7 @@ const Booking = () => {
     setFilterString(demoFilterString);
   }, [selectedCities, selectedServices, selectedStatus,selectedPartners]);
 
+
   return (
     <div>
       <h3>All Bookings</h3>
@@ -342,6 +343,7 @@ const Booking = () => {
               'addressArea',
               'userId',
               'appointmentAt',
+              'packageProductDetails'
             ]}
             viewBookingButton={'view'}
             bookingDetails={handleBookingDetail}

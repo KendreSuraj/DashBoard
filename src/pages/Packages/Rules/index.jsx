@@ -51,6 +51,8 @@ const RulesStep = () => {
         };
       });
 
+      transformedObject.rules=transformedObject.rules[0].filter.length===0?[]:transformedObject.rules
+
       const response = await axios.post(
         `${apiUrl}/api/v1/admin/package/add-rule`, transformedObject, {
         headers: {
@@ -96,7 +98,7 @@ const RulesStep = () => {
         if (rulesRes.data.data) {
           const alreadyRules = rulesRes.data.data.rules.map(rule => ({
             productId: `${rule.productId}. ${rule.name}`,
-            notIncludedProductIds: rule.filter.map((item)=> `${item.id}. ${item.name}`)
+            notIncludedProductIds: rule.filter.map((item) => `${item.id}. ${item.name}`)
           }));
           setRules(alreadyRules)
         }
@@ -141,15 +143,27 @@ const RulesStep = () => {
           >
             +
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            style={{ width: '12%', fontSize: '15px' }}
-          >
-            Add Rules
-          </Button>
+          <div>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              style={{ width: '12%', fontSize: '15px' }}
+            >
+              Add Rules
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              style={{ width: '16%', fontSize: '15px', marginLeft: "20px" }}
+            >
+              Skip Adding Rules
+            </Button>
+          </div>
         </> : <p>No Products added</p>}
     </>
   );

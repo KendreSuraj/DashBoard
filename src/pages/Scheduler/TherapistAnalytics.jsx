@@ -2,35 +2,44 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
 import { fetchTherapistAvailability } from '../../store/actions/SchedulerAnalytics.action';
+import { centerAction } from '../../store/slices/centerSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
 import { markTherapistFree } from '../../store/actions/therapist.action';
+import centerSlice from '../../store/slices/centerSlice';
 
 const TherapistAnalytics = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [activeOption, setActiveOption] = useState(0);
     const [centerId, setCenterId] = useState(4);
-    const [selectedDay, setSelectedDay] = useState(new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase());
     const centerList = useSelector(state => state.center?.centerList?.centers || []);
+    const selectedId = useSelector(state => state.center?.centerId);
+    const selectDate = useSelector(state => state.center?.selectDate);
+    const [selectedDay, setSelectedDay] = useState(selectDate.day);
     const therapists = useSelector(state => state.schedulerAnalytics?.therapistAnalytics?.therapists || []);
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
     useEffect(() => {
         dispatch(fetchCenter());
+        setCenterId(selectedId);
+        setActiveOption(selectDate.index);
+        setSelectedDay((selectDate.day));
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(fetchTherapistAvailability(centerId));
-    }, [centerId, dispatch]);
+        setCenterId(selectedId);
+        dispatch(fetchTherapistAvailability(selectedId));
+    }, [selectedId, dispatch]);
 
     const handleChange = (event) => {
         const selectedCenterId = event.target.value;
         setCenterId(selectedCenterId);
         dispatch(fetchTherapistAvailability(selectedCenterId));
+        dispatch(centerAction.addCenterId(selectedCenterId));
     };
 
     const handleDayChange = (event) => {
@@ -55,6 +64,7 @@ const TherapistAnalytics = () => {
         setActiveOption(index);
         setSelectedDay(item);
         setSelectedDate(date)
+        dispatch(centerAction.addDate({index, day: item, date}));
     };
     const handleMarkFreeTherapist=async(id,name)=>{
         try {

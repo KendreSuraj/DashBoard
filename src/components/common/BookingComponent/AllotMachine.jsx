@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAvailableMachine, fetchMachine, manualAllocateMachine, reAllocateMachine } from '../../../store/actions/machine.action';
+import { deAllocateMachine, fetchAvailableMachine, fetchMachine, manualAllocateMachine, reAllocateMachine } from '../../../store/actions/machine.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
+import DeleteIcon from '@mui/icons-material/Delete';
 const AllotMachine = ({ body,isDisabled }) => {
    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
@@ -69,6 +70,31 @@ const AllotMachine = ({ body,isDisabled }) => {
         }
       };
       
+      const deAllocateMachineForBooking = async () => {
+        try {
+          const isConfirmed = window.confirm('Are you sure you want to Deallocate Machine?');
+          if (isConfirmed) {
+            setIsButtonDisabled(true);
+            const reqBody={
+                sessionScheduleId: body?.sessionScheduleId,
+                date:body?.slotDate,
+                machineId:body?.machineId
+            }
+            const res = await deAllocateMachine(reqBody);
+            if (res?.status === 200) {
+              alert(res.data?.status?.message);
+              window.location.reload();
+            } else {
+              setIsButtonDisabled(false);
+              alert('An error occurred while Deallocating Machien. Please try again later.');
+              return res;
+            }
+          }
+        } catch (error) {
+          setIsButtonDisabled(false);
+          alert('An error occurred while  Deallocating Machine. Please try again later.');
+        }
+      };
 
     return (
         <>
@@ -87,6 +113,7 @@ const AllotMachine = ({ body,isDisabled }) => {
                 </Button>}
                 <form>
                     <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={11}>
                         <TextField
                             select
                             label="Machines"
@@ -111,6 +138,10 @@ const AllotMachine = ({ body,isDisabled }) => {
                                 <MenuItem value="value">Enter</MenuItem>
                             )}
                         </TextField>
+                        </Grid>
+                        <Grid item xs={1}>
+                        {body?.machineId&&<DeleteIcon onClick={() => deAllocateMachineForBooking()} />}
+                           </Grid>
                         <Grid item xs={12}>
                            {hasAdminAndSuperAdminAccess(role)&&<Button
                                 variant="contained"
