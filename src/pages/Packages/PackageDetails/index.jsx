@@ -312,7 +312,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       setDiscountPercent(parseInt(event.target.value))
     }
     else {
-      setDiscountValue((event.target.value * price) / 100)
+      setDiscountValue((event.target.value * (price) / 100))
       setDiscountPercent(parseInt(event.target.value))
     }
   }
@@ -387,6 +387,11 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       fetchParticularData();
     }
   }, [packageType]);
+
+  useEffect(()=>{
+    discount!=="flat" &&
+    setDiscountValue((discountPercent * (price) / 100))
+  },[price])
 
   useEffect(() => {
     if (price - discountValue < 0 && customState !== 'custom') {
