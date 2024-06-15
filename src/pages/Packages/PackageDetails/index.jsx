@@ -371,7 +371,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         token: getToken(),
       },
     });
-    setPrice(parseInt(price, 10) - parseInt(productSessions.data.productSessions[packageItems[index].sessions - 1].price, 10))
+    setPrice(parseInt(price, 10) - parseInt(productSessions.data.productSessions[packageItems[index].sessions - 1].finalPrice, 10))
     const updatedRules = packageItems.filter((_, i) => i !== index);
     setPackageItems(updatedRules);
   };
