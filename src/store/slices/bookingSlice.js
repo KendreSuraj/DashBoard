@@ -11,7 +11,7 @@ const initialState = {
   cityList: [],
   productList: [],
   paymentHistory:{},
-  isLoading: false,
+  isLoading: true,
   error: null,
 };
 
