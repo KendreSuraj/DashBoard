@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TableComponent from '../../components/common/TableComponent/TableComponent';
 import './Booking.style.css';
 import SearchComponent from '../../components/common/SearchComponent/SearchComponent';
@@ -18,8 +18,6 @@ const Booking = () => {
   const selectedServices = useSelector((state) => state.dashboard.selectedServices);
   const selectedStatus = useSelector((state) => state.dashboard.selectedStatus);
   const selectedPartners = useSelector((state) => state.dashboard.selectedPartners);
-  console.log("asdfghyju ________>>>>>>>>>",selectedPartners)
-  console.log("------------>>>>>>>>>",selectedStatus)
   // const [searchText, setSearchText] = useState('');
   // const [searchType, setSearchType] = useState('phoneNumber');
   const [searchBtnPressed, setSearchBtnPressed] = useState(false);
@@ -28,7 +26,6 @@ const Booking = () => {
   // const [selectedStatus, setSelectedStatus] = useState([]);
   const [filterString, setFilterString] = useState('');
   const { searchText, searchType } = useSelector((state) => state.dashboard);
-//  console.log("Hi bros its testingf-________>>>>>>>>>",searchText, searchBtnPressed)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
@@ -131,6 +128,12 @@ const Booking = () => {
     };
   }, []);
 
+  // const prevSearchTextRef = useRef();
+  const prevSearchTextRef = useRef(searchText);
+  useEffect(() => {
+    prevSearchTextRef.current = searchText;
+  });
+  
   useEffect(() => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
@@ -200,15 +203,15 @@ const Booking = () => {
     }
 
     if(selectedPartners.length>0){
-      let partnerFiletr='';
+      let partnerFilter='';
       for(let partner=0;partner<selectedPartners.length;partner++){
         if(partner == selectedPartners.length-1){
-         partnerFiletr += `'${selectedPartners[partner].name}'`;
+         partnerFilter += `${selectedPartners[partner].name}`;
         }else{
-          partnerFiletr += `'${selectedPartners[partner].name}'`;
+          partnerFilter += `${selectedPartners[partner].name}`;
         }
       }
-      obj.partnerFiletr = partnerFiletr;
+      obj.partnerFilter = partnerFilter;
     }
 
     dispatch(fetchBookings(obj));
@@ -223,8 +226,9 @@ const Booking = () => {
     selectedCities,
     selectedServices,
     selectedStatus,
-    selectedPartners
+    selectedPartners,
     // searchText.trim().length===0
+    searchText.trim().length === 0 && prevSearchTextRef.current.trim().length > 0 
   ]);
 
   useEffect(() => {
@@ -245,7 +249,7 @@ const Booking = () => {
     }
 
     setFilterString(demoFilterString);
-  }, [selectedCities, selectedServices, selectedStatus,selectedPartners]);
+  }, [startDate,endDate,selectedCities, selectedServices, selectedStatus,selectedPartners]);
 
 
   return (
@@ -326,7 +330,7 @@ const Booking = () => {
               Total no. of bookings for the selected date: {totalBooking}
             </h4>
           </div>
-
+          {isLoading && <LoaderComponent />}
           <TableComponent
             data={bookingList}
             hiddenFields={[
@@ -360,7 +364,7 @@ const Booking = () => {
           </div>
         </>
       ) : (
-        (!isLoading && <p className='centered-text'>No Data found, please try reducing the filters and try again!</p>)
+        (!isLoading &&<p className='centered-text'>No Data found, please try reducing the filters and try again!</p>)
         // <LoaderComponent />
       )}
       {isLoading && <LoaderComponent />}

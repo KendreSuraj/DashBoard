@@ -35,7 +35,7 @@ const PackageItem = ({ index, rule, names, onChange, setPrice, price, onDelete }
         } else if (sessions > productSession.length) {
             alert(`Sessions should be less than or equal to ${productSession.length}`);
         }
-        else if (sessions < 0) {
+        else if (sessions < 0 || sessions === "-") {
             alert("Cannot add negative values")
         }
         else if (sessions < 1) {

@@ -14,6 +14,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Editor } from '@tinymce/tinymce-react';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import { getToken } from '../../../components/common/userLocalStorageUtils';
 import PackageItem from './PackageItem';
@@ -48,6 +50,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   const [initialContent, setInitialContent] = useState("");
   const [editImage, setEditImage] = useState(false);
   const [deletedProduct, setDeleteProduct] = useState([])
+  const [isLoading, setLoading] = useState(false);
 
   const handleRadioChange = (event) => {
     setRadioValue(event.target.value);
@@ -93,6 +96,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
   };
 
   const fetchParticularData = async () => {
+    setLoading(true);
     const res = await axios.get(`${apiUrl}/api/v1/admin/package/detail/${packageId}`, {
       headers: {
         Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
@@ -135,18 +139,9 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       setPackageImage(res.data.data.image)
 
     }
-  };
+    setTimeout(() =>setLoading(false),2000)
 
-  // const handleChange = (event) => {
-  //   const {
-  //     target: { innerHTML },
-  //   } = event;
-  //   setPersonName([...personName, innerHTML]);
-  //   setValues({
-  //     ...values,
-  //     "productId": [...personName, innerHTML.split(".")[0]],
-  //   });
-  // };
+  };
 
   const handleChange = (event, value) => {
     setPersonName(value);
@@ -155,16 +150,6 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
       productId: value.map(item => item.split(".")[0]),
     });
   };
-
-  // const handleBodyParts = (event) => {
-  //   const {
-  //     target: { innerHTML },
-  //   } = event;
-  //   setParts([...new Set(parts), innerHTML]);
-  //   setValues({
-  //     ...values,
-  //   });
-  // }
 
   const handleBodyParts = (event, value) => {
     setParts(value);
@@ -413,221 +398,219 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   return (
     <>
-      <h3 style={{ textAlign: 'center' }}>Package Details</h3>
-      <TextField
-        variant="outlined"
-        label="Package Name"
-        name="packageName"
-        value={values.packageName}
-        onChange={handleInputChange}
-        required
-      />
-
-      {/* <TextField
-        variant="outlined"
-        label="Description"
-        name="description"
-        value={values.description}
-        onChange={handleInputChange}
-        required
-      /> */}
-
-      <Editor
-        apiKey='1s2mvrmfdfu3iaw5yvt1n3mek2e2zds78tm3b2mzbihysqw0'
-        onInit={(_evt, editor) => editorRef.current = editor}
-        initialValue={initialContent}
-        init={{
-          height: 500,
-          menubar: false,
-          plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker permanentpen powerpaste advtable advcode editimage tableofcontents mergetags inlinecss',
-          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-        }}
-        onEditorChange={(content) => setValues({ ...values, description: content })}
-      />
-      <div className="add-payment-form-group">
-        <label className="add-payment-label" htmlFor="image">Package Image:</label>
-        {packageType !== "edit" && <input
-          className="add-payment-input"
-          type="file"
-          id="image"
-          name="image"
-          // accept="image/*"
-          accept=".jpeg, .jpg, .png"
-          onChange={handleImageChange}
-          required
-        />}
-
-        {!editImage && packageType === "edit" &&
-          <div style={{ display: "flex", flexDirection: "column", width: "max-content", gap: "10px" }}>
-            <img src={packageImage} alt={values.packageName} width={200} height={200} />
-            <button type='button' onClick={() => { setEditImage(true); }}>Remove Image</button>
-          </div>}
-
-        {editImage && packageType === "edit" && <input
-          className="add-payment-input"
-          type="file"
-          id="image"
-          name="image"
-          // accept="image/*"
-          accept=".jpeg, .jpg, .png"
-          onChange={handleImageChange}
-          required
-        />}
-      </div>
-      {packageType !== "edit" && <div>
-        <FormControlLabel control={
-          <Checkbox
-            checked={checked}
-            onChange={handleCheckBoxChange}
-            inputProps={{ 'aria-label': 'controlled' }}
-          />} label="Custom" />
-      </div>}
-
-      {packageType === "edit" && <p
-        style={{
-          fontSize: "24px",
-          fontWeight: "bold",
-        }}
-      >Package Type: {customState === "custom" ? "Custom" : "Fix"}</p>}
-
-      {packageType !== "edit" && <FormControl>
-        <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: "black" }}>Select Gender</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-controlled-radio-buttons-group"
-          name="controlled-radio-buttons-group"
-          value={Radiovalue}
-          onChange={handleRadioChange}
-        >
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
-        </RadioGroup>
-      </FormControl>}
-
-      {packageType === "edit" && <p style={{
-        fontSize: "24px",
-        fontWeight: "bold",
-        marginBottom: "20px"
-      }}>Gender: {Radiovalue.slice(0, 1).toUpperCase()}{Radiovalue.slice(1)}</p>}
-
-      {!checked && packageItems.map((item, index) => (
-        <PackageItem
-          key={index}
-          index={index}
-          rule={item}
-          names={names}
-          onChange={handlePackageItemChange}
-          price={price}
-          setPrice={setPrice}
-          onDelete={() => handleRuleDelete(index)}
-        />
-      ))}
-
-      {!checked && <Button
-        variant="contained"
-        color="primary"
-        onClick={addPackageItem}
-        style={{ marginBottom: '20px', width: "25%" }}
-      >
-        Add Package Item
-      </Button>}
-
-      {checked &&
+      {isLoading ? <>
+        <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          <CircularProgress style={{ width: "100px", height: "100px" }} />
+        </Box>
+      </> :
         <>
+          <h3 style={{ textAlign: 'center' }}>Package Details</h3>
           <TextField
             variant="outlined"
-            label="Number Of Sessions"
-            name="noOfSession"
-            type='tel'
-            value={values.noOfSession}
+            label="Package Name"
+            name="packageName"
+            value={values.packageName}
             onChange={handleInputChange}
+            required
           />
-          <div style={{ display: "flex", gap: "20px" }}>
-            <FormControl sx={{ width: "850px" }}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={names}
-                value={personName}
-                onChange={handleChange}
-                multiple
-                renderInput={(params) => <TextField variant="outlined" {...params} label="Products" />}
-              />
-            </FormControl>
-            <FormControl sx={{ width: "330px" }}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={bodyparts}
-                value={parts}
-                onChange={handleBodyParts}
-                multiple
-                renderInput={(params) => <TextField {...params} variant="outlined" label="Body Parts" />}
-              />
-            </FormControl>
+
+          <Editor
+            apiKey='1s2mvrmfdfu3iaw5yvt1n3mek2e2zds78tm3b2mzbihysqw0'
+            onInit={(_evt, editor) => editorRef.current = editor}
+            initialValue={initialContent}
+            init={{
+              height: 500,
+              menubar: false,
+              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker permanentpen powerpaste advtable advcode editimage tableofcontents mergetags inlinecss',
+              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            }}
+            onEditorChange={(content) => setValues({ ...values, description: content })}
+          />
+          <div className="add-payment-form-group">
+            <label className="add-payment-label" htmlFor="image">Package Image:</label>
+            {packageType !== "edit" && <input
+              className="add-payment-input"
+              type="file"
+              id="image"
+              name="image"
+              // accept="image/*"
+              accept=".jpeg, .jpg, .png"
+              onChange={handleImageChange}
+              required
+            />}
+
+            {!editImage && packageType === "edit" &&
+              <div style={{ display: "flex", flexDirection: "column", width: "max-content", gap: "10px" }}>
+                <img src={packageImage} alt={values.packageName} width={200} height={200} />
+                <button type='button' onClick={() => { setEditImage(true); }}>Remove Image</button>
+              </div>}
+
+            {editImage && packageType === "edit" && <input
+              className="add-payment-input"
+              type="file"
+              id="image"
+              name="image"
+              // accept="image/*"
+              accept=".jpeg, .jpg, .png"
+              onChange={handleImageChange}
+              required
+            />}
           </div>
-        </>}
+          {packageType !== "edit" && <div>
+            <FormControlLabel control={
+              <Checkbox
+                checked={checked}
+                onChange={handleCheckBoxChange}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />} label="Custom" />
+          </div>}
 
-      <div style={{ fontSize: "20px" }}>
+          {packageType === "edit" && <p
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+            }}
+          >Package Type: {customState === "custom" ? "Custom" : "Fix"}</p>}
 
-        {!checked && <p>Price: {price}</p>}
-
-        {price > 0 && <>
-          <FormControl>
+          {packageType !== "edit" && <FormControl>
+            <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: "black" }}>Select Gender</FormLabel>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              value={discount}
-              style={{ display: "flex", flexDirection: "row" }}
-              onChange={handleDiscountChange}
+              value={Radiovalue}
+              onChange={handleRadioChange}
             >
-              <FormControlLabel value="flat" control={<Radio />} label="Flat" />
-              <FormControlLabel value="percent" control={<Radio />} label="%" />
+              <FormControlLabel value="female" control={<Radio />} label="Female" />
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
             </RadioGroup>
-          </FormControl><br />
+          </FormControl>}
 
-          {discount === "flat" &&
-            <TextField
-              variant="outlined"
-              label="Flat Discount"
-              name="flatDiscount"
-              type='number'
-              value={discountPercent}
-              onChange={handleDiscountValue}
-              required />}
+          {packageType === "edit" && <p style={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            marginBottom: "20px"
+          }}>Gender: {Radiovalue.slice(0, 1).toUpperCase()}{Radiovalue.slice(1)}</p>}
 
-          {discount === "percent" &&
-            <TextField
+          {!checked && packageItems.map((item, index) => (
+            <PackageItem
+              key={index}
+              index={index}
+              rule={item}
+              names={names}
+              onChange={handlePackageItemChange}
+              price={price}
+              setPrice={setPrice}
+              onDelete={() => handleRuleDelete(index)}
+            />
+          ))}
+
+          {!checked && <Button
+            variant="contained"
+            color="primary"
+            onClick={addPackageItem}
+            style={{ marginBottom: '20px', width: "25%" }}
+          >
+            Add Package Item
+          </Button>}
+
+          {checked &&
+            <>
+              <TextField
+                variant="outlined"
+                label="Number Of Sessions"
+                name="noOfSession"
+                type='tel'
+                value={values.noOfSession}
+                onChange={handleInputChange}
+              />
+              <div style={{ display: "flex", gap: "20px" }}>
+                <FormControl sx={{ width: "850px" }}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={names}
+                    value={personName}
+                    onChange={handleChange}
+                    multiple
+                    renderInput={(params) => <TextField variant="outlined" {...params} label="Products" />}
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "330px" }}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={bodyparts}
+                    value={parts}
+                    onChange={handleBodyParts}
+                    multiple
+                    renderInput={(params) => <TextField {...params} variant="outlined" label="Body Parts" />}
+                  />
+                </FormControl>
+              </div>
+            </>}
+
+          <div style={{ fontSize: "20px" }}>
+
+            {!checked && <p>Price: {price}</p>}
+
+            {price > 0 && <>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={discount}
+                  style={{ display: "flex", flexDirection: "row" }}
+                  onChange={handleDiscountChange}
+                >
+                  <FormControlLabel value="flat" control={<Radio />} label="Flat" />
+                  <FormControlLabel value="percent" control={<Radio />} label="%" />
+                </RadioGroup>
+              </FormControl><br />
+
+              {discount === "flat" &&
+                <TextField
+                  variant="outlined"
+                  label="Flat Discount"
+                  name="flatDiscount"
+                  type='number'
+                  value={discountPercent}
+                  onChange={handleDiscountValue}
+                  required />}
+
+              {discount === "percent" &&
+                <TextField
+                  variant="outlined"
+                  label="Discount Percentage"
+                  name="percentageDiscount"
+                  onChange={handleDiscountValue}
+                  value={discountPercent}
+                  type='number'
+                  required />}
+
+              {!checked && <p>Final Price: {finalPrice === 0 ? price : Math.ceil(finalPrice)}</p>}
+            </>}
+
+            {checked && <TextField
               variant="outlined"
               label="Discount Percentage"
               name="percentageDiscount"
               onChange={handleDiscountValue}
-              value={discountPercent}
               type='number'
+              value={discountPercent}
               required />}
+          </div>
 
-          {!checked && <p>Final Price: {finalPrice === 0 ? price : Math.ceil(finalPrice)}</p>}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={packageType === "add" ? handleSubmit : handleUpdate}
+            style={{ width: '20%', marginTop: '30px' }}
+          >
+            Submit
+          </Button>
         </>}
-
-        {checked && <TextField
-          variant="outlined"
-          label="Discount Percentage"
-          name="percentageDiscount"
-          onChange={handleDiscountValue}
-          type='number'
-          value={discountPercent}
-          required />}
-      </div>
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        onClick={packageType === "add" ? handleSubmit : handleUpdate}
-        style={{ width: '20%', marginTop: '30px' }}
-      >
-        Submit
-      </Button>
     </>
   );
 };
