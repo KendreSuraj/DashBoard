@@ -11,7 +11,9 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import FilterModal from '../../components/common/FilterModal/FilterModal';
 import { Button } from '@mui/material';
-
+import * as XLSX from 'xlsx';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import TopicIcon from '@mui/icons-material/Topic';
 const Booking = () => {
 
   const selectedCities = useSelector((state) => state.dashboard.selectedCities);
@@ -59,7 +61,7 @@ const Booking = () => {
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
       // MappedCity: mappedCity,
-      'Service Name': data.productNames ? data.productNames : data.productName ? data.productName : '',
+      'Service Name': data.productNames ? data.productNames +" - "+ data?.productGender : data.productName ? data.productName +" - "+ data?.productGender : '',
       'Service Date': formattedDate.date,
       'Service Time': formattedDate.time,
       Address: data.formattedAddress ? data.formattedAddress : '',
@@ -251,6 +253,88 @@ const Booking = () => {
     setFilterString(demoFilterString);
   }, [startDate,endDate,selectedCities, selectedServices, selectedStatus,selectedPartners]);
 
+  // const handleDownload = () => {
+  //   const xlsxData = [
+  //     ["Service Id", "Client Name", "Client Id", "Gender", "Phone Number", "City", "Service Name", "Service Date", "Service Time", "Address", "Total (Rs.)", "Count", "Service Status", "Partner Name", "Start Time", "End Time", "Comment", "Caller Name", "Caller Phone", "Booking Date", "Booking Time"]
+  //   ];
+  //   bookingList?.forEach((item) => {
+  //     xlsxData.push([
+  //       item['Service Id'],
+  //       item['Client Name'],
+  //       item['Client Id'],
+  //       item['Gender'],
+  //       item['Phone Number'],
+  //       item['City'],
+  //       item['Service Name'],
+  //       item['Service Date'],
+  //       item['Service Time'],
+  //       item['Address'],
+  //       item['Total (Rs.)'],
+  //       item['Count'],
+  //       item['Service Status'],
+  //       item['Partner Name'],
+  //       item['Start Time'],
+  //       item['End Time'],
+  //       item['Comment'],
+  //       item['Caller Name'],
+  //       item['Caller Phone'],
+  //       item['Booking Date'],
+  //       item['Booking Time'],
+  //     ]);
+  //   });
+  //   const worksheet = XLSX.utils.aoa_to_sheet(xlsxData);
+  //   const columnWidths = xlsxData[0].map(column => ({ width: column.length + 4 }));
+  //   worksheet['!cols'] = columnWidths;
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'virtualConsultations Sheet');
+  //   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //   const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  //   const link = document.createElement('a');
+  //   link.href = window.URL.createObjectURL(blob);
+  //   link.download = 'booking-data.xlsx';
+  //   link.click();
+  // }
+
+
+  const handleDownloadCSV = () => {
+    const csvData = [
+      ["Service Id", "Client Name", "Client Id", "Gender", "Phone Number", "City", "Service Name", "Service Date", "Service Time", "Address", "Total (Rs.)", "Count", "Service Status", "Partner Name", "Start Time", "End Time", "Comment", "Caller Name", "Caller Phone", "Booking Date", "Booking Time"]
+    ];
+    bookingList?.forEach((item) => {
+      csvData.push([
+        item['Service Id'],
+        item['Client Name'],
+        item['Client Id'],
+        item['Gender'],
+        item['Phone Number'],
+        item['City'],
+        item['Service Name'],
+        item['Service Date'],
+        item['Service Time'],
+        item['Address'],
+        item['Total (Rs.)'],
+        item['Count'],
+        item['Service Status'],
+        item['Partner Name'],
+        item['Start Time'],
+        item['End Time'],
+        item['Comment'],
+        item['Caller Name'],
+        item['Caller Phone'],
+        item['Booking Date'],
+        item['Booking Time'],
+      ]);
+    });
+  
+    const csvContent = csvData.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'booking-data.csv';
+    link.click();
+  };
+  
+
 
   return (
     <div>
@@ -329,6 +413,26 @@ const Booking = () => {
             >
               Total no. of bookings for the selected date: {totalBooking}
             </h4>
+            <div>
+            {/* {bookingList.length>0&&<Button
+              style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px',marginLeft:"10px" }}
+              variant="contained"
+              color="primary"
+              endIcon={<ListAltIcon />}
+              onClick={handleDownload}
+            >
+              Excel
+            </Button>} */}
+            {bookingList.length>0&&<Button
+              style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px'}}
+              variant="contained"
+              color="primary"
+              endIcon={<TopicIcon />}
+              onClick={handleDownloadCSV}
+            >
+             CSV
+            </Button>}
+            </div>
           </div>
           {isLoading && <LoaderComponent />}
           <TableComponent
