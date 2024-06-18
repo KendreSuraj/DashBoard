@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -56,8 +56,12 @@ const newCityList=[
 
 export default function FilterModal() {
   const [open, setOpen] = React.useState(false);
+  const [cities, setCities] = useState([]);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    dispatch(setSelectedCities(cities));  
+    setOpen(false)
+  };
 
   const dispatch = useDispatch();
 
@@ -108,8 +112,8 @@ export default function FilterModal() {
             <DropdownWithCheckBox
               dropdownLabel={'Select Centers'}
               data={Array.isArray(newCityList) ? newCityList : []}
-              setSelectedValues={(values) => dispatch(setSelectedCities(values))}
-              selectedValues={selectedCities}
+              setSelectedValues={(values) => (setCities(values))}
+              selectedValues={cities}
             />
           </div>
 
@@ -138,7 +142,7 @@ export default function FilterModal() {
           </div>
 
           <div className="btnCenter">
-            <Button variant="contained" sx={{ mt: 4 }} onClick={handleClose}>
+            <Button variant="contained" sx={{ mt: 6 }} onClick={handleClose}>
               Apply Filters
             </Button>
           </div>
