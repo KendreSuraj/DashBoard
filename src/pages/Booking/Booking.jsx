@@ -413,8 +413,8 @@ const Booking = () => {
             >
               Total no. of bookings for the selected date: {totalBooking}
             </h4>
-            <div>
-            {/* {bookingList.length>0&&<Button
+            {/* <div>
+            {bookingList.length>0&&<Button
               style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px',marginLeft:"10px" }}
               variant="contained"
               color="primary"
@@ -422,7 +422,7 @@ const Booking = () => {
               onClick={handleDownload}
             >
               Excel
-            </Button>} */}
+            </Button>}
             {bookingList.length>0&&<Button
               style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px'}}
               variant="contained"
@@ -432,7 +432,7 @@ const Booking = () => {
             >
              CSV
             </Button>}
-            </div>
+            </div> */}
           </div>
           {isLoading && <LoaderComponent />}
           <TableComponent
