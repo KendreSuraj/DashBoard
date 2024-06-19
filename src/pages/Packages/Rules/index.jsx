@@ -71,6 +71,11 @@ const RulesStep = () => {
     }
   };
 
+  const handleDeleteRule = (index) => {
+    const updatedRules = rules.filter((_, i) => i !== index);
+    setRules(updatedRules);
+};
+
   const fetchParticularData = async () => {
     if (id != undefined) {
       const res = await axios.get(`${apiUrl}/api/v1/admin/package/detail/${id}`, {
@@ -105,6 +110,9 @@ const RulesStep = () => {
       }
     }
   }
+
+  console.log(rules)
+
   useEffect(() => {
     const packageType = localStorage.getItem('packageDetail');
 
@@ -131,6 +139,7 @@ const RulesStep = () => {
                 productNames={productNames}
                 setProductNames={setProductNames}
                 allRules={rules}
+                onDelete={handleDeleteRule}
               />
             ))}
           </div>

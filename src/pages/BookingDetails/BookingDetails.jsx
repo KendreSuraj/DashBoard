@@ -467,7 +467,7 @@ const BookingDetails = () => {
           </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ?
+          {bookingData?.bookingDetail?.longitude !== "" && !bookingData?.bookingDetail?.isPackage&& bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ?
             <Grid item xs={6}>
               <AllotDateV2 handleAllotDate={handleAllotDate}
                 body={body}

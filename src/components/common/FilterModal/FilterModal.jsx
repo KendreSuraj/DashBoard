@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -56,8 +56,18 @@ const newCityList=[
 
 export default function FilterModal() {
   const [open, setOpen] = React.useState(false);
+  const [cities, setCities] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [partners, setPartners] = useState([]);
+  const[services, setServices] = useState([]);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    dispatch(setSelectedCities(cities));  
+    dispatch(setSelectedStatus(status))
+    dispatch(setSelectedPartners(partners))
+    dispatch(setSelectedServices(services))
+    setOpen(false)
+  };
 
   const dispatch = useDispatch();
 
@@ -96,8 +106,8 @@ export default function FilterModal() {
             <DropdownWithCheckBox
               dropdownLabel={'Select status'}
               data={Array.isArray(serviceStatusData) ? serviceStatusData : []}
-              setSelectedValues={(values) => dispatch(setSelectedStatus(values))}
-              selectedValues={selectedStatus}
+              setSelectedValues={(values) => setStatus(values)}
+              selectedValues={status}
             />
           </div>
 
@@ -108,8 +118,8 @@ export default function FilterModal() {
             <DropdownWithCheckBox
               dropdownLabel={'Select Centers'}
               data={Array.isArray(newCityList) ? newCityList : []}
-              setSelectedValues={(values) => dispatch(setSelectedCities(values))}
-              selectedValues={selectedCities}
+              setSelectedValues={(values) => (setCities(values))}
+              selectedValues={cities}
             />
           </div>
 
@@ -120,8 +130,8 @@ export default function FilterModal() {
             <DropdownWithCheckBox
               dropdownLabel={'Select Partner'}
               data={Array.isArray(therapistList) ? therapistList : []}
-              setSelectedValues={(values) => dispatch(setSelectedPartners(values))}
-              selectedValues={selectedPartners}
+              setSelectedValues={(values) => setPartners(values)}
+              selectedValues={partners}
             />
           </div>
 
@@ -132,13 +142,13 @@ export default function FilterModal() {
             <DropdownWithCheckBox
               dropdownLabel={'Select services'}
               data={Array.isArray(productList) ? productList : []}
-              setSelectedValues={(values) => dispatch(setSelectedServices(values))}
-              selectedValues={selectedServices}
+              setSelectedValues={(values) => setServices(values)}
+              selectedValues={services}
             />
           </div>
 
           <div className="btnCenter">
-            <Button variant="contained" sx={{ mt: 4 }} onClick={handleClose}>
+            <Button variant="contained" sx={{ mt: 6 }} onClick={handleClose}>
               Apply Filters
             </Button>
           </div>

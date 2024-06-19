@@ -7,7 +7,9 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from '@mui/material/Chip';
 
-const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames,allRules }) => {
+const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames, allRules, onDelete }) => {
+    const packageType = localStorage.getItem('packageDetail');
+
     const handleProductChange = (event) => {
         const productId = event.target.value;
         setProductNames(names.filter(item => item !== productId));
@@ -27,6 +29,10 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames,
         },
     };
 
+    const handleDelete = () => {
+        onDelete(index);
+    };
+
     const selectedProductIds = allRules
         .filter((_, i) => i !== index)
         .map(r => r.productId);
@@ -44,6 +50,7 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames,
                     value={rule.productId}
                     label="Age"
                     onChange={handleProductChange}
+                    disabled={Boolean(rule.productId) }
                 >
                     {filteredProductNames?.map((name) => (
                         <MenuItem
@@ -85,7 +92,17 @@ const RuleItem = ({ onChange, rule, index, names, productNames, setProductNames,
                         </MenuItem>
                     ))}
                 </Select>
+
             </FormControl>
+            <button style={{
+                backgroundColor: "rgb(215, 0, 64)",
+                borderColor: "rgb(215, 0, 64)",
+                color: "white",
+                cursor: "pointer",
+                width: "100px",
+                borderRadius: "10px"
+            }}
+                onClick={handleDelete}>DELETE</button>
         </div>
     )
 }

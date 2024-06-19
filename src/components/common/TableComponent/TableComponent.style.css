@@ -1,11 +1,11 @@
 .table-container {
   max-width: 100%;
-  /* overflow-x: auto; */
-  max-height: 800px;
-  
+  overflow-x: auto;
 }
 
-
+.table-header {
+  background-color: #e6e0e0;
+}
 
 .table-cell {
   font-weight: bold !important;
@@ -22,11 +22,4 @@
   max-width: 100%;
   max-height: 100%;
   border: 2px solid black;
-}
-
-.table-header .table-cell {
-  position: sticky;
-  top: 0;
-  background-color: #efeded;
-  /* z-index: 1; */
 }
