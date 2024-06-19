@@ -30,6 +30,7 @@ const Booking = () => {
   const dispatch = useDispatch();
   let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
   const isLoading = useSelector((state) => state.booking?.isLoading)
+  const isBookingLoading = useSelector((state) => state.booking?.isBookingLoading)
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
   let totalBooking = useSelector(
     (state) => state.booking.bookingList?.totalRecords,
@@ -364,7 +365,7 @@ const Booking = () => {
           </div>
         </>
       ) : (
-        (!isLoading ?   <p className='centered-text'>No Data found, please try reducing the filters and try again!</p> : 
+        (!isBookingLoading ?   <p className='centered-text'>No Data found, please try reducing the filters and try again!</p> : 
           <LoaderComponent />)
         
       )}
