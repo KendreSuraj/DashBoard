@@ -3,7 +3,7 @@ import TableComponent from '../../components/common/TableComponent/TableComponen
 import './Booking.style.css';
 import SearchComponent from '../../components/common/SearchComponent/SearchComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookings } from '../../store/actions/booking.action';
+import { fetchBookingforCSV, fetchBookings } from '../../store/actions/booking.action';
 import LoaderComponent from '../../components/common/LoaderComponent/LoaderComponent';
 import { useNavigate } from 'react-router-dom';
 import { splitDateTime } from '../../utils';
@@ -14,12 +14,14 @@ import { Button } from '@mui/material';
 import * as XLSX from 'xlsx';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import TopicIcon from '@mui/icons-material/Topic';
+import CircularProgress from '@mui/material/CircularProgress';
 const Booking = () => {
 
   const selectedCities = useSelector((state) => state.dashboard.selectedCities);
   const selectedServices = useSelector((state) => state.dashboard.selectedServices);
   const selectedStatus = useSelector((state) => state.dashboard.selectedStatus);
   const selectedPartners = useSelector((state) => state.dashboard.selectedPartners);
+  const [submitting,setSubmitting]=useState(false)
   // const [searchText, setSearchText] = useState('');
   // const [searchType, setSearchType] = useState('phoneNumber');
   const [searchBtnPressed, setSearchBtnPressed] = useState(false);
@@ -297,46 +299,83 @@ const Booking = () => {
   // }
 
 
-  const handleDownloadCSV = () => {
-    const csvData = [
-      ["Service Id", "Client Name", "Client Id", "Gender", "Phone Number", "City", "Service Name", "Service Date", "Service Time", "Address", "Total (Rs.)", "Count", "Service Status", "Partner Name", "Start Time", "End Time", "Comment", "Caller Name", "Caller Phone", "Booking Date", "Booking Time"]
-    ];
-    bookingList?.forEach((item) => {
-      csvData.push([
-        item['Service Id'],
-        item['Client Name'],
-        item['Client Id'],
-        item['Gender'],
-        item['Phone Number'],
-        item['City'],
-        item['Service Name'],
-        item['Service Date'],
-        item['Service Time'],
-        item['Address'],
-        item['Total (Rs.)'],
-        item['Count'],
-        item['Service Status'],
-        item['Partner Name'],
-        item['Start Time'],
-        item['End Time'],
-        item['Comment'],
-        item['Caller Name'],
-        item['Caller Phone'],
-        item['Booking Date'],
-        item['Booking Time'],
-      ]);
-    });
+  // const handleDownloadCSV = () => {
+  //   const csvData = [
+  //     ["Service Id", "Client Name", "Client Id", "Gender", "Phone Number", "City", "Service Name", "Service Date", "Service Time", "Address", "Total (Rs.)", "Count", "Service Status", "Partner Name", "Start Time", "End Time", "Comment", "Caller Name", "Caller Phone", "Booking Date", "Booking Time"]
+  //   ];
+  //   bookingList?.forEach((item) => {
+  //     csvData.push([
+  //       item['Service Id'],
+  //       item['Client Name'],
+  //       item['Client Id'],
+  //       item['Gender'],
+  //       item['Phone Number'],
+  //       item['City'],
+  //       item['Service Name'],
+  //       item['Service Date'],
+  //       item['Service Time'],
+  //       item['Address'],
+  //       item['Total (Rs.)'],
+  //       item['Count'],
+  //       item['Service Status'],
+  //       item['Partner Name'],
+  //       item['Start Time'],
+  //       item['End Time'],
+  //       item['Comment'],
+  //       item['Caller Name'],
+  //       item['Caller Phone'],
+  //       item['Booking Date'],
+  //       item['Booking Time'],
+  //     ]);
+  //   });
   
-    const csvContent = csvData.map(e => e.join(",")).join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'booking-data.csv';
-    link.click();
+  //   const csvContent = csvData.map(e => e.join(",")).join("\n");
+  //   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  //   const link = document.createElement('a');
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = 'booking-data.csv';
+  //   link.click();
+  // };
+  
+
+  // const handleCSVButtonClick = async (csv) => {
+  //   try {
+  //     const csvLink = await fetchBookingforCSV({ startDate, endDate });
+  //     if(res.status.code===200){
+  //       if (csvLink?.downloadLinks.csv&&csv==="csv") {
+  //         window.location.href = csvLink?.downloadLinks.csv;
+  //       }else{
+  //         window.location.href = csvLink?.downloadLinks.excel;
+  //       }
+  //     }else{
+  //       alert("Error occur while Generating CSV/EXCEL")
+  //     }
+     
+  //   } catch (error) {
+  //     console.error('Error fetching CSV link:', error);
+  //   }
+  // };
+
+  const handleCSVButtonClick = async (format) => {
+    try {
+      setSubmitting(true)
+      const data = await fetchBookingforCSV({ startDate, endDate });
+      if (data?.downloadLinks) {
+        const link = format === 'csv' ? data.downloadLinks.csv : data.downloadLinks.excel;
+        if (link) {
+          window.location.href = link;
+          setSubmitting(false)
+        } else {
+          alert('No valid download link available');
+        }
+      } else {
+        alert('Error occurred while generating download link');
+      }
+    } catch (error) {
+      console.error('Error fetching download link:', error);
+      alert('An error occurred while fetching the download link. Please try again.');
+    }
   };
-  
-
-
   return (
     <div>
       <h3>All Bookings</h3>
@@ -414,26 +453,28 @@ const Booking = () => {
             >
               Total no. of bookings for the selected date: {totalBooking}
             </h4>
-            {/* <div>
+            <div>
             {bookingList.length>0&&<Button
               style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px',marginLeft:"10px" }}
               variant="contained"
               color="primary"
               endIcon={<ListAltIcon />}
-              onClick={handleDownload}
+              onClick={()=>handleCSVButtonClick("excel")}
+              disabled={submitting}
             >
-              Excel
+             {submitting ? <CircularProgress size={24} color="inherit" /> : 'excel'}
             </Button>}
             {bookingList.length>0&&<Button
               style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px'}}
               variant="contained"
               color="primary"
               endIcon={<TopicIcon />}
-              onClick={handleDownloadCSV}
+              onClick={()=>handleCSVButtonClick("csv")}
+              disabled={submitting}
             >
-             CSV
+            {submitting ? <CircularProgress size={24} color="inherit" /> : 'CSV'}
             </Button>}
-            </div> */}
+            </div>
           </div>
           {isLoading && <LoaderComponent />}
           <TableComponent
