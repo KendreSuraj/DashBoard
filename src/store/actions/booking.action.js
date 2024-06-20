@@ -147,3 +147,23 @@ export const fetchBookingsByPartner = async (params) => {
     return null;
   }
 };
+
+export const fetchBookingforCSV = async (params) => {
+  try {
+    const res = await axios.get(
+      `${apiUrl}/api/v1/admin/booking/bookingsforcsv?startDate=${params.startDate}&endDate=${params.endDate}`,
+      {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      },
+    );
+    const data = res.data;
+    return data;
+  } catch (error) {
+    console.error('Error in fetchBookingforCSV:', error);
+    throw error;
+  }
+};
+
