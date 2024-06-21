@@ -64,7 +64,7 @@ const UpdateStatusComponentV2 = (props) => {
                             onChange={handleStatusChange}
                         >
                             {/* <MenuItem value="PENDING" disabled>PENDING</MenuItem> */}
-                            <MenuItem value="COMPLETED" disabled>COMPLETED</MenuItem>
+                            <MenuItem value="COMPLETED">COMPLETED</MenuItem>
                             <MenuItem value="SCHEDULED">SCHEDULED</MenuItem>
                             <MenuItem value="CANCELLED">CANCELLED</MenuItem>
                             {/* <MenuItem value="POSTPONED" disabled>POSTPONED</MenuItem> */}
