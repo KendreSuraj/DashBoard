@@ -232,7 +232,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
         alert('Something went wrong');
       }
     } catch (err) {
-      alert(err);
+      alert(err?.response?.data?.status?.message);
     }
   };
 
@@ -365,6 +365,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
 
   const handleRuleDelete = async (index) => {
     setDeleteProduct([...deletedProduct, parseInt(packageItems[index].productId.split('.')[0])])
+    localStorage.setItem('deleteProduct',[...deletedProduct, parseInt(packageItems[index].productId.split('.')[0])]);
     const productSessions = await axios.get(`${apiUrl}/api/v1/admin/product/session/${parseInt(packageItems[index].productId.split('.')[0], 10)}`, {
       headers: {
         Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
