@@ -11,6 +11,8 @@ const RulesStep = () => {
   const [names, setNames] = useState([]);
   const [productNames, setProductNames] = useState([]);
   const packageType = localStorage.getItem('packageDetail');
+  const deleteProducts=localStorage.getItem('deleteProduct');
+  let numArray = deleteProducts?.split(',').map(Number);
 
   const [id, setId] = useState();
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -51,7 +53,7 @@ const RulesStep = () => {
         };
       });
 
-      transformedObject.rules=transformedObject.rules[0].filter.length===0?[]:transformedObject.rules
+      transformedObject.rules = transformedObject.rules[0].filter.length === 0 ? [] : transformedObject.rules
 
       const response = await axios.post(
         `${apiUrl}/api/v1/admin/package/add-rule`, transformedObject, {
@@ -62,9 +64,10 @@ const RulesStep = () => {
 
       if (response?.status === 201 || response?.status === 200) {
         alert("Rules added successfully!!");
-        window.location.href = `https://test.partner.avataarskin.com/packages`
+        window.location.href = `/packages`;
+        localStorage.removeItem('deleteProduct');
       } else {
-        alert('Something went wrong');
+        alert(response?.message);
       }
     } catch (err) {
       alert(err?.response?.data?.status?.message);
@@ -74,7 +77,7 @@ const RulesStep = () => {
   const handleDeleteRule = (index) => {
     const updatedRules = rules.filter((_, i) => i !== index);
     setRules(updatedRules);
-};
+  };
 
   const fetchParticularData = async () => {
     if (id != undefined) {
@@ -101,6 +104,9 @@ const RulesStep = () => {
         })
 
         if (rulesRes.data.data) {
+          rulesRes.data.data.rules.forEach(rule => {
+            rule.filter = rule.filter.filter(item => !numArray?.includes(item.id));
+        });
           const alreadyRules = rulesRes.data.data.rules.map(rule => ({
             productId: `${rule.productId}. ${rule.name}`,
             notIncludedProductIds: rule.filter.map((item) => `${item.id}. ${item.name}`)
@@ -110,9 +116,6 @@ const RulesStep = () => {
       }
     }
   }
-
-  console.log(rules)
-
   useEffect(() => {
     const packageType = localStorage.getItem('packageDetail');
 
