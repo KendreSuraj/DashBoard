@@ -13,6 +13,7 @@ const initialState = {
   paymentHistory:{},
   isLoading: true,
   error: null,
+  isBookingLoading: false,
 };
 
 const bookingSlice = createSlice({
@@ -22,13 +23,16 @@ const bookingSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBookings.pending, (state) => {
       state.isLoading = true;
+      state.isBookingLoading = true;
     });
     builder.addCase(fetchBookings.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isBookingLoading = false;
       state.bookingList = action.payload;
     });
     builder.addCase(fetchBookings.rejected, (state, action) => {
       state.isLoading = false;
+      state.isBookingLoading = false;
       state.error = action.error.message;
     });
     builder.addCase(fetchCityList.pending, (state) => {
