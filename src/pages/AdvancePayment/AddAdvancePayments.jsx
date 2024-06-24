@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Paper,
-  TextField,
+  
   makeStyles,
   Button,
   Select,
@@ -13,10 +13,19 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getToken } from '../../components/common/userLocalStorageUtils';
+import DropdownWithCheckBox from '../../components/common/DropdownWithCheckBox/DropdownWithCheckBox';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 import PaymentOtpModal from './PaymentOtpModal';
+import { Box, display, width } from '@mui/system';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { Chip } from '@mui/material';
+import ImageModal from './ImagesModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(5),
   },
 }));
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 
 const AddAdvancePayments = () => {
   const [values, setValues] = useState({
@@ -45,7 +58,7 @@ const AddAdvancePayments = () => {
     address: ""
   });
 
-  const [selectedProducts, setSelectedProducts] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const classes = useStyles();
   const navigate = useNavigate();
   const [callersList, setCallersList] = useState([]);
@@ -53,6 +66,7 @@ const AddAdvancePayments = () => {
   const [selectedCaller, setSelectedCaller] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [openImageModal, setOpenImageModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,6 +101,7 @@ const AddAdvancePayments = () => {
       });
       const data = res.data.productList;
       setProductList(data);
+      console.log(data);
     } catch (error) {
       console.log("ERR: productList......", error);
     }
@@ -103,8 +118,8 @@ const AddAdvancePayments = () => {
         gender: values.gender,
         amountPaid: Number(values.amountPaid),
         date: moment(values.date).format("YYYY-MM-DD"),
-        productId: Number(selectedProducts.split(" - ")[0]),
-        productName: selectedProducts.split(" - ")[1],
+        // productId: Number(selectedProducts.split(" - ")[0]),
+        // productName: selectedProducts.split(" - ")[1],
         image: values.image,
         city: values.city,
         callerId: Number(selectedCaller.split(" - ")[0]),
@@ -198,9 +213,13 @@ const AddAdvancePayments = () => {
     setSelectedCaller(event.target.value);
   };
 
-  const handleProductChange = (event) => {
-    setSelectedProducts(event.target.value);
+
+  const handleProductsChange = (event, value) => {
+    console.log(value);
+    setSelectedProducts(value);
   };
+
+
 
   useEffect(() => {
     const hasReloaded = localStorage.getItem('hasReloaded');
@@ -353,31 +372,46 @@ const AddAdvancePayments = () => {
                 </Select>
               </FormControl>
 
-              <FormControl variant="outlined">
-                <InputLabel id="discount-type-label">Products</InputLabel>
-                <Select
-                  variant="outlined"
-                  labelId="product-label"
-                  label="Products"
-                  id="product"
-                  name="product"
+              
+                <FormControl>
+                <Autocomplete
+                  onChange={(event, value) => handleProductsChange(event, value)}
+                  multiple
+                  limitTags={2}
+                  id="checkboxes-tags-demo"
+                  options={productList}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.title?option.title:option.name}
                   value={selectedProducts}
-                  onChange={handleProductChange}
-                >
-                  {productList && productList.length > 0 ? (
-                    productList.map((product) => (
-                      <MenuItem
-                        value={`${product.id} - ${product.name} - ${product.categoryGender}`}
-                        key={product.id}
-                      >
-                        {product.id} - {product.name} - {product.categoryGender}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem value="value">Enter</MenuItem>
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props} key={option.id} >
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.title?option.title:option.name}
+                    </li>
                   )}
-                </Select>
-              </FormControl>
+
+                  renderTags={(selected, getTagProps) => 
+                    selected.map((option, index) => (
+                      <Chip
+                        key={option.id}
+                        label={option.title ? option.title : option.name}
+                        {...getTagProps({ index })}
+                      />
+                    ))
+                  }
+                  
+                  renderInput={(params) => <TextField {...params} label={"Select Products"} style={{width: "100%", margin: 0}}/>}
+                />
+                <Button size='small' onClick={() => setOpenImageModal(true)}>Show image</Button>
+                </FormControl>
+                <ImageModal open={openImageModal} handleClose={() => setOpenImageModal(false)} products={selectedProducts}/>
+                 
+              
             </Grid>
           </Grid>
 
