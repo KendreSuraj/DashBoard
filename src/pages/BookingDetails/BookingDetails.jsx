@@ -23,26 +23,25 @@ import AllotTherapistV1 from '../../components/common/BookingComponent/AllotTher
 import { addHoursToTime, subtractHoursFromTime } from '..';
 import UpdateStatusComponentPackage from '../../components/common/BookingComponent/UpdateStatusComponentPackage';
 
-
 const BookingDetails = () => {
   // const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [userDataObject, setUserDataObject] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [partnerNameStr, setPartnerNameStr] = useState('');
-  const [secondPartnerStr, setSecondPartnerStr] = useState("")
+  const [secondPartnerStr, setSecondPartnerStr] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [bookingData, setBookingData] = useState({})
+  const [bookingData, setBookingData] = useState({});
   const [callerDetails, setCallerDetails] = useState({
-    callerName: "",
-    callerPhone: ""
-  })
-  const [machineDetail, setMachineDetail] = useState({})
-  const [userLogs, setUserLogs] = useState([])
-  const [isPackage, setIsPackage] = useState(false)
-  const [packageSessionData, setPackageSessionData] = useState(null)
+    callerName: '',
+    callerPhone: '',
+  });
+  const [machineDetail, setMachineDetail] = useState({});
+  const [userLogs, setUserLogs] = useState([]);
+  const [isPackage, setIsPackage] = useState(false);
+  const [packageSessionData, setPackageSessionData] = useState(null);
 
   const params = useParams();
 
@@ -69,7 +68,9 @@ const BookingDetails = () => {
         {
           sessionScheduleId: params.sessionScheduleId,
           partnerId: data.selectedTherapist,
-          partner1: data.secondSelectedTherapist ? data.secondSelectedTherapist : null
+          partner1: data.secondSelectedTherapist
+            ? data.secondSelectedTherapist
+            : null,
         },
         {
           headers: {
@@ -84,7 +85,6 @@ const BookingDetails = () => {
       })
       .catch((err) => console.log(err));
   };
-
 
   const updatePackageSessionStatus = (data) => {
     try {
@@ -105,10 +105,10 @@ const BookingDetails = () => {
         })
         .catch((err) => console.log(err));
     } catch (err) {
-      console.log("ERR while updating the status of packages", err)
-      alert("ERR while updating the status of packages")
+      console.log('ERR while updating the status of packages', err);
+      alert('ERR while updating the status of packages');
     }
-  }
+  };
 
   const handleStatusUpdate = (data) => {
     const reqBody = {
@@ -145,7 +145,7 @@ const BookingDetails = () => {
         },
       )
       .then((response) => {
-        setBookingData(response?.data)
+        setBookingData(response?.data);
         const bookingDetail =
           response.data && response.data.bookingDetail
             ? response.data.bookingDetail
@@ -155,15 +155,16 @@ const BookingDetails = () => {
             ? response.data.partnerDetail
             : null;
 
-        const secondPartnerDetail = response.data && response.data.secondPartnerDetail
-          ? response.data.secondPartnerDetail
-          : null;
+        const secondPartnerDetail =
+          response.data && response.data.secondPartnerDetail
+            ? response.data.secondPartnerDetail
+            : null;
         const formattedDateAndTime =
           bookingDetail && bookingDetail.appointmentAt
             ? splitDateTime(bookingDetail.appointmentAt)
             : '-';
-        const isPackage = bookingDetail && bookingDetail.isPackage
-        setIsPackage(isPackage)
+        const isPackage = bookingDetail && bookingDetail.isPackage;
+        setIsPackage(isPackage);
         const detailObj = {
           Name: bookingDetail && bookingDetail.name ? bookingDetail.name : '-',
           Phone:
@@ -174,12 +175,11 @@ const BookingDetails = () => {
             bookingDetail && bookingDetail.addressArea
               ? bookingDetail.addressArea
               : '',
-          Service:
-            bookingDetail
-              ? bookingDetail.isPackage
-                ? bookingDetail.productNames // if isPackage is true, use productNames
-                : bookingDetail.productName // if isPackage is false, use productName
-              : '-', // if bookingDetail is not present, use '-'
+          Service: bookingDetail
+            ? bookingDetail.isPackage
+              ? bookingDetail.productNames // if isPackage is true, use productNames
+              : bookingDetail.productName // if isPackage is false, use productName
+            : '-', // if bookingDetail is not present, use '-'
           'Booking Date': formattedDateAndTime?.date,
           'Booking Time': formattedDateAndTime?.time,
           Status:
@@ -190,12 +190,12 @@ const BookingDetails = () => {
             partnerDetail && partnerDetail.phone ? partnerDetail.phone : '-',
           'Therapist Email':
             partnerDetail && partnerDetail.email ? partnerDetail.email : '-',
-          'Therapist Id': partnerDetail?.id
+          'Therapist Id': partnerDetail?.id,
         };
         const machineDetails = {
-          "Machine Name": response?.data?.machineDetail?.name,
-          "Machine Id": response?.data?.machineDetail?.id,
-        }
+          'Machine Name': response?.data?.machineDetail?.name,
+          'Machine Id': response?.data?.machineDetail?.id,
+        };
         const extractedStartDate =
           partnerDetail && partnerDetail.date
             ? partnerDetail.date.split('T')[0]
@@ -237,23 +237,37 @@ const BookingDetails = () => {
           partnerDetail && partnerDetail.name ? partnerDetail.name : '';
         const partnerId =
           partnerDetail && partnerDetail.id ? partnerDetail.id : '';
-        const secondPartnerName = secondPartnerDetail && secondPartnerDetail.name ? secondPartnerDetail.name : '';
-        const secondPartnerId = secondPartnerDetail && secondPartnerDetail.id ? secondPartnerDetail.id : '';
+        const secondPartnerName =
+          secondPartnerDetail && secondPartnerDetail.name
+            ? secondPartnerDetail.name
+            : '';
+        const secondPartnerId =
+          secondPartnerDetail && secondPartnerDetail.id
+            ? secondPartnerDetail.id
+            : '';
         setPartnerNameStr(`${partnerId} - ${partnerName}`);
         setSelectedStatus(detailObj.Status);
         setUserDataObject(detailObj);
-        setMachineDetail(machineDetails)
-        setSecondPartnerStr(`${secondPartnerId} - ${secondPartnerName}`)
+        setMachineDetail(machineDetails);
+        setSecondPartnerStr(`${secondPartnerId} - ${secondPartnerName}`);
         const callerName =
-          bookingDetail && bookingDetail.callerName ? bookingDetail.callerName : ''
-        const callerPhone = bookingDetail && bookingDetail.callerPhone ? bookingDetail.callerPhone : ''
+          bookingDetail && bookingDetail.callerName
+            ? bookingDetail.callerName
+            : '';
+        const callerPhone =
+          bookingDetail && bookingDetail.callerPhone
+            ? bookingDetail.callerPhone
+            : '';
         setCallerDetails({
           callerName,
-          callerPhone
-        })
+          callerPhone,
+        });
 
-        const logs = response.data.userLogs && response.data.userLogs.length > 0 ? response.data.userLogs : []
-        setUserLogs(logs)
+        const logs =
+          response.data.userLogs && response.data.userLogs.length > 0
+            ? response.data.userLogs
+            : [];
+        setUserLogs(logs);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -261,8 +275,8 @@ const BookingDetails = () => {
   const handleAllotDate = (date) => {
     const reqBody = {
       id: params.sessionScheduleId,
-      date
-    }
+      date,
+    };
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/allocate-date`,
@@ -279,8 +293,7 @@ const BookingDetails = () => {
         window.location.reload();
       })
       .catch((err) => console.log(err));
-
-  }
+  };
 
   useEffect(() => {
     if (isPackage) {
@@ -295,18 +308,18 @@ const BookingDetails = () => {
           },
         )
         .then((response) => {
-          setPackageSessionData(response?.data?.packageSessionData)
+          setPackageSessionData(response?.data?.packageSessionData);
         })
         .catch((err) => console.log(err));
     }
-  }, [isPackage])
+  }, [isPackage]);
 
   const deleteFirstTherapistHandler = (data) => {
     const body = {
       sessionScheduleId: params.sessionScheduleId,
       partnerId: Number(data),
-      partnerCount: 1
-    }
+      partnerCount: 1,
+    };
 
     axios
       .post(
@@ -324,16 +337,14 @@ const BookingDetails = () => {
         window.location.reload();
       })
       .catch((err) => console.log(err));
-
-  }
-
+  };
 
   const deleteSecondTherapistHandler = (data) => {
     const body = {
       sessionScheduleId: params.sessionScheduleId,
       partnerId: Number(data),
-      partnerCount: 2
-    }
+      partnerCount: 2,
+    };
 
     axios
       .post(
@@ -351,34 +362,43 @@ const BookingDetails = () => {
         window.location.reload();
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   function operateOnTimes(time1, time2) {
-    const time1Moment = moment(time1, "HH:mm");
-    const [hours2, minutes2] = time2.split(":").map(Number);
+    const time1Moment = moment(time1, 'HH:mm');
+    const [hours2, minutes2] = time2.split(':').map(Number);
     const isNegative = hours2 < 0 || minutes2 < 0;
-    const time2Moment = moment(time2.replace("-", ""), "HH:mm");
-    const result = isNegative ? time1Moment.subtract(time2Moment.hours(), 'hours').subtract(time2Moment.minutes(), 'minutes') :
-      time1Moment.add(time2Moment.hours(), 'hours').add(time2Moment.minutes(), 'minutes');
-    const formattedTime = result.format("HH:mm");
+    const time2Moment = moment(time2.replace('-', ''), 'HH:mm');
+    const result = isNegative
+      ? time1Moment
+          .subtract(time2Moment.hours(), 'hours')
+          .subtract(time2Moment.minutes(), 'minutes')
+      : time1Moment
+          .add(time2Moment.hours(), 'hours')
+          .add(time2Moment.minutes(), 'minutes');
+    const formattedTime = result.format('HH:mm');
     return formattedTime;
   }
-  var body
-  if (userDataObject?.["Booking Time"]) {
+  var body;
+  if (userDataObject?.['Booking Time']) {
     body = {
-      slotDate: userDataObject?.["Booking Date"],
+      slotDate: userDataObject?.['Booking Date'],
       slotTime: {
-        startTime: userDataObject?.["Booking Time"],
-        endTime: addHoursToTime(userDataObject?.["Booking Time"], 0, 30)
+        startTime: userDataObject?.['Booking Time'],
+        endTime: addHoursToTime(userDataObject?.['Booking Time'], 0, 30),
         // endTime: operateOnTimes(userDataObject?.["Booking Time"], "01:00")
       },
       blockedSlotTime: {
-        startTime: subtractHoursFromTime(userDataObject?.["Booking Time"], 1, 0),
+        startTime: subtractHoursFromTime(
+          userDataObject?.['Booking Time'],
+          1,
+          0,
+        ),
         // startTime: operateOnTimes(userDataObject?.["Booking Time"], "-01:00"),
         // endTime: userDataObject?.["Booking Time"]
-        endTime: subtractHoursFromTime(userDataObject?.["Booking Time"], 0, 30)
+        endTime: subtractHoursFromTime(userDataObject?.['Booking Time'], 0, 30),
       },
-      city: bookingData?.bookingDetail?.addressCity,
+      city: bookingData?.bookingDetail?.addressRegionalCity,
       productId: bookingData?.bookingDetail?.productId,
       clientLat: bookingData?.bookingDetail?.latitude,
       clientLong: bookingData?.bookingDetail?.longitude,
@@ -387,49 +407,68 @@ const BookingDetails = () => {
       previousMachineId: bookingData?.machineDetail?.id,
       clientId: bookingData?.bookingDetail?.userId,
       therapistId: bookingData?.partnerDetail?.id,
-      machineId: bookingData?.machineDetail?.id
-    }
+      machineId: bookingData?.machineDetail?.id,
+    };
   }
 
   useEffect(() => {
     if (body?.slotTime?.startTime) {
-      dispatch(fetchAvailableTherapist(body))
+      dispatch(fetchAvailableTherapist(body));
     }
-  }, [body])
+  }, [body]);
 
-  const schedulerAllowedCity = ["Delhi", "Noida", "Gurgaon", "Pune", "Mumbai", "Hyderabad", "Bangalore"];
-
+  const schedulerAllowedCity = [
+    'Delhi',
+    'Noida',
+    'Gurgaon',
+    'Pune',
+    'Mumbai',
+    'Hyderabad',
+    'Bangalore',
+  ];
 
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
       {Object.keys(userDataObject).length > 0 ? (
-        <UserDetailsComponent data={userDataObject} machineDetails={machineDetail} />
+        <UserDetailsComponent
+          data={userDataObject}
+          machineDetails={machineDetail}
+        />
       ) : (
         ''
       )}
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? <Grid item xs={6}>
-            <AllotTherapistComponent
-              handleAllotTherapist={handleSubmitAllotTherapist}
-              partnerNameStr={partnerNameStr ? partnerNameStr : ''}
-              secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
-              startDate={startDate ? startDate : ''}
-              startTime={startTime ? startTime : ''}
-              endTime={endTime ? endTime : ''}
-              isDisabled={
-                userDataObject.Status === 'COMPLETED' ||
-                userDataObject.Status === 'PAID' ||
-                userDataObject.Status === 'CANCELLED'
-              }
-              deleteFirstTherapistHandler={deleteFirstTherapistHandler}
-              deleteSecondTherapistHandler={deleteSecondTherapistHandler}
-              reAllocateBody={body}
-              therapist={userDataObject}
-            />
-          </Grid> :
+          {!bookingData?.bookingDetail?.isPackage &&
+          bookingData?.bookingDetail?.longitude !== '' &&
+          bookingData?.bookingDetail?.latitude !== '' &&
+          bookingData?.bookingDetail?.longitude &&
+          bookingData?.bookingDetail?.latitude &&
+          schedulerAllowedCity.includes(
+            bookingData?.bookingDetail?.addressRegionalCity,
+          ) ? (
+            <Grid item xs={6}>
+              <AllotTherapistComponent
+                handleAllotTherapist={handleSubmitAllotTherapist}
+                partnerNameStr={partnerNameStr ? partnerNameStr : ''}
+                secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
+                startDate={startDate ? startDate : ''}
+                startTime={startTime ? startTime : ''}
+                endTime={endTime ? endTime : ''}
+                isDisabled={
+                  userDataObject.Status === 'COMPLETED' ||
+                  userDataObject.Status === 'PAID' ||
+                  userDataObject.Status === 'CANCELLED'
+                }
+                deleteFirstTherapistHandler={deleteFirstTherapistHandler}
+                deleteSecondTherapistHandler={deleteSecondTherapistHandler}
+                reAllocateBody={body}
+                therapist={userDataObject}
+              />
+            </Grid>
+          ) : (
             <Grid item xs={6}>
               <AllotTherapistV1
                 handleAllotTherapist={handleSubmitAllotTherapist}
@@ -449,16 +488,26 @@ const BookingDetails = () => {
                 therapist={userDataObject}
               />
             </Grid>
-          }
-          {!bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.longitude !== "" && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) &&
-            <Grid item xs={12} md={6}>
-              <AllotMachine body={body}
-                isDisabled={
-                  userDataObject.Status === 'COMPLETED' ||
-                  userDataObject.Status === 'PAID' ||
-                  userDataObject.Status === 'CANCELLED'
-                } />
-            </Grid>}
+          )}
+          {!bookingData?.bookingDetail?.isPackage &&
+            bookingData?.bookingDetail?.longitude !== '' &&
+            bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) && (
+              <Grid item xs={12} md={6}>
+                <AllotMachine
+                  body={body}
+                  isDisabled={
+                    userDataObject.Status === 'COMPLETED' ||
+                    userDataObject.Status === 'PAID' ||
+                    userDataObject.Status === 'CANCELLED'
+                  }
+                />
+              </Grid>
+            )}
           {/* <Grid item xs={12} md={6}>
             <UpdateStatusComponent
               updateStatusHandler={handleStatusUpdate}
@@ -467,25 +516,38 @@ const BookingDetails = () => {
           </Grid> */}
         </Grid>
         <Grid container spacing={2} mt={4}>
-          {bookingData?.bookingDetail?.longitude !== "" && !bookingData?.bookingDetail?.isPackage && bookingData?.bookingDetail?.latitude !== "" && bookingData?.bookingDetail?.longitude && bookingData?.bookingDetail?.latitude && schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ?
+          {bookingData?.bookingDetail?.longitude !== '' &&
+          !bookingData?.bookingDetail?.isPackage &&
+          bookingData?.bookingDetail?.latitude !== '' &&
+          bookingData?.bookingDetail?.longitude &&
+          bookingData?.bookingDetail?.latitude &&
+          schedulerAllowedCity.includes(
+            bookingData?.bookingDetail?.addressRegionalCity,
+          ) ? (
             <Grid item xs={6}>
-              <AllotDateV2 handleAllotDate={handleAllotDate}
+              <AllotDateV2
+                handleAllotDate={handleAllotDate}
                 body={body}
                 isDisabled={
                   userDataObject.Status === 'COMPLETED' ||
                   userDataObject.Status === 'PAID' ||
                   userDataObject.Status === 'CANCELLED'
-                } />
+                }
+              />
             </Grid>
-            : <Grid item xs={6}>
-              <AllotDate handleAllotDate={handleAllotDate}
+          ) : (
+            <Grid item xs={6}>
+              <AllotDate
+                handleAllotDate={handleAllotDate}
                 body={body}
                 isDisabled={
                   userDataObject.Status === 'COMPLETED' ||
                   userDataObject.Status === 'PAID' ||
                   userDataObject.Status === 'CANCELLED'
-                } />
-            </Grid>}
+                }
+              />
+            </Grid>
+          )}
           {/* <Grid item xs={12} md={6}>
             <CommentBox />
           </Grid> */}
@@ -538,51 +600,47 @@ const BookingDetails = () => {
                 </Grid>
               )
             )} */}
-          {
-            bookingData?.bookingDetail?.isPackage ? (
-              <>
-                <Grid item xs={12} md={6}>
-                  <UpdateStatusComponentPackage
-                    updateStatusHandler={updatePackageSessionStatus}
-                    packageSessionData={packageSessionData}
-                    sessionScheduleId={params.sessionScheduleId}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <UpdateStatusComponent
-                    updateStatusHandler={handleStatusUpdate}
-                    selectedStatus={selectedStatus}
-                    body={body}
-                  />
-                </Grid>
-              </>
-            ) : (
-              bookingData?.bookingDetail?.latitude !== "" &&
-                bookingData?.bookingDetail?.longitude !== "" &&
-                bookingData?.bookingDetail?.longitude &&
-                bookingData?.bookingDetail?.latitude &&
-                schedulerAllowedCity.includes(bookingData?.bookingDetail?.addressCity) ? (
-                <Grid item xs={12} md={6}>
-                  <UpdateStatusComponentV2
-                    updateStatusHandler={handleStatusUpdate}
-                    selectedStatus={selectedStatus}
-                    body={body}
-                  />
-                </Grid>
-              ) : (
-                <Grid item xs={12} md={6}>
-                  <UpdateStatusComponent
-                    updateStatusHandler={handleStatusUpdate}
-                    selectedStatus={selectedStatus}
-                    body={body}
-                  />
-                </Grid>
-              )
-            )
-          }
-
+          {bookingData?.bookingDetail?.isPackage ? (
+            <>
+              <Grid item xs={12} md={6}>
+                <UpdateStatusComponentPackage
+                  updateStatusHandler={updatePackageSessionStatus}
+                  packageSessionData={packageSessionData}
+                  sessionScheduleId={params.sessionScheduleId}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <UpdateStatusComponent
+                  updateStatusHandler={handleStatusUpdate}
+                  selectedStatus={selectedStatus}
+                  body={body}
+                />
+              </Grid>
+            </>
+          ) : bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) ? (
+            <Grid item xs={12} md={6}>
+              <UpdateStatusComponentV2
+                updateStatusHandler={handleStatusUpdate}
+                selectedStatus={selectedStatus}
+                body={body}
+              />
+            </Grid>
+          ) : (
+            <Grid item xs={12} md={6}>
+              <UpdateStatusComponent
+                updateStatusHandler={handleStatusUpdate}
+                selectedStatus={selectedStatus}
+                body={body}
+              />
+            </Grid>
+          )}
         </Grid>
-
       </Grid>
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
@@ -593,7 +651,6 @@ const BookingDetails = () => {
             <CommentBox />
           </Grid>
         </Grid>
-
 
         <Grid item xs={12} md={6} mt={4}>
           <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
