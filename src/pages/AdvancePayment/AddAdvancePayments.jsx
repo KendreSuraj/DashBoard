@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Paper,
-  
   makeStyles,
   Button,
   Select,
@@ -65,7 +64,7 @@ const AddAdvancePayments = () => {
   const [productList, setProductList] = useState([]);
   const [selectedCaller, setSelectedCaller] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [files, setFiles] = useState([]);
   const [openImageModal, setOpenImageModal] = useState(false);
 
   const handleInputChange = (e) => {
@@ -101,112 +100,129 @@ const AddAdvancePayments = () => {
       });
       const data = res.data.productList;
       setProductList(data);
-      console.log(data);
     } catch (error) {
       console.log("ERR: productList......", error);
     }
   };
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   setIsSubmitting(true);
+  //   const formData= new FormData();
+  //   files.forEach((file) => {
+  //     formData.append("files", file);
+  //   });
+  //   console.log(files)
+  //   try {
+  //     const dummyReqBody = {
+  //       name: values.name,
+  //       phone: values.phone,
+  //       gender: values.gender,
+  //       amountPaid: Number(values.amountPaid),
+  //       date: moment(values.date).format("YYYY-MM-DD"),
+  //       products: selectedProducts.map(product => product.id),
+  //       formData,
+  //       city: values.city,
+  //       callerId: Number(selectedCaller.split(" - ")[0]),
+  //       modeOfPayment: values.modeOfPayment,
+  //       address: values.address,
+  //     };
+
+  //     const reqBodyData = () => {
+  //       const data = {};
+  //       for (const key in dummyReqBody) {
+  //         const value = dummyReqBody[key];
+  //         if (value !== "" && value !== 0 && value !== undefined) {
+  //           data[key] = value;
+  //         }
+  //       }
+  //       return data;
+  //     };
+
+  //     const reqBody = reqBodyData();
+
+  //     const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/add-payment`,
+  //       reqBody,
+  //       {
+  //         headers: {
+  //           Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+  //           token: getToken(),
+  //         },
+  //       });
+
+  //     if (response?.status === 201 || response?.status === 200) {
+  //       toast.success('Payment added successfully!');
+  //       navigate("/advance-payments");
+  //     }
+
+  //   } catch (err) {
+  //     toast.error(err?.response?.data?.status?.message || 'An error occurred while adding the payment.');
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
-      const dummyReqBody = {
-        name: values.name,
-        phone: values.phone,
-        gender: values.gender,
-        amountPaid: Number(values.amountPaid),
-        date: moment(values.date).format("YYYY-MM-DD"),
-        // productId: Number(selectedProducts.split(" - ")[0]),
-        // productName: selectedProducts.split(" - ")[1],
-        image: values.image,
-        city: values.city,
-        callerId: Number(selectedCaller.split(" - ")[0]),
-        modeOfPayment: values.modeOfPayment,
-        address: values.address,
-      };
+      // Create FormData for all data including files
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+  
+      // Append other form fields to FormData
+      formData.append("name", values.name);
+      formData.append("phone", values.phone);
+      formData.append("gender", values.gender);
+      formData.append("amountPaid", Number(values.amountPaid));
+      formData.append("date", moment(values.date).format("YYYY-MM-DD"));
+      formData.append("city", values.city);
+      formData.append("callerId", Number(selectedCaller.split(" - ")[0]));
+      formData.append("modeOfPayment", values.modeOfPayment);
+      formData.append("address", values.address);
 
-      const reqBodyData = () => {
-        const data = {};
-        for (const key in dummyReqBody) {
-          const value = dummyReqBody[key];
-          if (value !== "" && value !== 0 && value !== undefined) {
-            data[key] = value;
-          }
-        }
-        return data;
-      };
-
-      const reqBody = reqBodyData();
-
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/add-payment`,
-        reqBody,
+      selectedProducts.forEach((product, index) => {
+        formData.append(`products[${index}]`, product.id);
+      });
+  
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/add-payment`,
+        formData,
         {
           headers: {
             Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
             token: getToken(),
+            'Content-Type': 'multipart/form-data',
           },
-        });
-
+        }
+      );
+  
       if (response?.status === 201 || response?.status === 200) {
         toast.success('Payment added successfully!');
         navigate("/advance-payments");
       }
-
     } catch (err) {
       toast.error(err?.response?.data?.status?.message || 'An error occurred while adding the payment.');
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   const handleImageChange = (e) => {
-    const { name, files } = e.target;
-    if (name === 'image') {
-      const file = files[0];
-      const acceptedTypes = ["image/jpeg", "image/jpg", "image/png"];
-      if (!acceptedTypes.includes(file.type)) {
-        alert("Please select only image files (JPEG, JPG, PNG).");
-        window.location.reload();
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const img = new Image();
-        img.src = reader.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDimension = 1024;
-          let width = img.width;
-          let height = img.height;
+    const { files } = e.target;
+    const acceptedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
 
-          if (width > height) {
-            if (width > maxDimension) {
-              height *= maxDimension / width;
-              width = maxDimension;
-            }
-          } else {
-            if (height > maxDimension) {
-              width *= maxDimension / height;
-              height = maxDimension;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataURL = canvas.toDataURL(file.type);
-          setValues({
-            ...values,
-            image: compressedDataURL,
-          });
-        };
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setValues({ ...values, [name]: value });
+    const validFiles = Array.from(files).filter(file => acceptedTypes.includes(file.type));
+    if (validFiles.length !== files.length) {
+      alert("Please select only image files (JPEG, JPG, PNG) or PDF files.");
+      return;
     }
+    setFiles(validFiles);
   };
 
   const handleCallerChange = (event) => {
@@ -215,10 +231,9 @@ const AddAdvancePayments = () => {
 
 
   const handleProductsChange = (event, value) => {
-    console.log(value);
+    console.log(value)
     setSelectedProducts(value);
   };
-
 
 
   useEffect(() => {
@@ -316,7 +331,8 @@ const AddAdvancePayments = () => {
                 type="file"
                 label="Image: "
                 name="image"
-                accept=".jpeg, .jpg, .png"
+                inputProps={{ multiple: true }}
+                accept=".jpeg, .jpg, .png .pdf"
                 onChange={handleImageChange}
                 required
               />
@@ -372,8 +388,8 @@ const AddAdvancePayments = () => {
                 </Select>
               </FormControl>
 
-              
-                <FormControl>
+
+              <FormControl>
                 <Autocomplete
                   onChange={(event, value) => handleProductsChange(event, value)}
                   multiple
@@ -381,7 +397,7 @@ const AddAdvancePayments = () => {
                   id="checkboxes-tags-demo"
                   options={productList}
                   disableCloseOnSelect
-                  getOptionLabel={(option) => option.title?option.title:option.name}
+                  getOptionLabel={(option) => option.title ? option.title : option.name}
                   value={selectedProducts}
                   renderOption={(props, option, { selected }) => (
                     <li {...props} key={option.id} >
@@ -391,11 +407,11 @@ const AddAdvancePayments = () => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.title?option.title:option.name}
+                      {option.title ? option.title : option.name}
                     </li>
                   )}
 
-                  renderTags={(selected, getTagProps) => 
+                  renderTags={(selected, getTagProps) =>
                     selected.map((option, index) => (
                       <Chip
                         key={option.id}
@@ -404,14 +420,14 @@ const AddAdvancePayments = () => {
                       />
                     ))
                   }
-                  
-                  renderInput={(params) => <TextField {...params} label={"Select Products"} style={{width: "100%", margin: 0}}/>}
+
+                  renderInput={(params) => <TextField {...params} label={"Select Products"} style={{ width: "100%", margin: 0 }} />}
                 />
                 <Button size='small' onClick={() => setOpenImageModal(true)}>Show image</Button>
-                </FormControl>
-                <ImageModal open={openImageModal} handleClose={() => setOpenImageModal(false)} products={selectedProducts}/>
-                 
-              
+              </FormControl>
+              <ImageModal open={openImageModal} handleClose={() => setOpenImageModal(false)} products={selectedProducts} />
+
+
             </Grid>
           </Grid>
 
