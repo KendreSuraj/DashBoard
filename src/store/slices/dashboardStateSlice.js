@@ -20,6 +20,7 @@ const dashboardSlice = createSlice({
             state.searchText = action.payload;
         },
         setSelectedCities(state, action) {
+            console.log(action.payload);
             state.selectedCities = action.payload;
         },
         setSelectedServices(state, action) {
