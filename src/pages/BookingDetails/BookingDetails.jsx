@@ -425,6 +425,10 @@ const BookingDetails = () => {
     'Mumbai',
     'Hyderabad',
     'Bangalore',
+    'Indore',
+    'Ahmedabad',
+    'Ludhiana',
+    'Chandigarh',
   ];
 
   return (

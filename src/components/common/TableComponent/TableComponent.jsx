@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TableComponent.style.css';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+import AlertDialog from '../../../pages/AdvancePayment/deleteAlertDialog';
 
 const TableComponent = ({
   data,
@@ -34,6 +35,7 @@ const TableComponent = ({
   handleTransactionHistory,
   handleTransactionHistoryButton
 }) => {
+  const [open, setOpen] = useState(false);
   const handleUpdate = (id) => {
     updateDetails(id);
   };
@@ -47,6 +49,10 @@ const TableComponent = ({
   };
   const handlePackagesDetails = () => {
 
+  }
+
+  const deletePaymentHandler = () => {
+    setOpen(true);
   }
 
   const stringifiedUser = localStorage.getItem('userData');
@@ -235,7 +241,7 @@ const TableComponent = ({
                       )}
                     </TableCell>
                   )}
-                  {deletePaymentButton && (
+                  {deletePaymentButton && (<>
                     <TableCell className="table-cell">
                       {deletePaymentButton === 'img' ? (
                         <img
@@ -249,16 +255,20 @@ const TableComponent = ({
                           variant="contained"
                           color="primary"
                           style={{ backgroundColor: '#D70040', color: 'white' }}
-                          onClick={() => deletePayment(row)}
+                          onClick={deletePaymentHandler}
                         >
                           {deletePaymentButton}
                         </Button>
                       )}
                     </TableCell>
-                  )}
+                     {open && <AlertDialog open={open} setOpen={setOpen} row={row} deletePayment={deletePayment}/>}
+                     </>
+                  )
+                  }
 
 
                   {!row.isValidated && verifyPaymentButton && (
+
                     <TableCell className="table-cell">
                       {deletePaymentButton === 'img' ? (
                         <img
