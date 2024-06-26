@@ -77,13 +77,14 @@ const TransactionHistory = () => {
                                 <TableCell align="right" style={{ fontWeight: '700' }}>Balance At Time</TableCell>
                                 <TableCell align="right" style={{ fontWeight: '700' }}>Transaction Type</TableCell>
                                 <TableCell align="right" style={{ fontWeight: '700' }}>Order ID</TableCell>
+                                <TableCell align="center" style={{ fontWeight: '700' }}>Images</TableCell>
                                 <TableCell align="right" style={{ fontWeight: '700' }}>Verified</TableCell>
                                 <TableCell align="right" style={{ fontWeight: '700' }}>Date</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {transactionHistory.map((transaction) => (
-                                <TableRow
+                                transaction["Amount Selected"]!==0 &&<TableRow
                                     key={transaction["Transaction ID"]}
                                     sx={{
                                         '&:last-child td, &:last-child th': { border: 0 },
@@ -107,6 +108,7 @@ const TransactionHistory = () => {
                                         )}
                                     </TableCell>
                                     <TableCell align="right" sx={transaction["Order ID"] === "-" ? "" : { cursor: "pointer", textDecoration: "underline", color: "#1876D1" }} onClick={detailsOfOrder}>{transaction["Order ID"]}</TableCell>
+                                    <TableCell align="center">{transaction["Images"].length===0?"-":transaction["Images"].map((item,index)=><a href={item} target="_blank" style={{display:"flex", flexDirection:"column"}}>{item.includes('pdf')?"PDF":`Image ${index+1}`}</a>)}</TableCell>
                                     <TableCell align="right">{transaction["Verified"]}</TableCell>
                                     <TableCell align="right">{transaction["Date"]}</TableCell>
                                 </TableRow>
