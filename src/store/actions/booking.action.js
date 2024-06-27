@@ -167,3 +167,23 @@ export const fetchBookingforCSV = async (params) => {
   }
 };
 
+export const fetchBookingComments = createAsyncThunk(
+  'booking/fetchBookingComments',
+  async (sessionScheduleId) => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/v1/admin/booking/booking-comments/${sessionScheduleId}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching booking comments:', error);
+      throw error;
+    }
+  },
+);
