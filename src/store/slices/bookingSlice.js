@@ -3,7 +3,8 @@ import {
   fetchBookings,
   fetchCityList,
   fetchProductList,
-  fetchPaymentHistory
+  fetchPaymentHistory,
+  fetchBookingComments
 } from '../actions/booking.action';
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
   cityList: [],
   productList: [],
   paymentHistory:{},
+  bookingComments:[],
   isLoading: true,
   error: null,
   isBookingLoading: false,
@@ -66,6 +68,17 @@ const bookingSlice = createSlice({
       state.paymentHistory = action.payload?.data;
     });
     builder.addCase(fetchPaymentHistory.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(fetchBookingComments.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchBookingComments.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.bookingComments = action.payload?.data;
+    });
+    builder.addCase(fetchBookingComments.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
