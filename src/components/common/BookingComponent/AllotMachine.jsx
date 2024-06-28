@@ -21,10 +21,14 @@ const AllotMachine = ({ body,isDisabled }) => {
         dispatch(fetchMachine())
         setSelectedMachine(body?.previousMachineId || '')
         if (body?.slotTime?.startTime) {
-            dispatch(fetchAvailableMachine(body))
+            let newBody={
+              ...body,
+              centerId:selectedCenter
+            }
+            dispatch(fetchAvailableMachine(newBody))
         }
         dispatch(fetchCenter())
-    }, [dispatch, body])
+    }, [dispatch, selectedCenter])
     const handleMachineChange = (event) => {
         setSelectedMachine(event.target.value);
     }
@@ -39,7 +43,8 @@ const AllotMachine = ({ body,isDisabled }) => {
             setIsButtonDisabled(true);
             const newBody = {
               ...body,
-              newMachineId: selectedMachine
+              newMachineId: selectedMachine,
+              centerId:selectedCenter
             };
             const res = await manualAllocateMachine(newBody);
             if (res?.status === 200) {
@@ -62,7 +67,7 @@ const AllotMachine = ({ body,isDisabled }) => {
           const isConfirmed = window.confirm('Are you sure you want to Reallocate Machine?');
           if (isConfirmed) {
             setIsButtonDisabled(true);
-            const res = await reAllocateMachine(body);
+            const res = await reAllocateMachine({...body,centerId:selectedCenter});
             if (res?.status === 200) {
               alert(res.data?.status?.message);
               window.location.reload();

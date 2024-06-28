@@ -5,7 +5,7 @@ import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
 import { getMinutesList } from '../../../utils';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deAllocateTherapist, manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
+import { deAllocateTherapist, fetchAvailableTherapist, manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -13,12 +13,11 @@ import { fetchCenter } from '../../../store/actions/center.action';
 
 const AllotTherapistBox = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
-  const reallocateData=props?.reAllocateBody
-  console.log("hhh--_---",reallocateData)
+  const body=props?.reAllocateBody
   const dispatch = useDispatch()
   const [partners, setPartners] = useState([]);
   const [selectedTherapist, setSelectedTherapist] = useState('');
-  const [selectedCenter,setSelectedCenter]=useState(reallocateData?.therapistCenterId)
+  const [selectedCenter,setSelectedCenter]=useState(body?.therapistCenterId)
   const [selectSecondTherapist, setSelectSecondTherapist] = useState('');
   const therapist1 = props.therapist
   const availableTherapist = useSelector(state => state?.therapist?.availableTherapist)
@@ -91,7 +90,7 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to submit?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const res = await manualTherapistAllocation(reAllocateBodyWithId);
+        const res = await manualTherapistAllocation({...reAllocateBodyWithId,centerId:selectedCenter});
         if (res?.status === 200) {
           if (selectSecondTherapist) {
             const secondId = selectSecondTherapist.split("-")[0].trim();
@@ -138,7 +137,7 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to Reallocate Therapist?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const res = await reAllocateTherapist(reAllocateBody);
+        const res = await reAllocateTherapist({...reAllocateBody,centerId:selectedCenter});
         if (res?.status === 200) {
           alert(res.data?.status?.message);
           window.location.reload();
@@ -181,6 +180,15 @@ const AllotTherapistBox = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (body?.slotTime?.startTime) {
+      let newBody={
+        ...body,
+        centerId:selectedCenter
+      }
+      dispatch(fetchAvailableTherapist(newBody));
+    }
+  }, [dispatch,selectedCenter]);
 
   return (
     <div>

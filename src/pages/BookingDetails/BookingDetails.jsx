@@ -415,11 +415,11 @@ const BookingDetails = () => {
     };
   }
 
-  useEffect(() => {
-    if (body?.slotTime?.startTime) {
-      dispatch(fetchAvailableTherapist(body));
-    }
-  }, [body]);
+  // useEffect(() => {
+  //   if (body?.slotTime?.startTime) {
+  //     dispatch(fetchAvailableTherapist(body));
+  //   }
+  // }, [body]);
 
   const schedulerAllowedCity = [
     'Delhi',
