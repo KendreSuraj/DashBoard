@@ -146,6 +146,7 @@ const BookingDetails = () => {
         },
       )
       .then((response) => {
+        console.log("see resposne--->>",response)
         setBookingData(response?.data);
         const bookingDetail =
           response.data && response.data.bookingDetail
@@ -409,6 +410,8 @@ const BookingDetails = () => {
       clientId: bookingData?.bookingDetail?.userId,
       therapistId: bookingData?.partnerDetail?.id,
       machineId: bookingData?.machineDetail?.id,
+      therapistCenterId:bookingData?.partnerDetail?.center_id,
+      machineCenterId:bookingData?.machineDetail?.center_id
     };
   }
 
