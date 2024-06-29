@@ -1,29 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid } from '@mui/material';
+import { Paper, Button, FormControl, TextareaAutosize, TextField, MenuItem, Grid ,Box} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { deAllocateMachine, fetchAvailableMachine, fetchMachine, manualAllocateMachine, reAllocateMachine } from '../../../store/actions/machine.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { fetchCenter } from '../../../store/actions/center.action';
 const AllotMachine = ({ body,isDisabled }) => {
    const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+   console.log("see body over here",body)
     const dispatch = useDispatch()
     const availableMachines = useSelector(state => state.machine?.availableMachine)
     const availableMachine = [...availableMachines, body?.previousMachineId]
     const allMachine = useSelector(state => state.machine?.machineList?.machines)
+    let centerList = useSelector(state => state.center?.centerList?.centers)
     const [selectedMachine, setSelectedMachine] = useState('')
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [selectedCenter,setSelectedCenter]=useState(body?.machineCenterId)
     useEffect(() => {
         dispatch(fetchMachine())
         setSelectedMachine(body?.previousMachineId || '')
         if (body?.slotTime?.startTime) {
-            dispatch(fetchAvailableMachine(body))
+            let newBody={
+              ...body,
+              centerId:selectedCenter
+            }
+            dispatch(fetchAvailableMachine(newBody))
         }
-    }, [dispatch, body])
+        dispatch(fetchCenter())
+    }, [dispatch, selectedCenter])
     const handleMachineChange = (event) => {
         setSelectedMachine(event.target.value);
     }
-  
+    const handleCenterChange=(event)=>{
+      setSelectedCenter(event.target.value)
+    }
     const handleSubmit = async (e) => {
         try {
           e.preventDefault();
@@ -32,7 +43,8 @@ const AllotMachine = ({ body,isDisabled }) => {
             setIsButtonDisabled(true);
             const newBody = {
               ...body,
-              newMachineId: selectedMachine
+              newMachineId: selectedMachine,
+              centerId:selectedCenter
             };
             const res = await manualAllocateMachine(newBody);
             if (res?.status === 200) {
@@ -55,7 +67,7 @@ const AllotMachine = ({ body,isDisabled }) => {
           const isConfirmed = window.confirm('Are you sure you want to Reallocate Machine?');
           if (isConfirmed) {
             setIsButtonDisabled(true);
-            const res = await reAllocateMachine(body);
+            const res = await reAllocateMachine({...body,centerId:selectedCenter});
             if (res?.status === 200) {
               alert(res.data?.status?.message);
               window.location.reload();
@@ -100,9 +112,42 @@ const AllotMachine = ({ body,isDisabled }) => {
         <>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
                 <h3>Allot  Machine</h3>
-               {hasAdminAndSuperAdminAccess(role)&&<Button 
+                <Box display="flex" alignItems="center" gap={10}>
+          <TextField
+            select
+            label="Choose Center"
+            fullWidth
+            margin="normal"
+            value={selectedCenter}
+            onChange={handleCenterChange}
+            disabled={isDisabled}
+            required
+            sx={{
+              '.MuiInputBase-root': {
+                height: 41,
+              },
+              '.MuiInputLabel-root': {
+                fontSize: 12,
+              },
+              '.MuiMenuItem-root': {
+                fontSize: 12,
+              },
+            }}
+          >
+            {centerList && centerList.length > 0 ? (
+              centerList.map((center) => (
+                <MenuItem value={center.id} key={center.id}>
+                  {center.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value="value">Enter</MenuItem>
+            )}
+          </TextField>
+          {hasAdminAndSuperAdminAccess(role)&&<Button 
                   variant="contained"
                   color="primary"
+                  fullWidth
                   disabled={isDisabled || isButtonDisabled}
                  style={{ float: 'right', textTransform: 'none' }} onClick={() => reAllocateMachineManual()}>
                     {isButtonDisabled ? (
@@ -111,6 +156,7 @@ const AllotMachine = ({ body,isDisabled }) => {
                           'Re Allocate Machine'
                         )}
                 </Button>}
+          </Box>
                 <form>
                     <Grid container spacing={2} alignItems="center">
                     <Grid item xs={11}>
