@@ -10,16 +10,20 @@ import {
 import CircularProgress from '@mui/material/CircularProgress';
 import { useParams } from 'react-router-dom';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
+import { useSelector } from 'react-redux';
 
 const AllotDateV2 = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
   const [activeOption, setActiveOption] = useState(null);
   const [activeOption1, setActiveOption1] = useState(null);
+  const [selectedCenter, setSelectedCenter] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const clientInfo = props?.body;
   const [timeSlot, setTimeSlot] = useState([]);
   const params = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  let centerList = useSelector((state) => state.center?.centerList?.centers);
   useEffect(() => {
     setBooking((prevBooking) => ({
       ...prevBooking,
@@ -59,6 +63,7 @@ const AllotDateV2 = (props) => {
         clientLong: clientInfo?.clientLong,
         clientId: clientInfo?.clientId,
         isDashboard: true,
+        centerId: selectedCenter || null,
       };
       const response = await getClientSlots(requestData);
       if (response?.status === 200) {
@@ -97,46 +102,90 @@ const AllotDateV2 = (props) => {
         startTime: item.clientSlotStartTime,
         endTime: item.clientSlotEndTime,
       },
+      centerId: selectedCenter || null,
     }));
   };
-//   const handleSlotConfirmation = async () => {
-//     if (!booking?.newSlotTime.startTime) {
-//       alert('Please Select Booking time ');
-//     }
-//     const res = await confirmClientSlots(booking);
-//     if (res.status === 200) {
-//       alert(res.data?.status?.message);
-//       window.location.reload();
-//     }
-//   };
+  //   const handleSlotConfirmation = async () => {
+  //     if (!booking?.newSlotTime.startTime) {
+  //       alert('Please Select Booking time ');
+  //     }
+  //     const res = await confirmClientSlots(booking);
+  //     if (res.status === 200) {
+  //       alert(res.data?.status?.message);
+  //       window.location.reload();
+  //     }
+  //   };
 
-const handleSlotConfirmation = async () => {
+  const handleSlotConfirmation = async () => {
     if (!booking?.newSlotTime?.startTime) {
-        alert("Please Select Booking time ");
-        return;
+      alert('Please Select Booking time ');
+      return;
     }
-    const isConfirmed = window.confirm('Are you sure you want to Confirm slot?');
+    const isConfirmed = window.confirm(
+      'Are you sure you want to Confirm slot?',
+    );
     if (isConfirmed) {
-        try {
-            setIsButtonDisabled(true);
-            const res = await confirmClientSlots(booking);
-            if (res.status === 200) {
-                alert(res.data?.status?.message);
-                window.location.reload();
-            }
-        } catch (error) {
-            console.error('An error occurred while handling the submission:', error);
-            setIsButtonDisabled(false);
+      try {
+        setIsButtonDisabled(true);
+        const res = await confirmClientSlots(booking);
+        if (res.status === 200) {
+          alert(res.data?.status?.message);
+          window.location.reload();
         }
+      } catch (error) {
+        console.error(
+          'An error occurred while handling the submission:',
+          error,
+        );
+        setIsButtonDisabled(false);
+      }
     }
-};
+  };
 
+  const handleCenterChange = (event) => {
+    setSelectedCenter(event.target.value);
+    setActiveOption(null);
+    setActiveOption1(null);
+    setTimeSlot([]);
+  };
 
   return (
     <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
       <h1>Appointment Date</h1>
       <div>
         <h3>Select A Date</h3>
+
+        <TextField
+          select
+          label="Choose Center"
+          fullWidth
+          margin="normal"
+          value={selectedCenter}
+          onChange={handleCenterChange}
+          disabled={props.isDisabled}
+          required
+          sx={{
+            '.MuiInputBase-root': {
+              height: 50,
+            },
+            '.MuiInputLabel-root': {
+              fontSize: 12,
+            },
+            '.MuiMenuItem-root': {
+              fontSize: 12,
+            },
+          }}
+        >
+          {centerList && centerList.length > 0 ? (
+            centerList.map((center) => (
+              <MenuItem value={center.id} key={center.id}>
+                {center.name}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem value="value">Enter</MenuItem>
+          )}
+        </TextField>
         <div style={{ textAlign: 'center' }}>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {getNextSevenDays(new Date())?.map((item, index) => (
@@ -197,7 +246,8 @@ const handleSlotConfirmation = async () => {
                   style={{
                     padding: '10px 20px',
                     fontSize: '16px',
-                    backgroundColor: props?.isDisabled ||isButtonDisabled ?'gray':'blue',
+                    backgroundColor:
+                      props?.isDisabled || isButtonDisabled ? 'gray' : 'blue',
                     color: 'white',
                     border: 'none',
                     borderRadius: '5px',
@@ -208,10 +258,10 @@ const handleSlotConfirmation = async () => {
                 >
                   {/* Confirm your slot */}
                   {isButtonDisabled ? (
-                 <CircularProgress size={24} color="inherit" />
-                 ) : (
-                'Confirm your slot'
-                    )}
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    'Confirm your slot'
+                  )}
                 </button>
               )}
             </>

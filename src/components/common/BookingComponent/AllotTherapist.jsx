@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, TextField, Button, MenuItem, Grid } from '@mui/material';
+import { Paper, TextField, Button, MenuItem, Grid, Box } from '@mui/material';
 import axios from 'axios';
 import { getToken } from '../userLocalStorageUtils';
 import { getHoursList } from '../../../utils';
 import { getMinutesList } from '../../../utils';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deAllocateTherapist, manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
+import { deAllocateTherapist, fetchAvailableTherapist, manualTherapistAllocation, reAllocateTherapist } from '../../../store/actions/therapist.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
+import { fetchCenter } from '../../../store/actions/center.action';
 
 const AllotTherapistBox = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+  const body=props?.reAllocateBody
   const dispatch = useDispatch()
   const [partners, setPartners] = useState([]);
   const [selectedTherapist, setSelectedTherapist] = useState('');
+  const [selectedCenter,setSelectedCenter]=useState(body?.therapistCenterId)
   const [selectSecondTherapist, setSelectSecondTherapist] = useState('');
   const therapist1 = props.therapist
   const availableTherapist = useSelector(state => state?.therapist?.availableTherapist)
+  let centerList = useSelector(state => state.center?.centerList?.centers)
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [startTime, setStartTime] = useState({
@@ -34,6 +39,7 @@ const AllotTherapistBox = (props) => {
   useEffect(() => {
     setSelectedTherapist(props.partnerNameStr);
     setSelectSecondTherapist(props.secondPartnerStr);
+    dispatch(fetchCenter())
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/partner/list`, {
         headers: {
@@ -56,6 +62,9 @@ const AllotTherapistBox = (props) => {
   const handleTherapistChange = (event) => {
     setSelectedTherapist(event.target.value);
   };
+  const handleCenterChange=(event)=>{
+    setSelectedCenter(event.target.value)
+  }
 
   const handleSecondTherapistChange = (event) => {
     setSelectSecondTherapist(event.target.value)
@@ -81,7 +90,7 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to submit?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const res = await manualTherapistAllocation(reAllocateBodyWithId);
+        const res = await manualTherapistAllocation({...reAllocateBodyWithId,centerId:selectedCenter});
         if (res?.status === 200) {
           if (selectSecondTherapist) {
             const secondId = selectSecondTherapist.split("-")[0].trim();
@@ -128,7 +137,7 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to Reallocate Therapist?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const res = await reAllocateTherapist(reAllocateBody);
+        const res = await reAllocateTherapist({...reAllocateBody,centerId:selectedCenter});
         if (res?.status === 200) {
           alert(res.data?.status?.message);
           window.location.reload();
@@ -171,23 +180,66 @@ const AllotTherapistBox = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (body?.slotTime?.startTime) {
+      let newBody={
+        ...body,
+        centerId:selectedCenter
+      }
+      dispatch(fetchAvailableTherapist(newBody));
+    }
+  }, [dispatch,selectedCenter]);
 
   return (
     <div>
       <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
         <h3>Allot Therapist</h3>
-        {hasAdminAndSuperAdminAccess(role)&&<Button
-          variant="contained"
-          color="primary"
-          disabled={props.isDisabled || isButtonDisabled}
-          style={{ float: 'right', textTransform: 'none' }}
-          onClick={(() => reAllocateAvailableTherapist())}>
-          {isButtonDisabled ? (
-                 <CircularProgress size={24} color="inherit" />
-                 ) : (
-                'Re Allocate Therapist'
-                    )}
-        </Button>}
+        <Box display="flex" alignItems="center" gap={10}>
+          <TextField
+            select
+            label="Choose Center"
+            fullWidth
+            margin="normal"
+            value={selectedCenter}
+            onChange={handleCenterChange}
+            disabled={props.isDisabled}
+            required
+            sx={{
+              '.MuiInputBase-root': {
+                height: 41,
+              },
+              '.MuiInputLabel-root': {
+                fontSize: 12,
+              },
+              '.MuiMenuItem-root': {
+                fontSize: 12,
+              },
+            }}
+          >
+            {centerList && centerList.length > 0 ? (
+              centerList.map((center) => (
+                <MenuItem value={center.id} key={center.id}>
+                  {center.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value="value">Enter</MenuItem>
+            )}
+          </TextField>
+          {hasAdminAndSuperAdminAccess(role) && <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={props.isDisabled || isButtonDisabled}
+            style={{ float: 'right', textTransform: 'none' }}
+            onClick={(() => reAllocateAvailableTherapist())}>
+            {isButtonDisabled ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Re Allocate Therapist'
+            )}
+          </Button>}
+        </Box>
         <form>
           <Grid container spacing={2} alignItems="center">
             {/* First Therapist */}
