@@ -13,11 +13,11 @@ import { fetchCenter } from '../../../store/actions/center.action';
 
 const AllotTherapistBox = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
-  const body=props?.reAllocateBody
+  const body = props?.reAllocateBody
   const dispatch = useDispatch()
   const [partners, setPartners] = useState([]);
   const [selectedTherapist, setSelectedTherapist] = useState('');
-  const [selectedCenter,setSelectedCenter]=useState(body?.therapistCenterId)
+  const [selectedCenter, setSelectedCenter] = useState(body?.therapistCenterId)
   const [selectSecondTherapist, setSelectSecondTherapist] = useState('');
   const therapist1 = props.therapist
   const availableTherapist = useSelector(state => state?.therapist?.availableTherapist)
@@ -62,7 +62,7 @@ const AllotTherapistBox = (props) => {
   const handleTherapistChange = (event) => {
     setSelectedTherapist(event.target.value);
   };
-  const handleCenterChange=(event)=>{
+  const handleCenterChange = (event) => {
     setSelectedCenter(event.target.value)
   }
 
@@ -90,7 +90,7 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to submit?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const res = await manualTherapistAllocation({...reAllocateBodyWithId,centerId:selectedCenter});
+        const res = await manualTherapistAllocation({ ...reAllocateBodyWithId, centerId: selectedCenter });
         if (res?.status === 200) {
           if (selectSecondTherapist) {
             const secondId = selectSecondTherapist.split("-")[0].trim();
@@ -101,7 +101,7 @@ const AllotTherapistBox = (props) => {
           }
           alert(res.data?.status?.message);
           window.location.reload()
-        }else{
+        } else {
           setIsButtonDisabled(false);
           alert('An error occurred while submission')
         }
@@ -111,7 +111,7 @@ const AllotTherapistBox = (props) => {
       console.error('An error occurred while handling the submission:', error);
     }
   };
-  
+
 
   const deleteFisrtTherapist = () => {
     const id = selectedTherapist ? selectedTherapist.split('-')[0].trim() : null
@@ -132,18 +132,64 @@ const AllotTherapistBox = (props) => {
     props.deleteSecondTherapistHandler(id)
   }
 
-  const reAllocateAvailableTherapist = async () => {
+  const changeGenderOfBooking = async () => {
     try {
-      const isConfirmed = window.confirm('Are you sure you want to Reallocate Therapist?');
-      if (isConfirmed) {
-        setIsButtonDisabled(true);
-        const res = await reAllocateTherapist({...reAllocateBody,centerId:selectedCenter});
+      try {
+        const reqBody = {
+          sessionScheduleId: reAllocateBody?.sessionScheduleId,
+          date: reAllocateBody?.slotDate,
+          therapistId: reAllocateBody?.therapistId
+        }
+        const res = await deAllocateTherapist(reqBody);
+        console.log("seeee", res)
         if (res?.status === 200) {
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
           setIsButtonDisabled(false);
-          alert('An error occurred while reallocating therapist. Please try again later.');
+          alert(res?.response?.data?.status?.message);
+        }
+      } catch (err) {
+        console.log(err)
+      }
+
+      const isConfirmed = window.confirm('Are you sure you want to change Gender?');
+      if (isConfirmed) {
+        setIsButtonDisabled(true);
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/change-gender`, { sessionScheduleId: reAllocateBody?.sessionScheduleId }, {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        });
+        if (res?.status === 200) {
+          alert(res.data?.status?.message);
+          window.location.reload();
+        } else {
+          setIsButtonDisabled(false);
+          console.log("Alert jo hai wo error wala hai", res)
+          alert(res?.response?.data?.status?.message);
+          return res;
+        }
+      }
+    } catch (error) {
+      setIsButtonDisabled(false);
+      alert(error?.response?.data?.status?.message);
+    }
+  }
+
+  const reAllocateAvailableTherapist = async () => {
+    try {
+      const isConfirmed = window.confirm('Are you sure you want to Reallocate Therapist?');
+      if (isConfirmed) {
+        setIsButtonDisabled(true);
+        const res = await reAllocateTherapist({ ...reAllocateBody, centerId: selectedCenter });
+        if (res?.status === 200) {
+          alert(res.data?.status?.message);
+          window.location.reload();
+        } else {
+          setIsButtonDisabled(false);
+          alert(res?.response?.data?.status?.message);
           return res;
         }
       }
@@ -158,23 +204,24 @@ const AllotTherapistBox = (props) => {
       const isConfirmed = window.confirm('Are you sure you want to Deallocate Therapist?');
       if (isConfirmed) {
         setIsButtonDisabled(true);
-        const reqBody={
-            sessionScheduleId: reAllocateBody?.sessionScheduleId,
-            date:reAllocateBody?.slotDate,
-            therapistId:reAllocateBody?.therapistId
+        const reqBody = {
+          sessionScheduleId: reAllocateBody?.sessionScheduleId,
+          date: reAllocateBody?.slotDate,
+          therapistId: reAllocateBody?.therapistId
         }
         const res = await deAllocateTherapist(reqBody);
-        console.log("seeee",res)
+        console.log("seeee", res)
         if (res?.status === 200) {
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
           setIsButtonDisabled(false);
-          alert('An error occurred while Deallocating therapist. Please try again later.');
+          alert(res?.response?.data?.status?.message);
           return res;
         }
       }
     } catch (error) {
+      console.log("-=-==-=--=", error)
       setIsButtonDisabled(false);
       alert('An error occurred while Deallocating therapist. Please try again later.');
     }
@@ -182,18 +229,33 @@ const AllotTherapistBox = (props) => {
 
   useEffect(() => {
     if (body?.slotTime?.startTime) {
-      let newBody={
+      let newBody = {
         ...body,
-        centerId:selectedCenter
+        centerId: selectedCenter
       }
       dispatch(fetchAvailableTherapist(newBody));
     }
-  }, [dispatch,selectedCenter]);
+  }, [dispatch, selectedCenter]);
 
   return (
     <div>
       <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
         <h3>Allot Therapist</h3>
+        <Box display="flex" alignItems="center" gap={10}>
+          {hasAdminAndSuperAdminAccess(role) && <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={props.isDisabled || isButtonDisabled}
+            style={{ float: 'right', textTransform: 'none' }}
+            onClick={changeGenderOfBooking}>
+            {isButtonDisabled ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Change gender'
+            )}
+          </Button>}
+        </Box>
         <Box display="flex" alignItems="center" gap={10}>
           <TextField
             select
@@ -269,7 +331,7 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              {reAllocateBody?.therapistId&&<DeleteIcon onClick={()=>deAllocateTherapistForBooking()} />}
+              {reAllocateBody?.therapistId && <DeleteIcon onClick={() => deAllocateTherapistForBooking()} />}
             </Grid>
 
             {/* Second Therapist */}
@@ -298,12 +360,12 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-             {hasAdminAndSuperAdminAccess(role)&&<DeleteIcon onClick={deleteSecondTherapist} />}
+              {hasAdminAndSuperAdminAccess(role) && <DeleteIcon onClick={deleteSecondTherapist} />}
             </Grid>
 
             {/* Submit Button */}
             <Grid item xs={12}>
-             {hasAdminAndSuperAdminAccess(role)&&<Button
+              {hasAdminAndSuperAdminAccess(role) && <Button
                 variant="contained"
                 color="primary"
                 type="submit"
@@ -311,10 +373,10 @@ const AllotTherapistBox = (props) => {
                 disabled={props.isDisabled || isButtonDisabled}
               >
                 {isButtonDisabled ? (
-                 <CircularProgress size={24} color="inherit" />
-                 ) : (
-                'Submit'
-                    )}
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Submit'
+                )}
               </Button>}
             </Grid>
           </Grid>
