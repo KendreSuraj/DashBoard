@@ -144,7 +144,6 @@ const AllotTherapistBox = (props) => {
         console.log("seeee", res)
         if (res?.status === 200) {
           alert(res.data?.status?.message);
-          window.location.reload();
         } else {
           setIsButtonDisabled(false);
           alert(res?.response?.data?.status?.message);
