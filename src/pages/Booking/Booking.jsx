@@ -80,8 +80,8 @@ const Booking = () => {
       "Caller Phone": data.callerPhone ? data.callerPhone : "-",
       "Booking Date": bookingDate?.date,
       "Booking Time": data?.bookingTime,
-      "Avataar Rating":data?.avataarRating?data?.avataarRating:"N/A",
-      "Partner Rating":data?.partnerRating?data?.partnerRating:"N/A",
+      "Avataar Rating":parseInt(data?.avataarRating)>0?data?.avataarRating:"N/A",
+      "Partner Rating":parseInt(data?.partnerRating)>0?data?.partnerRating:"N/A",
     };
   });
 
