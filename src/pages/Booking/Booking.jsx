@@ -36,6 +36,14 @@ const Booking = () => {
   const isLoading = useSelector((state) => state.booking?.isLoading)
   const isBookingLoading = useSelector((state) => state.booking?.isBookingLoading)
   let pageCount = useSelector((state) => state.booking.bookingList?.totalPages);
+
+  const ratingDescriptions = {
+    1: "Disappointing",
+    2: "Mediocre",
+    3: "Acceptable",
+    4: "Impressive",
+    5: "Delighted"
+  };
   let totalBooking = useSelector(
     (state) => state.booking.bookingList?.totalRecords,
   );
@@ -81,7 +89,7 @@ const Booking = () => {
       "Booking Date": bookingDate?.date,
       "Booking Time": data?.bookingTime,
       "Avataar Rating":parseInt(data?.avataarRating)>0?data?.avataarRating:"N/A",
-      "Partner Rating":parseInt(data?.partnerRating)>0?data?.partnerRating:"N/A",
+      "Partner Rating":data?.partnerRating>0?ratingDescriptions[data?.partnerRating]:"N/A",
     };
   });
 
