@@ -80,6 +80,8 @@ const Booking = () => {
       "Caller Phone": data.callerPhone ? data.callerPhone : "-",
       "Booking Date": bookingDate?.date,
       "Booking Time": data?.bookingTime,
+      "Avataar Rating":data?.avataarRating,
+      "Partner Rating":data?.partnerRating,
     };
   });
 
