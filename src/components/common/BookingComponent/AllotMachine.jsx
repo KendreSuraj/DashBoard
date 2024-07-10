@@ -8,7 +8,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchCenter } from '../../../store/actions/center.action';
 const AllotMachine = ({ body, isDisabled }) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
-  console.log("see body over here", body)
   const dispatch = useDispatch()
   const availableMachines = useSelector(state => state.machine?.availableMachine)
   const availableMachine = [...availableMachines, body?.previousMachineId]
