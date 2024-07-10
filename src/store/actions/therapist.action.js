@@ -163,3 +163,12 @@ export const deAllocateTherapist = async (data) => {
     return error;
   }
 }
+
+export const markTherapistWeekOffFree = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/allocate/mark-therapist-weekoff-available`, data);
+    return res;
+  } catch (error) {
+    return error;
+  }
+}
