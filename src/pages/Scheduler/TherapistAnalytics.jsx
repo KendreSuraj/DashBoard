@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
-import { markTherapistFree } from '../../store/actions/therapist.action';
+import { markTherapistFree, markTherapistWeekOffFree } from '../../store/actions/therapist.action';
 import centerSlice from '../../store/slices/centerSlice';
 
 const TherapistAnalytics = () => {
@@ -89,6 +89,30 @@ const TherapistAnalytics = () => {
             console.error('An error occurred while handling the submission:', error);
           }
     }
+
+    const markFreeTherapistWeekOfF=async(id,name)=>{
+        try {
+            const isConfirmed = window.confirm(`Are you sure you want to Mark ${name} free on ${selectedDate}?`);
+            if (isConfirmed) {
+              setIsButtonDisabled(true);
+              const body = {
+                date:selectedDate,
+                therapistId:id
+              };
+              const res = await markTherapistWeekOffFree(body);
+              if (res?.status === 200) {
+                alert(res.data?.status?.message);
+                window.location.reload();
+              }else{
+                  alert("An error occurred while mark free therapist.")
+                  setIsButtonDisabled(false);
+              }
+            }
+          } catch (error) {
+            setIsButtonDisabled(false);
+            console.error('An error occurred while handling the submission:', error);
+          }
+        }
 
     const timeSlots = [
         '07:00-07:30', '07:30-08:00',
@@ -204,7 +228,7 @@ const TherapistAnalytics = () => {
                             <TableRow key={index}>
                                 <TableCell component="th" scope="row" align="center" sx={{ borderRight: 1, borderColor: 'divider', position: 'sticky', left: 0, backgroundColor: 'white', zIndex: 1 }}>
                                     {therapist.name}
-                                    {therapist?.[`${selectedDay.toLowerCase()}Availability`].some(slot => slot.status === "LEAVE" || slot.status === "REPAIR" || slot.status === "UNAVAILABLE")&&
+                                    {(therapist?.[`${selectedDay.toLowerCase()}Availability`].length===0 || therapist?.[`${selectedDay.toLowerCase()}Availability`].some(slot => slot.status === "LEAVE" || slot.status === "REPAIR" || slot.status === "UNAVAILABLE"))&&
                                     <Button
                                         style={{
                                           fontWeight: 'bold',
@@ -215,11 +239,16 @@ const TherapistAnalytics = () => {
                                           padding:'5px',
                                         }}
                                         disabled={isButtonDisabled}
-                                        onClick={()=>handleMarkFreeTherapist(therapist.id,therapist.name)}
+                                        // onClick={()=>handleMarkFreeTherapist(therapist.id,therapist.name)}
+                                        onClick={() =>
+                                            therapist?.[`${selectedDay.toLowerCase()}Availability`]?.length === 0
+                                              ? markFreeTherapistWeekOfF(therapist.id, therapist.name)
+                                              : handleMarkFreeTherapist(therapist.id, therapist.name)
+                                          }
+
                                     >
                                         Mark Free
                                     </Button>}
-
                                     {/* <Button color='primary' sx={{fontWeight: 'bold'}}>Mark Free</Button> */}
                                 </TableCell>
                                 {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
