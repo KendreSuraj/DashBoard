@@ -112,8 +112,19 @@ export const confirmClientSlots = async (data) => {
   }
 }
 
-export const cancelBooking = async (data) => {
+export const cancelBooking = async (reqData) => {
   try {
+    let userData = localStorage.getItem("userData")
+    userData = JSON.parse(userData)
+
+    const dashboardUserId = userData?.user?.id
+    const dashboardUserName = userData?.user?.name
+    const data = {
+      ...reqData,
+      dashboardUserId,
+      dashboardUserName
+
+    }
     const res = await axios.post(`${apiUrl}/api/v1/allocate/cancel-booking`, data);
     return res;
   } catch (error) {
