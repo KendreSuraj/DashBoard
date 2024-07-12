@@ -53,7 +53,7 @@ const AllotTherapistBox = (props) => {
             ? response.data.partnerList
             : [];
         if (reAllocateBody?.slotTime?.startTime) {
-          let newAvailableTherapist = [...availableTherapist, therapist1?.['Therapist Id'],selectedTherapist&&selectedTherapist.split(' ')[0]]
+          let newAvailableTherapist = [...availableTherapist, therapist1?.['Therapist Id']]
           setPartners(partnerList?.filter(therapist => newAvailableTherapist.includes(therapist.partner_id)));
         }
       });
@@ -344,7 +344,7 @@ const AllotTherapistBox = (props) => {
                 disabled={props.isDisabled}
               >
                 {partners && partners.length > 0 ? (
-                  partners.filter(x=>x.partner_id!== parseInt(selectedTherapist.split(' ')[0])).map((partner) => (
+                  partners.map((partner) => (
                     <MenuItem
                       value={`${partner.partner_id} - ${partner.name}`}
                       key={partner.partner_id}
