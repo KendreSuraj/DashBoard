@@ -329,7 +329,7 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              {reAllocateBody?.therapistId && <DeleteIcon onClick={() => deAllocateTherapistForBooking()} />}
+              {(reAllocateBody?.therapistId && !props.isDisabled) && <DeleteIcon onClick={() => deAllocateTherapistForBooking()} />}
             </Grid>
 
             {/* Second Therapist */}
@@ -358,7 +358,7 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              {hasAdminAndSuperAdminAccess(role) && <DeleteIcon onClick={deleteSecondTherapist} />}
+              {(hasAdminAndSuperAdminAccess(role)&& !props.isDisabled) && <DeleteIcon onClick={deleteSecondTherapist} />}
             </Grid>
 
             {/* Submit Button */}

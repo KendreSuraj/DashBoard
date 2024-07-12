@@ -185,7 +185,7 @@ const AllotMachine = ({ body, isDisabled }) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              {body?.machineId && <DeleteIcon onClick={() => deAllocateMachineForBooking()} />}
+              {(body?.machineId && !isDisabled)&& <DeleteIcon onClick={() => deAllocateMachineForBooking()} />}
             </Grid>
             <Grid item xs={12}>
               {hasAdminAndSuperAdminAccess(role) && <Button

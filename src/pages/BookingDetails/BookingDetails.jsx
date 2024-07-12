@@ -467,7 +467,6 @@ const BookingDetails = () => {
                 endTime={endTime ? endTime : ''}
                 isDisabled={
                   userDataObject.Status === 'COMPLETED' ||
-                  userDataObject.Status === 'PAID' ||
                   userDataObject.Status === 'CANCELLED'
                 }
                 deleteFirstTherapistHandler={deleteFirstTherapistHandler}
@@ -510,7 +509,6 @@ const BookingDetails = () => {
                   body={body}
                   isDisabled={
                     userDataObject.Status === 'COMPLETED' ||
-                    userDataObject.Status === 'PAID' ||
                     userDataObject.Status === 'CANCELLED'
                   }
                 />
