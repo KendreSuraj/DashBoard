@@ -106,7 +106,7 @@ const CallerBox = (props) => {
                             margin="normal"
                             value={selectedCaller}
                             onChange={handleCallerChange}
-                            disabled={props.isDisabled}
+                            // disabled={props.isDisabled}
                             required
                         >
                             {callersList && callersList.length > 0 ? (
@@ -133,7 +133,7 @@ const CallerBox = (props) => {
                                 color="primary"
                                 type="submit"
                                 onClick={handleSubmit}
-                                disabled={props.isDisabled}
+                                // disabled={props.isDisabled}
                             >
                                 Submit
                             </Button>}

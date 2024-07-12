@@ -128,7 +128,7 @@ const CommentBox = (props) => {
                         variant="contained"
                         color="primary"
                         type="submit"
-                        disabled={isSubmitting || props?.isDisabled}
+                        disabled={isSubmitting}
                     >
                         {isSubmitting ? 'Adding...' : 'Add Comment'}
                     </Button>
