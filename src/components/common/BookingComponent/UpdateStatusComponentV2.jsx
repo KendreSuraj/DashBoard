@@ -74,7 +74,7 @@ const UpdateStatusComponentV2 = (props) => {
                         </Select>
                     </FormControl>
                     {hasAdminAndSuperAdminAccess(role)&&<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}
-                    disabled={isButtonDisabled}
+                    disabled={isButtonDisabled || props?.isDisabled}
                     >
                   {isButtonDisabled ? (
                     <CircularProgress size={24} color="inherit" />

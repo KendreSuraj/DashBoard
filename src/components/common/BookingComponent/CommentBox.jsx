@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { getToken } from '../userLocalStorageUtils';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
-const CommentBox = () => {
+const CommentBox = (props) => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const userId = JSON.parse(localStorage.getItem('userData'))?.user?.id
     const [commentData, setCommentData] = useState("")
@@ -128,7 +128,7 @@ const CommentBox = () => {
                         variant="contained"
                         color="primary"
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || props?.isDisabled}
                     >
                         {isSubmitting ? 'Adding...' : 'Add Comment'}
                     </Button>

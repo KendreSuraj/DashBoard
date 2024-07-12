@@ -637,6 +637,7 @@ const BookingDetails = () => {
                 updateStatusHandler={handleStatusUpdate}
                 selectedStatus={selectedStatus}
                 body={body}
+                isDisabled={userDataObject.Status === 'COMPLETED'}
               />
             </Grid>
           ) : (
@@ -653,10 +654,12 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
-            <CallerBox callerDetails={callerDetails} />
+            <CallerBox callerDetails={callerDetails}  isDisabled={userDataObject.Status === 'COMPLETED'}/>
           </Grid>
           <Grid item xs={12} md={6}>
-            <CommentBox />
+            <CommentBox 
+             isDisabled={userDataObject.Status === 'COMPLETED'}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
