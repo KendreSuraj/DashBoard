@@ -31,6 +31,7 @@ const BookingComments = ({sessionScheduleId}) => {
             <th>Added By</th>
             <th>Comment</th>
             <th>Updated Date</th>
+            <th>Updated Time</th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@ const BookingComments = ({sessionScheduleId}) => {
                 <td>{getAdminNameById(data.adminUserId)}</td>
                 <td>{data.comment}</td>
                 <td>{new Date(data.createdAt).toLocaleDateString('en-GB')}</td>
+                <td>{new Date(new Date(data.createdAt).getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[1].split('.')[0]}</td>
               </tr>
             ))
           ) : (
