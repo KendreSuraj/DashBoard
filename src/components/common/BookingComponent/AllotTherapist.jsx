@@ -239,7 +239,7 @@ const AllotTherapistBox = (props) => {
     <div>
       <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
         <h3>Allot Therapist</h3>
-        {/* <Box display="flex" alignItems="center" gap={10}>
+        <Box display="flex" alignItems="center" gap={10}>
           {hasAdminAndSuperAdminAccess(role) && <Button
             variant="contained"
             color="primary"
@@ -253,7 +253,7 @@ const AllotTherapistBox = (props) => {
               'Change gender'
             )}
           </Button>}
-        </Box> */}
+        </Box>
         <Box display="flex" alignItems="center" gap={10}>
           <TextField
             select
@@ -358,7 +358,7 @@ const AllotTherapistBox = (props) => {
               </TextField>
             </Grid>
             <Grid item xs={1}>
-              {(hasAdminAndSuperAdminAccess(role)&& !props.isDisabled) && <DeleteIcon onClick={deleteSecondTherapist} />}
+              {(hasAdminAndSuperAdminAccess(role) && !props.isDisabled) && <DeleteIcon onClick={deleteSecondTherapist} />}
             </Grid>
 
             {/* Submit Button */}
