@@ -1,26 +1,30 @@
 // UserDetailsComponent
 
 import React from 'react';
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Button } from '@mui/material';
 
-const UserDetailsComponent = ({ data,machineDetails }) => {
+const UserDetailsComponent = ({ data, machineDetails, handleSetOfficeLeftTime }) => {
     const keys = Object.keys(data);
     const keys1 = Object.keys(machineDetails);
     const middleIndex = Math.ceil(keys.length / 2);
     return (
-        <Grid container spacing={2}>  
+        <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
                 <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
                     <TableContainer style={{ overflowX: 'auto' }}>
-                    <h3>Client Details</h3>
+                        <h3>Client Details</h3>
                         <Table>
                             <TableBody>
-                                {keys.slice(0, middleIndex+1).map((key) => (
+                                {keys.slice(0, middleIndex + 1).map((key) => (
                                     <TableRow key={key}>
                                         <TableCell>
                                             <strong>{key}:</strong>
                                         </TableCell>
-                                        <TableCell>{data[key]}</TableCell>
+                                        <TableCell>
+                                            {
+                                                key === 'Left for appointment' && data[key] ? data[key] : key === 'Left for appointment' && !data[key] ? <Button variant="contained" color="primary" type="submit" onClick={handleSetOfficeLeftTime}>Add Time</Button> : data[key]
+                                            }
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -34,7 +38,7 @@ const UserDetailsComponent = ({ data,machineDetails }) => {
                         <h3>Therapist Details</h3>
                         <Table>
                             <TableBody>
-                                {keys.slice(middleIndex+1).map((key) => (
+                                {keys.slice(middleIndex + 1).map((key) => (
                                     <TableRow key={key}>
                                         <TableCell>
                                             <strong>{key}:</strong>

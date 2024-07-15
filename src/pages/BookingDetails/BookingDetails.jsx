@@ -146,7 +146,6 @@ const BookingDetails = () => {
         },
       )
       .then((response) => {
-        console.log("see resposne--->>",response)
         setBookingData(response?.data);
         const bookingDetail =
           response.data && response.data.bookingDetail
@@ -183,6 +182,7 @@ const BookingDetails = () => {
               : bookingDetail.productName // if isPackage is false, use productName
             : '-', // if bookingDetail is not present, use '-'
           'Booking Date': formattedDateAndTime?.date,
+          'Left for appointment': bookingDetail.officeLeftTime,
           'Booking Time': formattedDateAndTime?.time,
           Status:
             bookingDetail && bookingDetail.status ? bookingDetail.status : '-',
@@ -373,11 +373,11 @@ const BookingDetails = () => {
     const time2Moment = moment(time2.replace('-', ''), 'HH:mm');
     const result = isNegative
       ? time1Moment
-          .subtract(time2Moment.hours(), 'hours')
-          .subtract(time2Moment.minutes(), 'minutes')
+        .subtract(time2Moment.hours(), 'hours')
+        .subtract(time2Moment.minutes(), 'minutes')
       : time1Moment
-          .add(time2Moment.hours(), 'hours')
-          .add(time2Moment.minutes(), 'minutes');
+        .add(time2Moment.hours(), 'hours')
+        .add(time2Moment.minutes(), 'minutes');
     const formattedTime = result.format('HH:mm');
     return formattedTime;
   }
@@ -410,8 +410,8 @@ const BookingDetails = () => {
       clientId: bookingData?.bookingDetail?.userId,
       therapistId: bookingData?.partnerDetail?.id,
       machineId: bookingData?.machineDetail?.id,
-      therapistCenterId:bookingData?.partnerDetail?.center_id,
-      machineCenterId:bookingData?.machineDetail?.center_id
+      therapistCenterId: bookingData?.partnerDetail?.center_id,
+      machineCenterId: bookingData?.machineDetail?.center_id
     };
   }
 
@@ -435,6 +435,35 @@ const BookingDetails = () => {
     'Chandigarh',
   ];
 
+
+  const handleSetOfficeLeftTime = async () => {
+    try {
+      const reqBody = {
+        sessionScheduleId: params.sessionScheduleId,
+      }
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/office-left-time`,
+          reqBody,
+          {
+            headers: {
+              Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+              token: getToken(),
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response.data);
+          window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    } catch (err) {
+      console.log("ERR: handleSetOfficeLeftTime.....", err)
+      alert(err)
+
+    }
+  }
+
   return (
     <div>
       {/* Render the UserDetailsBox component with the userDataObject */}
@@ -442,6 +471,7 @@ const BookingDetails = () => {
         <UserDetailsComponent
           data={userDataObject}
           machineDetails={machineDetail}
+          handleSetOfficeLeftTime={handleSetOfficeLeftTime}
         />
       ) : (
         ''
@@ -450,13 +480,13 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           {!bookingData?.bookingDetail?.isPackage &&
-          bookingData?.bookingDetail?.longitude !== '' &&
-          bookingData?.bookingDetail?.latitude !== '' &&
-          bookingData?.bookingDetail?.longitude &&
-          bookingData?.bookingDetail?.latitude &&
-          schedulerAllowedCity.includes(
-            bookingData?.bookingDetail?.addressRegionalCity,
-          ) ? (
+            bookingData?.bookingDetail?.longitude !== '' &&
+            bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) ? (
             <Grid item xs={6}>
               <AllotTherapistComponent
                 handleAllotTherapist={handleSubmitAllotTherapist}
@@ -523,13 +553,13 @@ const BookingDetails = () => {
         </Grid>
         <Grid container spacing={2} mt={4}>
           {bookingData?.bookingDetail?.longitude !== '' &&
-          !bookingData?.bookingDetail?.isPackage &&
-          bookingData?.bookingDetail?.latitude !== '' &&
-          bookingData?.bookingDetail?.longitude &&
-          bookingData?.bookingDetail?.latitude &&
-          schedulerAllowedCity.includes(
-            bookingData?.bookingDetail?.addressRegionalCity,
-          ) ? (
+            !bookingData?.bookingDetail?.isPackage &&
+            bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) ? (
             <Grid item xs={6}>
               <AllotDateV2
                 handleAllotDate={handleAllotDate}
@@ -652,16 +682,16 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
-            <CallerBox callerDetails={callerDetails}  isDisabled={userDataObject.Status === 'COMPLETED'}/>
+            <CallerBox callerDetails={callerDetails} isDisabled={userDataObject.Status === 'COMPLETED'} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <CommentBox 
-             isDisabled={userDataObject.Status === 'COMPLETED'}
+            <CommentBox
+              isDisabled={userDataObject.Status === 'COMPLETED'}
             />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
-          <BookingComments  sessionScheduleId={params.sessionScheduleId}/>
+          <BookingComments sessionScheduleId={params.sessionScheduleId} />
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
           <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
