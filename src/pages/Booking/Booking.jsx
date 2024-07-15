@@ -21,7 +21,7 @@ const Booking = () => {
   const selectedServices = useSelector((state) => state.dashboard.selectedServices);
   const selectedStatus = useSelector((state) => state.dashboard.selectedStatus);
   const selectedPartners = useSelector((state) => state.dashboard.selectedPartners);
-  const [submitting,setSubmitting]=useState(false)
+  const [submitting, setSubmitting] = useState(false)
   // const [searchText, setSearchText] = useState('');
   // const [searchType, setSearchType] = useState('phoneNumber');
   const [searchBtnPressed, setSearchBtnPressed] = useState(false);
@@ -72,7 +72,7 @@ const Booking = () => {
       'Phone Number': data.phoneNumber,
       City: data.city ? data.city : '',
       // MappedCity: mappedCity,
-      'Service Name': data.productNames ? data.productNames +" - "+ data?.productGender : data.productName ? data.productName +" - "+ data?.productGender : '',
+      'Service Name': data.productNames ? data.productNames + " - " + data?.productGender : data.productName ? data.productName + " - " + data?.productGender : '',
       'Service Date': formattedDate.date,
       'Service Time': formattedDate.time,
       Address: data.formattedAddress ? data.formattedAddress : '',
@@ -88,8 +88,9 @@ const Booking = () => {
       "Caller Phone": data.callerPhone ? data.callerPhone : "-",
       "Booking Date": bookingDate?.date,
       "Booking Time": data?.bookingTime,
-      "Avataar Rating":parseInt(data?.avataarRating)>0?data?.avataarRating:"N/A",
-      "Partner Rating":data?.partnerRating>0?ratingDescriptions[data?.partnerRating]:"N/A",
+      "Avataar Rating": parseInt(data?.avataarRating) > 0 ? data?.avataarRating : "N/A",
+      "Partner Rating": data?.partnerRating > 0 ? ratingDescriptions[data?.partnerRating] : "N/A",
+      "Office Left Time": data?.officeLeftTime ? data?.officeLeftTime : ""
     };
   });
 
@@ -148,7 +149,7 @@ const Booking = () => {
   useEffect(() => {
     prevSearchTextRef.current = searchText;
   });
-  
+
   useEffect(() => {
     sessionStorage.setItem('bookingStartDate', startDate);
     sessionStorage.setItem('bookingEndDate', endDate);
@@ -217,12 +218,12 @@ const Booking = () => {
       obj.statusFilter = statusFilter;
     }
 
-    if(selectedPartners.length>0){
-      let partnerFilter='';
-      for(let partner=0;partner<selectedPartners.length;partner++){
-        if(partner == selectedPartners.length-1){
-         partnerFilter += `${selectedPartners[partner].name}`;
-        }else{
+    if (selectedPartners.length > 0) {
+      let partnerFilter = '';
+      for (let partner = 0; partner < selectedPartners.length; partner++) {
+        if (partner == selectedPartners.length - 1) {
+          partnerFilter += `${selectedPartners[partner].name}`;
+        } else {
           partnerFilter += `${selectedPartners[partner].name}`;
         }
       }
@@ -243,7 +244,7 @@ const Booking = () => {
     selectedStatus,
     selectedPartners,
     // searchText.trim().length===0
-    searchText.trim().length === 0 && prevSearchTextRef.current.trim().length > 0 
+    searchText.trim().length === 0 && prevSearchTextRef.current.trim().length > 0
   ]);
 
   useEffect(() => {
@@ -264,7 +265,7 @@ const Booking = () => {
     }
 
     setFilterString(demoFilterString);
-  }, [startDate,endDate,selectedCities, selectedServices, selectedStatus,selectedPartners]);
+  }, [startDate, endDate, selectedCities, selectedServices, selectedStatus, selectedPartners]);
 
   const handleCSVButtonClick = async (format) => {
     try {
@@ -364,26 +365,26 @@ const Booking = () => {
               Total no. of bookings for the selected date: {totalBooking}
             </h4>
             <div>
-            {bookingList.length>0&&<Button
-              style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px',marginLeft:"10px" }}
-              variant="contained"
-              color="primary"
-              endIcon={<ListAltIcon />}
-              onClick={()=>handleCSVButtonClick("excel")}
-              disabled={submitting}
-            >
-             {submitting ? <CircularProgress size={24} color="inherit" /> : 'excel'}
-            </Button>}
-            {bookingList.length>0&&<Button
-              style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px'}}
-              variant="contained"
-              color="primary"
-              endIcon={<TopicIcon />}
-              onClick={()=>handleCSVButtonClick("csv")}
-              disabled={submitting}
-            >
-            {submitting ? <CircularProgress size={24} color="inherit" /> : 'CSV'}
-            </Button>}
+              {bookingList.length > 0 && <Button
+                style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px', marginLeft: "10px" }}
+                variant="contained"
+                color="primary"
+                endIcon={<ListAltIcon />}
+                onClick={() => handleCSVButtonClick("excel")}
+                disabled={submitting}
+              >
+                {submitting ? <CircularProgress size={24} color="inherit" /> : 'excel'}
+              </Button>}
+              {bookingList.length > 0 && <Button
+                style={{ display: 'flex', justifyContent: 'flex-end', float: 'right', marginBottom: '20px' }}
+                variant="contained"
+                color="primary"
+                endIcon={<TopicIcon />}
+                onClick={() => handleCSVButtonClick("csv")}
+                disabled={submitting}
+              >
+                {submitting ? <CircularProgress size={24} color="inherit" /> : 'CSV'}
+              </Button>}
             </div>
           </div>
           {isLoading && <LoaderComponent />}
@@ -420,9 +421,9 @@ const Booking = () => {
           </div>
         </>
       ) : (
-        (!isBookingLoading ?   <p className='centered-text'>No Data found, please try reducing the filters and try again!</p> : 
+        (!isBookingLoading ? <p className='centered-text'>No Data found, please try reducing the filters and try again!</p> :
           <LoaderComponent />)
-        
+
       )}
       {isLoading && <LoaderComponent />}
     </div>
