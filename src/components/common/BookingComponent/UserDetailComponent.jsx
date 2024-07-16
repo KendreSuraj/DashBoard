@@ -22,7 +22,7 @@ const UserDetailsComponent = ({ data, machineDetails, handleSetOfficeLeftTime })
                                         </TableCell>
                                         <TableCell>
                                             {
-                                                key === 'Left for appointment' && data[key] ? data[key] : key === 'Left for appointment' && !data[key] ? <Button variant="contained" color="primary" type="submit" onClick={handleSetOfficeLeftTime}>Add Time</Button> : data[key]
+                                                key === 'Left for appointment' && data[key] ? new Date(new Date(data[key]).getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[1].split('.')[0] : key === 'Left for appointment' && !data[key] ? <Button variant="contained" color="primary" type="submit" onClick={handleSetOfficeLeftTime}>Left Time</Button> : data[key]
                                             }
                                         </TableCell>
                                     </TableRow>
