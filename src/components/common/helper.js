@@ -1,4 +1,5 @@
 import moment from "moment"
+import momentTime from 'moment-timezone'
 
 export const isLoggedIn = () => {
   return localStorage.getItem("token") ? true : false;
@@ -68,3 +69,12 @@ export const FilterSlots = (slotsDate) => {
   }
   return slotsDate;
 };
+
+
+export const changeUTCtoIST = (utcTime) => {
+  const utcMoment = moment.utc(utcTime, "YYYY-MM-DD hh:mm A");
+  const istMoment = utcMoment.tz('Asia/Kolkata');
+  const istTime = istMoment.format('YYYY-MM-DD hh:mm A');
+  return istTime
+}
+
