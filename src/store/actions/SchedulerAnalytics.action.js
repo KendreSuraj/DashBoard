@@ -29,3 +29,13 @@ export const fetchSlotData = createAsyncThunk('scheduler-slot-data', async (data
     return rejectWithValue('Failed to fetch Machines. Please try again later.');
   }
 });
+
+
+export const makeFreeSlotForHalfanHour = async(data) => {
+  try {
+   const res=await axios.put(`${apiUrl}/api/v1/slot/free-half-hour-slot`,data)
+   return res?.data;
+  } catch (error) {
+    throw error;
+  }
+}

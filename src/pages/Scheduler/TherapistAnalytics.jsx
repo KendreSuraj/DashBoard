@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCenter } from '../../store/actions/center.action';
-import { fetchTherapistAvailability } from '../../store/actions/SchedulerAnalytics.action';
+import { fetchTherapistAvailability, makeFreeSlotForHalfanHour } from '../../store/actions/SchedulerAnalytics.action';
 import { centerAction } from '../../store/slices/centerSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
@@ -9,6 +9,8 @@ import moment from 'moment';
 import { Button } from 'react-bootstrap';
 import { markTherapistFree, markTherapistWeekOffFree } from '../../store/actions/therapist.action';
 import centerSlice from '../../store/slices/centerSlice';
+import './slotModal.style.css';
+import SlotModal from './SlotModal';
 
 const TherapistAnalytics = () => {
     const dispatch = useDispatch();
@@ -23,6 +25,39 @@ const TherapistAnalytics = () => {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
+   
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedSlot, setSelectedSlot] = useState(null);
+
+    const handleClick = (timeRange) => {
+        setSelectedSlot(timeRange);
+        setModalVisible(true);
+    };
+
+    const handleClose = () => {
+        setModalVisible(false);
+        setSelectedSlot(null);
+    };
+
+    const handleFree = async () => {
+        try {
+            const res = await makeFreeSlotForHalfanHour({
+                time: selectedSlot.time,
+                serviceId: selectedSlot.serviceId,
+                therapistId: selectedSlot.therapistId,
+                day: selectedDay,
+            });
+            if (res?.status?.code === 200) {
+                alert(res.status?.message)
+                handleClose();
+                window.location.reload()
+            }
+        } catch (err) {
+            console.error('An error occurred while making the slot free:', err);
+            return err;
+        }
+    };
+    
     useEffect(() => {
         dispatch(fetchCenter());
         setCenterId(selectedId);
@@ -124,7 +159,7 @@ const TherapistAnalytics = () => {
         '19:00-19:30', '19:30-20:00', '20:00-20:30', '20:30-21:00',
         '21:00-21:30', '21:30-22:00'
     ];
-    const renderSlots = (availability) => {
+    const renderSlots = (availability,therapist) => {
         const slotMap = {};
 
         availability.forEach(slot => {
@@ -139,17 +174,20 @@ const TherapistAnalytics = () => {
                 const timeRange = `${startTimeFormatted}-${endTimeFormatted}`;
 
                 if (slot.status === "LEAVE") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', padding: '8px', borderRadius: '10px' }}>Leave</span>;
+                    slotMap[timeRange] = <span onClick={() => handleClick({time:timeRange,type:"Leave",therapistId:therapist.id})} style={{ backgroundColor: 'gray', color: 'black', padding: '8px', padding: '8px', borderRadius: '10px' }}>Leave</span>;
                 } else if (slot.status === "AVAILABLE") {
                     slotMap[timeRange] = <span style={{ backgroundColor: '#01FF00', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Available</span>;
                 } else if (slot.status === "UNAVAILABLE") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Unavailable</span>;
+                    slotMap[timeRange] = <span  onClick={() => handleClick({time:timeRange,type:"UNAVAILABLE",therapistId:therapist.id})} style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px' }}>Unavailable</span>;
                 } else if (slot.status === "SESSION_BLOCKED") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span onClick={() => handleClick({time:timeRange,type:"SESSION_BLOCKED",therapistId:therapist.id,serviceId:slot.serviceId})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} >Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_START") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span onClick={() => handleClick({time:timeRange,type:"AVAILABLE",therapistId:therapist.id,serviceId:slot.serviceId})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} >Service ID:{slot.serviceId}</span>;
                 } else if (slot.status === "BUFFER_END") {
-                    slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} onClick={() => window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+                    slotMap[timeRange] = <span onClick={() => handleClick({time:timeRange,type:"AVAILABLE",therapistId:therapist.id,serviceId:slot.serviceId})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }} >Service ID:{slot.serviceId}</span>;
+                }
+                else if (slot.status === "OFF_HOUR") {
+                    slotMap[timeRange] = <span onClick={() => handleClick({time:timeRange,type:"OFF_HOUR",therapistId:therapist.id})} style={{ color: 'black', padding: '8px', backgroundColor: 'gray', borderRadius: '10px' }}>Off&nbsp;hours</span>
                 }
                 else {
                     slotMap[timeRange] = 'error';
@@ -159,7 +197,7 @@ const TherapistAnalytics = () => {
 
         return timeSlots.map(time => (
             <TableCell key={time} align="center" sx={{ borderRight: 1, borderColor: 'divider' }}>
-                {slotMap[time] || (Object.keys(slotMap).length !== 0 ? <span style={{ color: 'black', padding: '8px', backgroundColor: 'gray', borderRadius: '10px' }}>Off&nbsp;hours</span> : <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', borderRadius: '10px' }}>Week&nbsp;Off</span>)}
+                {slotMap[time] || (Object.keys(slotMap).length !== 0 ? <span onClick={() => handleClick({time:time,type:"OFF_HOUR",therapistId:therapist.id})} style={{ color: 'black', padding: '8px', backgroundColor: 'gray', borderRadius: '10px' }}>NA&nbsp;</span> : <span  style={{ backgroundColor: 'gray', color: 'black', padding: '8px', borderRadius: '10px' }}>Week&nbsp;Off</span>)}
             </TableCell>
         ));
     }
@@ -251,12 +289,24 @@ const TherapistAnalytics = () => {
                                     </Button>}
                                     {/* <Button color='primary' sx={{fontWeight: 'bold'}}>Mark Free</Button> */}
                                 </TableCell>
-                                {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
+                                {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [],therapist)}
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            <div>
+                {modalVisible && (
+                    <SlotModal
+                        timeRange={selectedSlot.time}
+                        serviceId={selectedSlot.serviceId}
+                        therapistId={selectedSlot.therapistId}
+                        day={selectedDay}
+                        onClose={handleClose}
+                        onFree={handleFree}
+                    />
+                )}
+            </div>
         </Box>
     );
 };
