@@ -421,7 +421,7 @@ const PackageDetails = ({ setPackagesSubmitted }) => {
           />
 
           <Editor
-            apiKey='1s2mvrmfdfu3iaw5yvt1n3mek2e2zds78tm3b2mzbihysqw0'
+            apiKey='p4oms0qiwlv8h44arpkvcva2dkamn6343jmv13aq805gj7x9'
             onInit={(_evt, editor) => editorRef.current = editor}
             initialValue={initialContent}
             init={{
