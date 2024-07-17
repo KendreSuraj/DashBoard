@@ -31,6 +31,7 @@ import Packages from '../pages/Packages/Packages';
 import AdvancePayments from '../pages/AdvancePayment/AdvancePayments';
 import SchedulerTabs from '../pages/Scheduler/SchedulerTabs';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import Deallocation from '../pages/TechDeallocation/Deallocation';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 
@@ -204,6 +205,16 @@ const appRoutes = [
     state: 'advancePayments',
     sidebarProps: {
       displayText: 'Advance Payments',
+      icon: <BallotIcon />,
+    },
+  },
+
+  {
+    path: '/therapist-deallocation',
+    element: <Deallocation />,
+    state: 'deallocation',
+    sidebarProps: {
+      displayText: 'Deallocation',
       icon: <BallotIcon />,
     },
   },

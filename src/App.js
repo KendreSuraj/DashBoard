@@ -30,6 +30,7 @@ import AddMachineRequest from './pages/Machine/AddMachineRequest';
 import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailability.jsx';
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
 import TransactionHistory from './pages/AdvancePayment/TransactionHistory.jsx';
+import Deallocation from './pages/TechDeallocation/Deallocation.jsx';
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
             <Route path="/advance-payments" element={<AdvancePayments />} />
             <Route path="/add-advance-payments" element={< AddAdvancePayments />} />
             <Route path="/transaction-history/:id" element={< TransactionHistory />} />
+            <Route path="/therapist-deallocation" element={< Deallocation />} />
           </Route>
         </Routes>
       </Router>
