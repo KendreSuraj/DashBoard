@@ -75,13 +75,13 @@ const AdvancePayments = () => {
     }, [dispatch]);
 
 
-    const handleDelete = async (data) => {
+    const handleDelete = async (id) => {
         try {
-            if (!data.id) {
+            if (!id) {
                 alert("Could not find the ID", 400)
                 return
             }
-            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/delete-advance-payment/${data.id}`,
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/admin/advance-payment/delete-advance-payment/${id}`,
                 {
                     headers: {
                         Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,

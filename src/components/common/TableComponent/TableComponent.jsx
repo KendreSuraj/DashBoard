@@ -51,7 +51,8 @@ const TableComponent = ({
 
   }
 
-  const deletePaymentHandler = () => {
+  const deletePaymentHandler = (row) => {
+      localStorage.setItem('deletePaymentRow', row.id)
     setOpen(true);
   }
 
@@ -138,7 +139,7 @@ const TableComponent = ({
                               onClick={() => window.open(row[key], '_blank')}
                               style={{ maxWidth: '100px', maxHeight: '100px', cursor: 'pointer' }}
                               alt="img"
-                            /> : key==="packageDescription"? <div dangerouslySetInnerHTML={{ __html: row[key] }} />:row[key]
+                            /> : key === "packageDescription" ? <div dangerouslySetInnerHTML={{ __html: row[key] }} /> : row[key]
                           )}
                         </TableCell>
                       );
@@ -255,14 +256,14 @@ const TableComponent = ({
                           variant="contained"
                           color="primary"
                           style={{ backgroundColor: '#D70040', color: 'white' }}
-                          onClick={deletePaymentHandler}
+                          onClick={() => deletePaymentHandler(row)}
                         >
                           {deletePaymentButton}
                         </Button>
                       )}
                     </TableCell>
-                     {open && <AlertDialog open={open} setOpen={setOpen} row={row} deletePayment={deletePayment}/>}
-                     </>
+                    {open && <AlertDialog open={open} setOpen={setOpen} deletePayment={deletePayment} />}
+                  </>
                   )
                   }
 
