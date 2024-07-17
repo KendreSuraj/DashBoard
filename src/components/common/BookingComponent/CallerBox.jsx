@@ -12,18 +12,18 @@ const CallerBox = (props) => {
     const params = useParams();
     const handleSubmit = (event) => {
         event.preventDefault();
-
         if (!selectedCaller) {
             alert("Please select a caller name.")
             return
         }
         const callerVariableArr = selectedCaller.split(" - ")
-        const id = callerVariableArr.length > 0 ? callerVariableArr[0] : null
-        if (!id) {
+        const name = callerVariableArr.length > 0 ? callerVariableArr[0] : null
+        if (!name) {
             alert("No caller found.")
             return
         }
-        const callerObj = callersList.find((obj) => obj.id == id)
+        console.log(name)
+        const callerObj = callersList.find((obj) => obj.name == name)
         if (!callerObj) {
             alert("Caller details not found.")
             return
@@ -72,7 +72,7 @@ const CallerBox = (props) => {
                 setCallersList(callersList);
                 const callerObj = callersList.find(caller => caller.name === props.callerDetails.callerName && caller.phone === props.callerDetails.callerPhone)
                 if (callerObj) {
-                    const selectedCallerStr = `${callerObj.id} - ${callerObj.name}`
+                    const selectedCallerStr = `${callerObj.name} - ${callerObj.phone}`
                     console.log(selectedCallerStr)
                     setSelectedCaller(selectedCallerStr)
                 }
@@ -112,7 +112,7 @@ const CallerBox = (props) => {
                             {callersList && callersList.length > 0 ? (
                                 callersList.map((caller) => (
                                     <MenuItem
-                                        value={`${caller.id} - ${caller.name}`}
+                                        value={`${caller.name} - ${caller.phone}`}
                                         key={caller.id}
                                     >
                                         {caller.name} - {caller.phone}
