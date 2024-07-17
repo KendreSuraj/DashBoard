@@ -60,7 +60,7 @@ const Deallocation = () => {
                                     <ListItem key={index}>
                                         {therapist.partnerId} {therapist.partnerName} -
                                         <Typography variant="caption" component="span">
-                                            {therapist.type === 'ANALYTIC' ? '-B' : '-O'}
+                                            {therapist.type === 'ANALYTIC' ? 'B' : 'O'}
                                         </Typography>
                                     </ListItem>
                                 ))}
