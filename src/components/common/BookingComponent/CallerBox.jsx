@@ -115,7 +115,7 @@ const CallerBox = (props) => {
                                         value={`${caller.id} - ${caller.name}`}
                                         key={caller.id}
                                     >
-                                        {caller.id} - {caller.name}
+                                        {caller.name} - {caller.phone}
                                     </MenuItem>
                                 ))
                             ) : (
