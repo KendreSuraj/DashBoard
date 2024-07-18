@@ -162,7 +162,12 @@ const BookingDetails = () => {
             : null;
         const formattedDateAndTime =
           bookingDetail && bookingDetail.appointmentAt
-            ? splitDateTime(bookingDetail.appointmentAt)
+            ? splitDateTime(
+                moment(bookingDetail.appointmentAt)
+                  .add(5, 'hours')
+                  .add(30, 'minutes')
+                  .toISOString(),
+              )
             : '-';
         const isPackage = bookingDetail && bookingDetail.isPackage;
         setIsPackage(isPackage);
@@ -373,11 +378,11 @@ const BookingDetails = () => {
     const time2Moment = moment(time2.replace('-', ''), 'HH:mm');
     const result = isNegative
       ? time1Moment
-        .subtract(time2Moment.hours(), 'hours')
-        .subtract(time2Moment.minutes(), 'minutes')
+          .subtract(time2Moment.hours(), 'hours')
+          .subtract(time2Moment.minutes(), 'minutes')
       : time1Moment
-        .add(time2Moment.hours(), 'hours')
-        .add(time2Moment.minutes(), 'minutes');
+          .add(time2Moment.hours(), 'hours')
+          .add(time2Moment.minutes(), 'minutes');
     const formattedTime = result.format('HH:mm');
     return formattedTime;
   }
@@ -411,7 +416,7 @@ const BookingDetails = () => {
       therapistId: bookingData?.partnerDetail?.id,
       machineId: bookingData?.machineDetail?.id,
       therapistCenterId: bookingData?.partnerDetail?.center_id,
-      machineCenterId: bookingData?.machineDetail?.center_id
+      machineCenterId: bookingData?.machineDetail?.center_id,
     };
   }
 
@@ -435,12 +440,11 @@ const BookingDetails = () => {
     'Chandigarh',
   ];
 
-
   const handleSetOfficeLeftTime = async () => {
     try {
       const reqBody = {
         sessionScheduleId: params.sessionScheduleId,
-      }
+      };
       axios
         .post(
           `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/office-left-time`,
@@ -458,11 +462,10 @@ const BookingDetails = () => {
         })
         .catch((err) => console.log(err));
     } catch (err) {
-      console.log("ERR: handleSetOfficeLeftTime.....", err)
-      alert(err)
-
+      console.log('ERR: handleSetOfficeLeftTime.....', err);
+      alert(err);
     }
-  }
+  };
 
   return (
     <div>
@@ -480,13 +483,13 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           {!bookingData?.bookingDetail?.isPackage &&
-            bookingData?.bookingDetail?.longitude !== '' &&
-            bookingData?.bookingDetail?.latitude !== '' &&
-            bookingData?.bookingDetail?.longitude &&
-            bookingData?.bookingDetail?.latitude &&
-            schedulerAllowedCity.includes(
-              bookingData?.bookingDetail?.addressRegionalCity,
-            ) ? (
+          bookingData?.bookingDetail?.longitude !== '' &&
+          bookingData?.bookingDetail?.latitude !== '' &&
+          bookingData?.bookingDetail?.longitude &&
+          bookingData?.bookingDetail?.latitude &&
+          schedulerAllowedCity.includes(
+            bookingData?.bookingDetail?.addressRegionalCity,
+          ) ? (
             <Grid item xs={6}>
               <AllotTherapistComponent
                 handleAllotTherapist={handleSubmitAllotTherapist}
@@ -553,13 +556,13 @@ const BookingDetails = () => {
         </Grid>
         <Grid container spacing={2} mt={4}>
           {bookingData?.bookingDetail?.longitude !== '' &&
-            !bookingData?.bookingDetail?.isPackage &&
-            bookingData?.bookingDetail?.latitude !== '' &&
-            bookingData?.bookingDetail?.longitude &&
-            bookingData?.bookingDetail?.latitude &&
-            schedulerAllowedCity.includes(
-              bookingData?.bookingDetail?.addressRegionalCity,
-            ) ? (
+          !bookingData?.bookingDetail?.isPackage &&
+          bookingData?.bookingDetail?.latitude !== '' &&
+          bookingData?.bookingDetail?.longitude &&
+          bookingData?.bookingDetail?.latitude &&
+          schedulerAllowedCity.includes(
+            bookingData?.bookingDetail?.addressRegionalCity,
+          ) ? (
             <Grid item xs={6}>
               <AllotDateV2
                 handleAllotDate={handleAllotDate}
@@ -682,12 +685,13 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
-            <CallerBox callerDetails={callerDetails} isDisabled={userDataObject.Status === 'COMPLETED'} />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <CommentBox
+            <CallerBox
+              callerDetails={callerDetails}
               isDisabled={userDataObject.Status === 'COMPLETED'}
             />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CommentBox isDisabled={userDataObject.Status === 'COMPLETED'} />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
