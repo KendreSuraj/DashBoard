@@ -162,12 +162,7 @@ const BookingDetails = () => {
             : null;
         const formattedDateAndTime =
           bookingDetail && bookingDetail.appointmentAt
-            ? splitDateTime(
-                moment(bookingDetail.appointmentAt)
-                  .add(5, 'hours')
-                  .add(30, 'minutes')
-                  .toISOString(),
-              )
+            ? splitDateTime(bookingDetail.appointmentAt)
             : '-';
         const isPackage = bookingDetail && bookingDetail.isPackage;
         setIsPackage(isPackage);
@@ -378,11 +373,11 @@ const BookingDetails = () => {
     const time2Moment = moment(time2.replace('-', ''), 'HH:mm');
     const result = isNegative
       ? time1Moment
-          .subtract(time2Moment.hours(), 'hours')
-          .subtract(time2Moment.minutes(), 'minutes')
+        .subtract(time2Moment.hours(), 'hours')
+        .subtract(time2Moment.minutes(), 'minutes')
       : time1Moment
-          .add(time2Moment.hours(), 'hours')
-          .add(time2Moment.minutes(), 'minutes');
+        .add(time2Moment.hours(), 'hours')
+        .add(time2Moment.minutes(), 'minutes');
     const formattedTime = result.format('HH:mm');
     return formattedTime;
   }
@@ -483,13 +478,13 @@ const BookingDetails = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
           {!bookingData?.bookingDetail?.isPackage &&
-          bookingData?.bookingDetail?.longitude !== '' &&
-          bookingData?.bookingDetail?.latitude !== '' &&
-          bookingData?.bookingDetail?.longitude &&
-          bookingData?.bookingDetail?.latitude &&
-          schedulerAllowedCity.includes(
-            bookingData?.bookingDetail?.addressRegionalCity,
-          ) ? (
+            bookingData?.bookingDetail?.longitude !== '' &&
+            bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) ? (
             <Grid item xs={6}>
               <AllotTherapistComponent
                 handleAllotTherapist={handleSubmitAllotTherapist}
@@ -556,13 +551,13 @@ const BookingDetails = () => {
         </Grid>
         <Grid container spacing={2} mt={4}>
           {bookingData?.bookingDetail?.longitude !== '' &&
-          !bookingData?.bookingDetail?.isPackage &&
-          bookingData?.bookingDetail?.latitude !== '' &&
-          bookingData?.bookingDetail?.longitude &&
-          bookingData?.bookingDetail?.latitude &&
-          schedulerAllowedCity.includes(
-            bookingData?.bookingDetail?.addressRegionalCity,
-          ) ? (
+            !bookingData?.bookingDetail?.isPackage &&
+            bookingData?.bookingDetail?.latitude !== '' &&
+            bookingData?.bookingDetail?.longitude &&
+            bookingData?.bookingDetail?.latitude &&
+            schedulerAllowedCity.includes(
+              bookingData?.bookingDetail?.addressRegionalCity,
+            ) ? (
             <Grid item xs={6}>
               <AllotDateV2
                 handleAllotDate={handleAllotDate}
