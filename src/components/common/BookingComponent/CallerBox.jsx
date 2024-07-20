@@ -4,12 +4,29 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../userLocalStorageUtils';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
+import { addBookingActionLog } from '../../../store/actions/booking.action';
 
 const CallerBox = (props) => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+    const user = JSON.parse(localStorage.getItem('userData'))?.user;
     const [callersList, setCallersList] = useState([])
     const [selectedCaller, setSelectedCaller] = useState("")
     const params = useParams();
+    const addUserActivity = async (data) => {
+        const body={
+          session_schedule_id:params?.sessionScheduleId,
+          dashboard_user_id:user?.id,
+          dashboard_user_name:user?.name,
+          operation_type:data.operation_type,
+          operation_string:data.operation_string,
+        }
+        try {
+          await addBookingActionLog(body);
+        } catch (error) {
+          console.error("Error adding user log:", error);
+        }
+      };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!selectedCaller) {
@@ -22,7 +39,6 @@ const CallerBox = (props) => {
             alert("No caller found.")
             return
         }
-        console.log(name)
         const callerObj = callersList.find((obj) => obj.name == name)
         if (!callerObj) {
             alert("Caller details not found.")
@@ -46,6 +62,10 @@ const CallerBox = (props) => {
                 },
             )
             .then((response) => {
+                addUserActivity({
+                    operation_string: `Dashboard user ${user?.name} Add caller ${reqBody?.callerName} .`,
+                    operation_type: "add-caller"
+                });        
                 alert("Caller Added")
                 window.location.reload();
             })

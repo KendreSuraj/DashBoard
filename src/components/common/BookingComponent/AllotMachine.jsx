@@ -6,8 +6,11 @@ import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchCenter } from '../../../store/actions/center.action';
+import { addBookingActionLog } from '../../../store/actions/booking.action';
+
 const AllotMachine = ({ body, isDisabled }) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+  const user = JSON.parse(localStorage.getItem('userData'))?.user;
   const dispatch = useDispatch()
   const availableMachines = useSelector(state => state.machine?.availableMachine)
   const availableMachine = [...availableMachines, body?.previousMachineId]
@@ -33,7 +36,21 @@ const AllotMachine = ({ body, isDisabled }) => {
   }
   const handleCenterChange = (event) => {
     setSelectedCenter(event.target.value)
-  }
+  } 
+  const addUserActivity = async (data) => {
+    const body1={
+      session_schedule_id:body?.sessionScheduleId,
+      dashboard_user_id:user?.id,
+      dashboard_user_name:user?.name,
+      operation_type:data.operation_type,
+      operation_string:data.operation_string,
+    }
+    try {
+        await addBookingActionLog(body1);
+    } catch (error) {
+        console.error("Error adding user log:", error);
+    }
+};
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -47,6 +64,10 @@ const AllotMachine = ({ body, isDisabled }) => {
         };
         const res = await manualAllocateMachine(newBody);
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} manually allocated machine.`,
+            operation_type: "manually-allocate-machine"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
@@ -68,6 +89,10 @@ const AllotMachine = ({ body, isDisabled }) => {
         setIsButtonDisabled(true);
         const res = await reAllocateMachine({ ...body, centerId: selectedCenter });
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} reallocated machine.`,
+            operation_type: "reallocate-machine"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
@@ -93,6 +118,10 @@ const AllotMachine = ({ body, isDisabled }) => {
         }
         const res = await deAllocateMachine(reqBody);
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} deallocated machine.`,
+            operation_type: "deallocate-machine"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         } else {

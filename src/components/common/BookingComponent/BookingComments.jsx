@@ -23,6 +23,7 @@ const BookingComments = ({sessionScheduleId}) => {
   return (
     <div>
      <div className="table-container">
+      <h3>Comment Logs</h3>
       <table className="custom-table">
         <thead>
           <tr>

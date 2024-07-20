@@ -4,14 +4,32 @@ import { Paper, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/m
 import { autoAllocateTherapistAndMachine, cancelBooking } from '../../../store/actions/therapist.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
+import { addBookingActionLog } from '../../../store/actions/booking.action';
+
 const UpdateStatusComponentV2 = (props) => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+    const user = JSON.parse(localStorage.getItem('userData'))?.user;
     const [selectedStatus, setSelectedStatus] = useState("");
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     };
     const body = props?.body
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+    const addUserActivity = async (data) => {
+        const body1={
+            session_schedule_id:body?.sessionScheduleId,
+            dashboard_user_id:user?.id,
+            dashboard_user_name:user?.name,
+            operation_type:data.operation_type,
+            operation_string:data.operation_string,
+          }
+        try {
+            await addBookingActionLog(body1);
+        } catch (error) {
+            console.error("Error adding user log:", error);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -32,12 +50,20 @@ const UpdateStatusComponentV2 = (props) => {
         if (props?.selectedStatus !== "CANCELLED" && selectedStatus === "CANCELLED") {
             const res = await cancelBooking(reqBody)
             if (res?.status === 200) {
+                addUserActivity({
+                    operation_string: `Dashboard user ${user?.name} canceled this booking.`,
+                    operation_type: "cancel-booking"
+                  });                  
                 alert(res.data?.status?.message);
                 window.location.reload()
             }
         } else if (props?.selectedStatus === "CANCELLED" && selectedStatus === "SCHEDULED") {
             const res = await autoAllocateTherapistAndMachine(body)
             if (res?.status === 200) {
+                addUserActivity({
+                    operation_string: `Dashboard user ${user?.name} scheduled this booking.`,
+                    operation_type: "booking-schedule"
+                  });                  
                 alert(res.data?.status?.message);
                 window.location.reload()
             }

@@ -11,9 +11,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useParams } from 'react-router-dom';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import { useSelector } from 'react-redux';
-
+import { addBookingActionLog } from '../../../store/actions/booking.action';
 const AllotDateV2 = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+  const user = JSON.parse(localStorage.getItem('userData'))?.user;
   const [activeOption, setActiveOption] = useState(null);
   const [activeOption1, setActiveOption1] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState();
@@ -23,6 +24,20 @@ const AllotDateV2 = (props) => {
   const params = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  const addUserActivity = async (data) => {
+    const body={
+      session_schedule_id:params?.sessionScheduleId,
+      dashboard_user_id:user?.id,
+      dashboard_user_name:user?.name,
+      operation_type:data.operation_type,
+      operation_string:data.operation_string,
+    }
+    try {
+      await addBookingActionLog(body);
+    } catch (error) {
+      console.error("Error adding user log:", error);
+    }
+  };
   let centerList = useSelector((state) => state.center?.centerList?.centers);
   useEffect(() => {
     setBooking((prevBooking) => ({
@@ -129,6 +144,10 @@ const AllotDateV2 = (props) => {
         setIsButtonDisabled(true);
         const res = await confirmClientSlots(booking);
         if (res.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} rescheduled this booking  .`,
+            operation_type: "rescheduled"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         }

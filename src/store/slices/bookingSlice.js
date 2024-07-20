@@ -4,7 +4,8 @@ import {
   fetchCityList,
   fetchProductList,
   fetchPaymentHistory,
-  fetchBookingComments
+  fetchBookingComments,
+  fetchBookingActionLogs
 } from '../actions/booking.action';
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   productList: [],
   paymentHistory:{},
   bookingComments:[],
+  bookingActionLogs:[],
   isLoading: true,
   error: null,
   isBookingLoading: false,
@@ -79,6 +81,18 @@ const bookingSlice = createSlice({
       state.bookingComments = action.payload?.data;
     });
     builder.addCase(fetchBookingComments.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(fetchBookingActionLogs.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchBookingActionLogs.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.bookingActionLogs = action.payload?.data;
+    });
+    builder.addCase(fetchBookingActionLogs.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });

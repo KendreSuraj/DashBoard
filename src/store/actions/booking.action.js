@@ -187,3 +187,45 @@ export const fetchBookingComments = createAsyncThunk(
     }
   },
 );
+
+export const addBookingActionLog = async (logs) => {
+  try {
+      const res = await axios.post(
+          `${apiUrl}/api/v1/admin/booking/add-booking-action-log`,
+          logs,
+          {
+              headers: {
+                  Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+                  token: getToken(),
+              },
+          },
+      );
+      const data = res.data;
+      console.log("see logs",data)
+      return data;
+  } catch (error) {
+      console.error('Error in Adding user', error);
+      throw error;
+  }
+};
+
+export const fetchBookingActionLogs = createAsyncThunk(
+  'booking/fetchBookingActionLogs',
+  async (sessionScheduleId) => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/v1/admin/booking/booking-action-logs/${sessionScheduleId}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching booking logs:', error);
+      throw error;
+    }
+  },
+);
