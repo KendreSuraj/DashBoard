@@ -10,9 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 import CircularProgress from '@mui/material/CircularProgress';
 import { fetchCenter } from '../../../store/actions/center.action';
-
+import { addBookingActionLog } from '../../../store/actions/booking.action';
 const AllotTherapistBox = (props) => {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+  const user = JSON.parse(localStorage.getItem('userData'))?.user;
   const body = props?.reAllocateBody
   const dispatch = useDispatch()
   const [partners, setPartners] = useState([]);
@@ -35,6 +36,21 @@ const AllotTherapistBox = (props) => {
   const { handleAllotTherapist } = props;
   const hours = getHoursList();
   const minutes = getMinutesList();
+
+  const addUserActivity = async (data) => {
+    const body={
+      session_schedule_id:reAllocateBody?.sessionScheduleId,
+      dashboard_user_id:user?.id,
+      dashboard_user_name:user?.name,
+      operation_type:data.operation_type,
+      operation_string:data.operation_string,
+    }
+    try {
+      await addBookingActionLog(body);
+    } catch (error) {
+      console.error("Error adding user log:", error);
+    }
+  };
 
   useEffect(() => {
     setSelectedTherapist(props.partnerNameStr);
@@ -99,6 +115,10 @@ const AllotTherapistBox = (props) => {
               secondSelectedTherapist: secondId
             });
           }
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} manually allocated therapist ${body?.therapistName ? body.therapistName : ''}.`,
+            operation_type: "manually-reallocate-therapist"
+          });
           alert(res.data?.status?.message);
           window.location.reload()
         } else {
@@ -162,6 +182,10 @@ const AllotTherapistBox = (props) => {
           },
         });
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} changed the gender for the booking service.`,
+            operation_type: "change-gender"
+          });          
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
@@ -184,6 +208,10 @@ const AllotTherapistBox = (props) => {
         setIsButtonDisabled(true);
         const res = await reAllocateTherapist({ ...reAllocateBody, centerId: selectedCenter });
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} reallocated therapist ${body?.therapistName?body?.therapistName:""}.`,
+            operation_type: "reallocate-therapist"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         } else {
@@ -211,6 +239,10 @@ const AllotTherapistBox = (props) => {
         const res = await deAllocateTherapist(reqBody);
         console.log("seeee", res)
         if (res?.status === 200) {
+          addUserActivity({
+            operation_string: `Dashboard user ${user?.name} deallocated therapist ${body?.therapistName}.`,
+            operation_type: "deallocate-therapist"
+        });        
           alert(res.data?.status?.message);
           window.location.reload();
         } else {

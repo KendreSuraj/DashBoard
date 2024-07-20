@@ -23,6 +23,7 @@ import AllotTherapistV1 from '../../components/common/BookingComponent/AllotTher
 import { addHoursToTime, subtractHoursFromTime } from '..';
 import UpdateStatusComponentPackage from '../../components/common/BookingComponent/UpdateStatusComponentPackage';
 import BookingComments from '../../components/common/BookingComponent/BookingComments';
+import BookingActionLogs from './BookingActionLogs';
 
 const BookingDetails = () => {
   // const navigate = useNavigate()
@@ -412,6 +413,7 @@ const BookingDetails = () => {
       machineId: bookingData?.machineDetail?.id,
       therapistCenterId: bookingData?.partnerDetail?.center_id,
       machineCenterId: bookingData?.machineDetail?.center_id,
+      therapistName: bookingData?.partnerDetail?.name
     };
   }
 
@@ -694,6 +696,9 @@ const BookingDetails = () => {
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
           <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
+        </Grid>
+        <Grid item xs={12} md={6} mt={4}>
+          <BookingActionLogs sessionScheduleId={params.sessionScheduleId} />
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
           <UserLogs userLogs={userLogs} />
