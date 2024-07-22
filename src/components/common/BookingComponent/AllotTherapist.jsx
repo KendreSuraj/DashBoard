@@ -116,7 +116,7 @@ const AllotTherapistBox = (props) => {
             });
           }
           addUserActivity({
-            operation_string: `Dashboard user ${user?.name} manually allocated therapist ${body?.therapistName ? body.therapistName : ''}.`,
+            operation_string: `Dashboard user ${user?.name} manually deallocated therapist ${body?.therapistName ? body.therapistName : ''}.`,
             operation_type: "manually-reallocate-therapist"
           });
           alert(res.data?.status?.message);
