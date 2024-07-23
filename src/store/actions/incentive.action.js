@@ -53,7 +53,7 @@ export const submitIncentive = createAsyncThunk(
   'incentive/submitincentive',
   async (body) => {
     try {
-      const scrollPosition = window.scrollY;
+      localStorage.setItem('scrollPosition', window.scrollY);
 
       const res = await axios.post(
         `${apiUrl}/api/v1/admin/partner/check-incentive`,
@@ -70,9 +70,6 @@ export const submitIncentive = createAsyncThunk(
       if (data.status.code === 200) {
         alert(data.status.message);
         window.location.reload(0, 0);
-        setTimeout(() => {
-          window.scrollTo(0, scrollPosition);
-        }, 0);
 
         return data;
       }

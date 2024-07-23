@@ -14,6 +14,8 @@ import { hasAdminAndSuperAdminAccess } from '../../components/common/UserRolesCo
 
 export default function ViewUncheckedIncentive() {
   const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
+  const scrollPosition = localStorage.getItem('scrollPosition');
+
   const dispatch = useDispatch();
   const location = useLocation();
   const incentiveDetails = location.state?.details;
@@ -84,6 +86,10 @@ export default function ViewUncheckedIncentive() {
       }
     }
   };
+
+  if (scrollPosition > 100) {
+    window.scrollTo(0, parseInt(scrollPosition, 10));
+  }
 
   return (
     <div>
@@ -183,7 +189,7 @@ export default function ViewUncheckedIncentive() {
                         required
                       />
                       {item.isIncentive && index !== isEditing ? (
-                       hasAdminAndSuperAdminAccess(role)&&<Button
+                        hasAdminAndSuperAdminAccess(role) && <Button
                           type="button"
                           onClick={() => handleEdit(index)}
                           style={{
@@ -195,7 +201,7 @@ export default function ViewUncheckedIncentive() {
                           Edit
                         </Button>
                       ) : (
-                        hasAdminAndSuperAdminAccess(role)&&<button
+                        hasAdminAndSuperAdminAccess(role) && <button
                           type="submit"
                           className="incentive-edit-form-button button-green"
                         >
@@ -222,7 +228,7 @@ export default function ViewUncheckedIncentive() {
       {incentiveSteps?.length > 0 && hasAdminAndSuperAdminAccess(role) && (
         <div className="center">
           <button
-          
+
             className="final-submit-button"
             onClick={() => handleFinalSubmit()}
           >
