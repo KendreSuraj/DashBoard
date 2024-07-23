@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './TableComponent.style.css';
 import { Link } from 'react-router-dom';
+import moment from "moment"
 
 import {
   Table,
@@ -139,7 +140,9 @@ const TableComponent = ({
                               onClick={() => window.open(row[key], '_blank')}
                               style={{ maxWidth: '100px', maxHeight: '100px', cursor: 'pointer' }}
                               alt="img"
-                            /> : key === "packageDescription" ? <div dangerouslySetInnerHTML={{ __html: row[key] }} /> : row[key]
+                            /> : key === "packageDescription" ? <div dangerouslySetInnerHTML={{ __html: row[key] }} /> :
+                              key === "appointmentAt" ?
+                                moment(row[key]).format('MMMM Do YYYY, HH:mm:ss a') : row[key]
                           )}
                         </TableCell>
                       );
