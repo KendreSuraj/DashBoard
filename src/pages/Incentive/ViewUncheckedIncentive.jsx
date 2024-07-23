@@ -93,7 +93,7 @@ export default function ViewUncheckedIncentive() {
 
   setTimeout(() => {
     localStorage.removeItem('scrollPosition');
-  }, 4000)
+  }, 5000)
 
   return (
     <div>
