@@ -91,6 +91,10 @@ export default function ViewUncheckedIncentive() {
     window.scrollTo(0, parseInt(scrollPosition, 10));
   }
 
+  setTimeout(() => {
+    localStorage.removeItem('scrollPosition');
+  }, 1000)
+
   return (
     <div>
       <h3>View Unchecked Incentive</h3>
