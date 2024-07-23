@@ -142,7 +142,9 @@ const TableComponent = ({
                               alt="img"
                             /> : key === "packageDescription" ? <div dangerouslySetInnerHTML={{ __html: row[key] }} /> :
                               key === "appointmentAt" ?
-                                moment(row[key]).format('MMMM Do YYYY, HH:mm:ss a') : row[key]
+                              moment(row[key], "YYYY-MM-DDTHH:mm:ss.SSSZ")
+                              .utcOffset("+00:00")
+                              .format(`DD-MM-YYYY, HH:mm A`) : row[key]
                           )}
                         </TableCell>
                       );
