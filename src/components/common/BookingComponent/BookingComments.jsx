@@ -16,7 +16,7 @@ const BookingComments = ({sessionScheduleId}) => {
     const getAdminNameById = (id) => {
         for (let i = 0; i < adminList.length; i++) {
             if (adminList[i].id === id) {
-                return adminList[i].name;
+                return adminList[i].name+ " - " +adminList[i].role;
             }
         }
     }
