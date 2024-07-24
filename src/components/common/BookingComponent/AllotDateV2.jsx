@@ -25,12 +25,12 @@ const AllotDateV2 = (props) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const addUserActivity = async (data) => {
-    const body={
-      session_schedule_id:params?.sessionScheduleId,
-      dashboard_user_id:user?.id,
-      dashboard_user_name:user?.name,
-      operation_type:data.operation_type,
-      operation_string:data.operation_string,
+    const body = {
+      session_schedule_id: params?.sessionScheduleId,
+      dashboard_user_id: user?.id,
+      dashboard_user_name: user?.name,
+      operation_type: data.operation_type,
+      operation_string: data.operation_string,
     }
     try {
       await addBookingActionLog(body);
@@ -83,8 +83,14 @@ const AllotDateV2 = (props) => {
       const response = await getClientSlots(requestData);
       if (response?.status === 200) {
         setIsLoading(false);
+        const currentDate = new Date();
+        const currentTime = currentDate.toTimeString().slice(0, 5);
+        let currentSlots = response?.data?.slots
+        if (currentDate.toISOString().slice(0, 10) === date) {
+          currentSlots = currentSlots.filter(slot => slot.clientSlotEndTime > currentTime);
+        }
         setTimeSlot(
-          response?.data?.slots.sort((a, b) => {
+          currentSlots.sort((a, b) => {
             return a.clientSlotStartTime.localeCompare(b.clientSlotStartTime);
           }),
         );
@@ -147,7 +153,7 @@ const AllotDateV2 = (props) => {
           addUserActivity({
             operation_string: `Dashboard user ${user?.name} rescheduled this booking  .`,
             operation_type: "rescheduled"
-        });        
+          });
           alert(res.data?.status?.message);
           window.location.reload();
         }
