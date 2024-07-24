@@ -503,6 +503,7 @@ const BookingDetails = () => {
                 deleteSecondTherapistHandler={deleteSecondTherapistHandler}
                 reAllocateBody={body}
                 therapist={userDataObject}
+                therapistGender={bookingData?.partnerDetail?.gender}
               />
             </Grid>
           ) : (
@@ -698,11 +699,11 @@ const BookingDetails = () => {
           <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
-          <BookingActionLogs sessionScheduleId={params.sessionScheduleId} />
+          <BookingActionLogs sessionScheduleId={params.sessionScheduleId} userLogs={userLogs} />
         </Grid>
-        <Grid item xs={12} md={6} mt={4}>
+        {/* <Grid item xs={12} md={6} mt={4}>
           <UserLogs userLogs={userLogs} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );
