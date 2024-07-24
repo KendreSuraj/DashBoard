@@ -50,7 +50,8 @@ const TherapistAnalytics = () => {
             if (res?.status?.code === 200) {
                 alert(res.status?.message)
                 handleClose();
-                window.location.reload()
+                dispatch(fetchTherapistAvailability(selectedId));
+                // window.location.reload()
             }
         } catch (err) {
             console.error('An error occurred while making the slot free:', err);

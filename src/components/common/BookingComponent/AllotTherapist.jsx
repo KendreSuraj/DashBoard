@@ -116,7 +116,7 @@ const AllotTherapistBox = (props) => {
             });
           }
           addUserActivity({
-            operation_string: `Dashboard user ${user?.name} manually deallocated therapist ${body?.therapistName ? body.therapistName : ''}.`,
+            operation_string: `Dashboard user ${user?.name} manually allocated therapist ${body?.therapistName ? body.therapistName : ''}.`,
             operation_type: "manually-reallocate-therapist"
           });
           alert(res.data?.status?.message);
@@ -183,7 +183,7 @@ const AllotTherapistBox = (props) => {
         });
         if (res?.status === 200) {
           addUserActivity({
-            operation_string: `Dashboard user ${user?.name} changed the gender for the booking service.`,
+            operation_string: `Dashboard user ${user?.name} changed the gender for the booking service from ${props?.therapistGender} to ${props?.therapistGender==="Female"?"Male":"Female"}.`,
             operation_type: "change-gender"
           });          
           alert(res.data?.status?.message);

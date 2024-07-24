@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdmin } from '../../store/actions/center.action';
 import { fetchBookingActionLogs } from '../../store/actions/booking.action';
 
-const BookingActionLogs = ({sessionScheduleId}) => {
+const BookingActionLogs = ({sessionScheduleId,userLogs}) => {
     const  dispatch=useDispatch()
     const bookingActionLog = useSelector((state) => state?.booking?.bookingActionLogs)
     const adminList = useSelector(state => state.center?.adminList)
@@ -35,13 +35,13 @@ const BookingActionLogs = ({sessionScheduleId}) => {
          </tr>
        </thead>
        <tbody>
-         {bookingActionLog?.length > 0 ? (
-           bookingActionLog.map((data,idx) => (
+         {[...bookingActionLog,...userLogs]?.length > 0 ? (
+           [...bookingActionLog,...userLogs].map((data,idx) => (
              <tr key={idx}>
                <td>{idx+1}</td>
-               <td>{data.dashboard_user_name}</td>
+               <td>{data.dashboard_user_name?data.dashboard_user_name:data?.app_user_name}</td>
                {/* <td>{getAdminNameById(data.dashboard_user_id)}</td> */}
-               <td>{data.operation_string}</td>
+               <td>{data.operation_string?data.operation_string:data?.activity}</td>
                <td>{new Date(data.created_at).toLocaleDateString('en-GB')}</td>
                <td>{new Date(new Date(data.created_at).getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[1].split('.')[0]}</td>
              </tr>
