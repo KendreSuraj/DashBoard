@@ -32,6 +32,7 @@ import AdvancePayments from '../pages/AdvancePayment/AdvancePayments';
 import SchedulerTabs from '../pages/Scheduler/SchedulerTabs';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import Deallocation from '../pages/TechDeallocation/Deallocation';
+import BookingAnalytics from '../pages/Analytics/BookingAnalytics';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 
@@ -187,6 +188,15 @@ const appRoutes = [
     state: 'schedulerAnalytics',
     sidebarProps: {
       displayText: 'Scheduler Analytics',
+      icon: <AnalyticsIcon />,
+    },
+  },
+  {
+    path: '/booking-analytics',
+    element: <BookingAnalytics />,
+    state: 'bookngAnalytics',
+    sidebarProps: {
+      displayText: 'Booking Analytics',
       icon: <AnalyticsIcon />,
     },
   },
