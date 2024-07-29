@@ -184,6 +184,8 @@ const BookingDetails = () => {
             : '-', // if bookingDetail is not present, use '-'
           'Booking Date': formattedDateAndTime?.date,
           'Left for appointment': bookingDetail.officeLeftTime,
+          'Payment ID': bookingDetail.rzpPaymentId ? bookingDetail.rzpPaymentId : "",
+          'Payment Order ID': bookingDetail.rzpOrderId ? bookingDetail.rzpOrderId : "",
           'Booking Time': formattedDateAndTime?.time,
           Status:
             bookingDetail && bookingDetail.status ? bookingDetail.status : '-',
