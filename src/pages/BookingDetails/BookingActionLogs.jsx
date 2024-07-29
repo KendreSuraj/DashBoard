@@ -39,7 +39,7 @@ const BookingActionLogs = ({sessionScheduleId,userLogs}) => {
            [...bookingActionLog,...userLogs].map((data,idx) => (
              <tr key={idx}>
                <td>{idx+1}</td>
-               <td>{data.dashboard_user_name?data.dashboard_user_name:data?.app_user_name}</td>
+               <td>{data.dashboard_user_id?data.dashboard_user_name:data?.app_user_name}</td>
                {/* <td>{getAdminNameById(data.dashboard_user_id)}</td> */}
                <td>{data.operation_string?data.operation_string:data?.activity}</td>
                <td>{new Date(data.created_at).toLocaleDateString('en-GB')}</td>
