@@ -5,6 +5,7 @@ import {
   fetchIncentiveSteps,
   finalIncentiveSubmit,
   submitIncentive,
+  submitIncentiveRemark,
 } from '../../store/actions/incentive.action';
 import { useLocation } from 'react-router-dom';
 import './ViewUncheckedIncentive.style.css';
@@ -52,6 +53,28 @@ export default function ViewUncheckedIncentive() {
       );
     }
   };
+
+  const handleChangeRemark = (index, field, value) => {
+    setEditedData((prevData) =>
+      prevData.map((item, i) =>
+        i === index ? { ...item, [field]:value } : item,
+      ),
+    );
+  };
+
+  const addRemarks=async(e,item,index)=>{
+    e.preventDefault();
+    const updatedData = editedData[index] ?? {};
+    if (updatedData) {
+      dispatch(
+        submitIncentiveRemark({
+          partnerStepId: item.partnerStepId,
+          partnerStepIncentiveId: item.partnerStepIncentiveId,
+          incentiveRemark:updatedData.incentiveRemark,
+        }),
+      );
+    }
+  }
 
   useEffect(() => {
     dispatch(
@@ -135,7 +158,8 @@ export default function ViewUncheckedIncentive() {
               <th>Title</th>
               <th>Description</th>
               <th>Image</th>
-              <th>Remarks</th>
+              <th>Therapist Remarks</th>
+              <th>Incentive Remark</th>
               <th>Type</th>
               <th>Allocated Incentive</th>
             </tr>
@@ -169,6 +193,36 @@ export default function ViewUncheckedIncentive() {
                     />
                   </td>
                   <td>{item.remarks}</td>
+                 <td
+                  >
+                    {!item.incentiveRemark?<form
+                    onSubmit={(e) => addRemarks(e, item, index)}
+                    className="inline-form"
+                  >
+                    <input
+                    style={{width:'150px'}}
+                        type="text"
+                      value={
+                        editedData[index]?.incentiveRemark??item.incentiveRemark
+                      }
+                      onChange={(e) =>
+                        handleChangeRemark(
+                          index,
+                          'incentiveRemark',
+                          e.target.value
+                        )
+                      }
+                      className="min-width-textarea"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="incentive-edit-form-button button-green"
+                    >
+                      SUBMIT
+                    </button>
+                  </form>:item.incentiveRemark}
+                  </td>
                   <td>{item.type}</td>
                   <td>
                     <form
