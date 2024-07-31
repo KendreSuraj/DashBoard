@@ -106,3 +106,35 @@ export const finalIncentiveSubmit = createAsyncThunk(
     }
   },
 );
+
+
+export const submitIncentiveRemark = createAsyncThunk(
+  'incentive/add-submit-remark',
+  async (body) => {
+    try {
+      localStorage.setItem('scrollPosition', window.scrollY);
+
+      const res = await axios.post(
+        `${apiUrl}/api/v1/admin/partner/add-incentive-remark`,
+        body,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        },
+      );
+
+      const data = res.data;
+      if (data.status.code === 200) {
+        alert(data.status.message);
+        window.location.reload(0, 0);
+
+        return data;
+      }
+    } catch (error) {
+      console.error('Error in submit incentive', error);
+      throw error;
+    }
+  },
+);
