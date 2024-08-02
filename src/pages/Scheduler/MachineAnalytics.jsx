@@ -5,9 +5,10 @@ import { fetchMachineAvailability } from '../../store/actions/SchedulerAnalytics
 import { centerAction } from '../../store/slices/centerSlice';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { Button } from 'react-bootstrap';
-import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { markMachineFree } from '../../store/actions/machine.action';
+// import { Button } from 'react-bootstrap';
+// import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Button, Dialog,Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {markMachineFree, markMachineSlotFree }from '../../store/actions/machine.action';
 
 const MachineAnalytics = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,44 @@ const MachineAnalytics = () => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0, 10))
+
+  const [open, setOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const handleClick = (data) => {
+    setSelectedSlot(data);
+    setOpen(true); 
+  }
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedSlot(null);
+  };
+
+  const handleView=()=>{
+    handleClose()
+    window.open(`/booking-details/${selectedSlot?.serviceId}`, '_blank')
+}
+
+const handleFree = async () => {
+  try {
+      const res =await markMachineSlotFree({
+          time: selectedSlot.time,
+          serviceId: selectedSlot.serviceId,
+          machineId: selectedSlot.machineId,
+          day: selectedDay,
+      });
+      if (res?.status?.code === 200) {
+          alert(res.status?.message)
+          handleClose();
+          dispatch(fetchMachineAvailability(selectedId));
+          // window.location.reload()
+      }
+  } catch (err) {
+      console.error('An error occurred while making the slot free:', err);
+      return err;
+  }
+};
+
+
   useEffect(() => {
     dispatch(fetchCenter());
     setCenterId(selectedId)
@@ -76,7 +115,7 @@ const MachineAnalytics = () => {
     '21:00-21:30','21:30-22:00'
   ];
 
-  const renderSlots = (availability) => {
+  const renderSlots = (availability,machine) => {
     const slotMap = {};
 
     availability.forEach(slot => {
@@ -97,11 +136,11 @@ const MachineAnalytics = () => {
         } else if (slot.status === "UNAVAILABLE") {
           slotMap[timeRange] = <span style={{ backgroundColor: 'gray', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }}>Unavailable</span>;
         } else if (slot.status === "SESSION_BLOCKED") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span onClick={()=>handleClick({time:timeRange,machineId:machine.id,serviceId:slot.serviceId,machineName:machine.name})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px', cursor: 'pointer' }}>Service ID:{slot.serviceId}</span>;
         } else if (slot.status === "BUFFER_START") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span onClick={()=>handleClick({time:timeRange,machineId:machine.id,serviceId:slot.serviceId,machineName:machine.name})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }}>Service ID:{slot.serviceId}</span>;
         } else if (slot.status === "BUFFER_END") {
-          slotMap[timeRange] = <span style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }} onClick={() =>window.open(`/booking-details/${slot?.serviceId}`, '_blank')}>Service ID:{slot.serviceId}</span>;
+          slotMap[timeRange] = <span onClick={()=>handleClick({time:timeRange,machineId:machine.id,serviceId:slot.serviceId,machineName:machine.name})} style={{ backgroundColor: 'red', color: 'black', padding: '8px', whiteSpace: 'nowrap', borderRadius: '10px',cursor:'pointer' }}>Service ID:{slot.serviceId}</span>;
         }
         else {
           slotMap[timeRange] = 'Repair';
@@ -217,12 +256,25 @@ const MachineAnalytics = () => {
                    Mark Free
                   </Button>}
                 </TableCell>
-                {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [])}
+                {renderSlots(therapist?.[`${selectedDay.toLowerCase()}Availability`] || [],therapist)}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={open} onClose={handleClose}>
+         <div className="slot-modal">
+            <div className="slot-modal-content">
+                <span className="slot-close" onClick={handleClose}>&times;</span>
+                <h3> Are you sure want Free slot of:</h3>
+                <h3 style={{ textAlign: "center" }}>
+                    <span style={{ backgroundColor: "red", color: "white", padding: '10px' }}>{selectedSlot?.time}</span>
+                </h3>
+                {<button className='view-slot-button' onClick={()=>handleView()}>View Booking</button>}
+                <button className='slot-button'onClick={handleFree} >Free Slot</button>
+            </div>
+        </div>
+      </Dialog>
     </Box>
   );
 };

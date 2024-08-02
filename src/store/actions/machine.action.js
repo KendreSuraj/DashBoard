@@ -112,3 +112,13 @@ export const deAllocateMachine = async (data) => {
     return error;
   }
 }
+
+
+export const markMachineSlotFree = async (data) => {
+  try {
+    const res = await axios.post(`${apiUrl}/api/v1/custom-machine-slot/free-machine-slot`, data);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+}
