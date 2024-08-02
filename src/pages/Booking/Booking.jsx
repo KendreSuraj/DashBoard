@@ -90,6 +90,7 @@ const Booking = () => {
       "Booking Time": data?.bookingTime,
       "Avataar Rating": parseInt(data?.avataarRating) > 0 ? data?.avataarRating : "N/A",
       "Partner Rating": data?.partnerRating > 0 ? ratingDescriptions[data?.partnerRating] : "N/A",
+      "orderId": data?.orderId,
       // "Office Left Time": data?.officeLeftTime ? data?.officeLeftTime : "",
       "Pre-treatment Filled":data?.preTreatment?"Yes":"No"
     };

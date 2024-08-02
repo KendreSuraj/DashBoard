@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Button } from '@mui/material';
-import { changeUTCtoIST } from '../helper';
 
 const UserDetailsComponent = ({ data, machineDetails, handleSetOfficeLeftTime }) => {
+    console.log(data)
     const keys = Object.keys(data);
     const keys1 = Object.keys(machineDetails);
     const middleIndex = Math.ceil(keys.length / 2);
