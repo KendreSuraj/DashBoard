@@ -8,7 +8,7 @@ import moment from 'moment';
 // import { Button } from 'react-bootstrap';
 // import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import {Button, Dialog,Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import {markMachineSlotFree }from '../../store/actions/machine.action';
+import {markMachineFree, markMachineSlotFree }from '../../store/actions/machine.action';
 
 const MachineAnalytics = () => {
   const dispatch = useDispatch();
