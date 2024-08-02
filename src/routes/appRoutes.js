@@ -33,6 +33,7 @@ import SchedulerTabs from '../pages/Scheduler/SchedulerTabs';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import Deallocation from '../pages/TechDeallocation/Deallocation';
 import BookingAnalytics from '../pages/Analytics/BookingAnalytics';
+import MissedBookings from '../pages/MIssedBookings/MissedBookings';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 
@@ -225,6 +226,15 @@ const appRoutes = [
     state: 'deallocation',
     sidebarProps: {
       displayText: 'Deallocation',
+      icon: <BallotIcon />,
+    },
+  },
+  {
+    path: '/missed-bookings',
+    element: <MissedBookings />,
+    state: 'missedBookings',
+    sidebarProps: {
+      displayText: 'Missed Bookings',
       icon: <BallotIcon />,
     },
   },
