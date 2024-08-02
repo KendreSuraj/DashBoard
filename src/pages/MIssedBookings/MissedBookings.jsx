@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getToken } from '../../components/common/userLocalStorageUtils';
 
 function MissedBookings() {
     const [missedBookings, setMissedBookings] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/missed-bookings/bookings`)
+        axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/missed-bookings/bookings`, {
+            headers: {
+                Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+                token: getToken(),
+            }
+        })
             .then(res => setMissedBookings(res.data.bookings))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
