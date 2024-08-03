@@ -189,7 +189,7 @@ const BookingDetails = () => {
               : bookingDetail.productName // if isPackage s false, use productNames
             : '-',
           "Order Id": bookingDetail && bookingDetail.orderId ? bookingDetail.orderId : "-",
-          "Session": `${scehduleData?.schedule.findIndex((item)=>item.id==params.sessionScheduleId)+1}/${bookingDetail?.count}`,
+          "Session#": `${scehduleData?.schedule.findIndex((item)=>item.id==params.sessionScheduleId)+1} out of ${bookingDetail?.count}`,
           'Booking Date': formattedDateAndTime?.date,
           'Left for appointment': bookingDetail.officeLeftTime,
           'Payment ID': bookingDetail.rzpPaymentId ? bookingDetail.rzpPaymentId : "",
