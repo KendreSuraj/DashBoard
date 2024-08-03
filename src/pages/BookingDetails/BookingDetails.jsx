@@ -46,6 +46,8 @@ const BookingDetails = () => {
   const [isPackage, setIsPackage] = useState(false);
   const [packageSessionData, setPackageSessionData] = useState(null);
   const [packageDetails, setPackageDetails] = useState();
+  const [scehduleData, setScheduleData]=useState();
+  const [isScheduleData, setIsScheduleData] = useState(false);
 
   const params = useParams();
 
@@ -151,6 +153,7 @@ const BookingDetails = () => {
       .then((response) => {
         setBookingData(response?.data);
         fetchPackageDetails(response?.data?.bookingDetail.orderId)
+        !isScheduleData && ScheduleOfOrder(response?.data?.bookingDetail.sessionId);
         const bookingDetail =
           response.data && response.data.bookingDetail
             ? response.data.bookingDetail
@@ -183,9 +186,10 @@ const BookingDetails = () => {
           Service: bookingDetail
             ? bookingDetail.isPackage
               ? bookingDetail.productNames // if isPackage is true, use productNames
-              : bookingDetail.productName // if isPackage is false, use productName
-            : '-', // if bookingDetail is not present, use '-'
-          "Order Id": bookingDetail && bookingDetail.orderId ? bookingDetail.orderId:"-",
+              : bookingDetail.productName // if isPackage s false, use productNames
+            : '-',
+          "Order Id": bookingDetail && bookingDetail.orderId ? bookingDetail.orderId : "-",
+          "Session": `${scehduleData?.schedule.findIndex((item)=>item.id==params.sessionScheduleId)+1}/${bookingDetail?.count}`,
           'Booking Date': formattedDateAndTime?.date,
           'Left for appointment': bookingDetail.officeLeftTime,
           'Payment ID': bookingDetail.rzpPaymentId ? bookingDetail.rzpPaymentId : "",
@@ -279,7 +283,7 @@ const BookingDetails = () => {
         setUserLogs(logs);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [scehduleData]);
 
   const fetchPackageDetails = async (orderId) => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/get-order-products/${orderId}`,
@@ -333,6 +337,24 @@ const BookingDetails = () => {
         .catch((err) => console.log(err));
     }
   }, [isPackage]);
+
+  const ScheduleOfOrder=async(id)=>{
+    try {
+      const abc = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/booking-details-info/${id}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+            token: getToken(),
+          },
+        }
+      );
+      setScheduleData(abc.data.bookingDetails);
+      setIsScheduleData(true)
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const deleteFirstTherapistHandler = (data) => {
     const body = {
