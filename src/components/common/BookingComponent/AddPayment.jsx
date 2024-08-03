@@ -9,6 +9,8 @@ const AddPayment = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const sessionScheduleId = location?.state?.sessionScheduleId
     const remainingAmount = location?.state?.remainingAmount
+    const orderId = location?.state?.orderId
+
     const userData = JSON.parse(localStorage.getItem('userData')).user;
     const [formData, setFormData] = useState({
         paidAmount: '',
@@ -77,7 +79,8 @@ const AddPayment = () => {
             sessionScheduleId: parseInt(sessionScheduleId),
             paidAmount: parseInt(formData.paidAmount),
             modeOfPayment: formData.modeOfPayment,
-            image: formData.image
+            image: formData.image,
+            orderId:orderId,
         }
         try {
             const response = await addBookingPayment(reqBody);
@@ -86,7 +89,8 @@ const AddPayment = () => {
                 navigate(`/booking-details/${sessionScheduleId}`);
             }
         } catch (err) {
-            alert(err);
+            alert(err.response.data.status.message);
+            
         } finally {
             setIsSubmitting(false);
         }

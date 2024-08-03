@@ -5,20 +5,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPaymentHistory } from '../../../store/actions/booking.action';
 import { hasAdminAndSuperAdminAccess } from '../UserRolesConfig';
 
-const PaymentHistory = ({ sessionScheduleId }) => {
+const PaymentHistory = ({ sessionScheduleId, orderId }) => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const paymentHistory = useSelector((state) => state?.booking?.paymentHistory)
     useEffect(() => {
-        dispatch(fetchPaymentHistory(sessionScheduleId))
-    }, [sessionScheduleId]);
+        dispatch(fetchPaymentHistory({sessionScheduleId,orderId}))
+    }, [sessionScheduleId,orderId]);
     const remainingAmount = paymentHistory.remainingAmount
     return (
         <div>
             <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    {hasAdminAndSuperAdminAccess(role) && <Button onClick={() => navigate("/add-booking-payment", { state: { sessionScheduleId, remainingAmount } })} style={{ color: '#FFFFFF', background: '#0C2294', borderRadius: '8px', textTransform: 'capitalize' }}>Add Payment</Button>}                </div> <h3>Payment History</h3>
+                    {hasAdminAndSuperAdminAccess(role) && <Button onClick={() => navigate("/add-booking-payment", { state: { sessionScheduleId, remainingAmount ,orderId} })} style={{ color: '#FFFFFF', background: '#0C2294', borderRadius: '8px', textTransform: 'capitalize' }}>Add Payment</Button>}                </div> <h3>Payment History</h3>
                 <div style={{ display: 'flex' }}>
                     <h4 style={{ borderBottom: '1px solid black', marginRight: '50px', paddingBottom: '5px' }}>Total Amount: {paymentHistory.totalAmount}</h4>
                     <h4 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>Remaining Amount: {paymentHistory.remainingAmount}</h4>

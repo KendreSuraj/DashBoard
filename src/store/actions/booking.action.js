@@ -87,10 +87,10 @@ export const fetchProductList = createAsyncThunk(
 
 export const fetchPaymentHistory = createAsyncThunk(
   'booking/fetchpaymenthistory',
-  async (sessionScheduleId) => {
+  async ({ sessionScheduleId, orderId}) => {
     try {
       const res = await axios.get(
-        `${apiUrl}/api/v1/admin/booking/session-payment-history/${sessionScheduleId}`,
+        `${apiUrl}/api/v1/admin/booking/session-payment-history/${sessionScheduleId}/${orderId}`,
         {
           headers: {
             Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,

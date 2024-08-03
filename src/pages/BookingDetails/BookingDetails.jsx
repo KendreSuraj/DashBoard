@@ -24,6 +24,7 @@ import { addHoursToTime, subtractHoursFromTime } from '..';
 import UpdateStatusComponentPackage from '../../components/common/BookingComponent/UpdateStatusComponentPackage';
 import BookingComments from '../../components/common/BookingComponent/BookingComments';
 import BookingActionLogs from './BookingActionLogs';
+import PackageDetails from '../../components/common/BookingComponent/PackageDetails';
 
 const BookingDetails = () => {
   // const navigate = useNavigate()
@@ -44,6 +45,7 @@ const BookingDetails = () => {
   const [userLogs, setUserLogs] = useState([]);
   const [isPackage, setIsPackage] = useState(false);
   const [packageSessionData, setPackageSessionData] = useState(null);
+  const [packageDetails, setPackageDetails] = useState();
 
   const params = useParams();
 
@@ -148,6 +150,7 @@ const BookingDetails = () => {
       )
       .then((response) => {
         setBookingData(response?.data);
+        fetchPackageDetails(response?.data?.bookingDetail.orderId)
         const bookingDetail =
           response.data && response.data.bookingDetail
             ? response.data.bookingDetail
@@ -182,6 +185,7 @@ const BookingDetails = () => {
               ? bookingDetail.productNames // if isPackage is true, use productNames
               : bookingDetail.productName // if isPackage is false, use productName
             : '-', // if bookingDetail is not present, use '-'
+          "Order Id": bookingDetail && bookingDetail.orderId ? bookingDetail.orderId:"-",
           'Booking Date': formattedDateAndTime?.date,
           'Left for appointment': bookingDetail.officeLeftTime,
           'Payment ID': bookingDetail.rzpPaymentId ? bookingDetail.rzpPaymentId : "",
@@ -276,6 +280,17 @@ const BookingDetails = () => {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const fetchPackageDetails = async (orderId) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/get-order-products/${orderId}`,
+      {
+        headers: {
+          Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
+          token: getToken(),
+        },
+      },)
+    setPackageDetails(response.data.data)
+  }
 
   const handleAllotDate = (date) => {
     const reqBody = {
@@ -698,7 +713,10 @@ const BookingDetails = () => {
           <BookingComments sessionScheduleId={params.sessionScheduleId} />
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
-          <PaymentHistory sessionScheduleId={params.sessionScheduleId} />
+          <PackageDetails data={packageDetails} />
+        </Grid>
+        <Grid item xs={12} md={6} mt={4}>
+          <PaymentHistory sessionScheduleId={params.sessionScheduleId} orderId={bookingData?.bookingDetail?.orderId} />
         </Grid>
         <Grid item xs={12} md={6} mt={4}>
           <BookingActionLogs sessionScheduleId={params.sessionScheduleId} userLogs={userLogs} />
