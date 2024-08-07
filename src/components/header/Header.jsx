@@ -7,7 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import { usersProfile } from '../common/menuItems.js';
 import MenuDropdownComponent from '../common/MenuDropdown/MenuDropdownComponent.jsx';
-// import SearchComponent from '../common/SearchComponent/SearchComponent';
 import './Header.style.css';
 
 const Header = () => {
