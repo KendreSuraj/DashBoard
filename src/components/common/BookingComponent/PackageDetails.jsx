@@ -3,6 +3,9 @@ import { Paper, } from '@mui/material';
 
 const PackageDetails = ({ data }) => {
     const [showBreakup, setShowBreakUp] = useState(false);
+    const totalCouponDiscount = data?.products.reduce((sum, product) => {
+        return sum + Number(product.couponDiscount);
+    }, 0);
     return (
         <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
             <h3>Package Details</h3>
@@ -34,9 +37,10 @@ const PackageDetails = ({ data }) => {
                     <p style={{ textAlign: "right", color: "grey" }}>Total Order Discount: ₹ {(data?.totalOrderDiscount + parseInt(data?.products[0].walletAmount)).toLocaleString("en-in")} <span style={{ cursor: "pointer" }} onClick={() => setShowBreakUp(!showBreakup)}>{showBreakup ? "🔼" : "🔽"}</span></p>
                     {showBreakup &&
                         <>
-                            <p style={{ textAlign: "right", color: "grey",fontSize:"12px" }}>( - ) Total Product Discount: ₹ {data?.totalOrderDiscount.toLocaleString("en-in")}</p>
-                            {parseInt(data?.products[0].walletAmount) > 0 && <p style={{ textAlign: "right", color: "grey",fontSize:"12px" }} className='productSummaryPrice'>( - ) Credits Used: ₹ {parseInt(data?.products[0].walletAmount).toLocaleString("en-in")}</p>}
+                            <p style={{ textAlign: "right", color: "grey",fontSize:"12px" }}>( - ) Total Product Discount: ₹ {(data?.totalOrderDiscount- totalCouponDiscount).toLocaleString("en-in")}</p>
+                            <p style={{ textAlign: "right", color: "grey",fontSize:"12px" }} className='productSummaryPrice'>( - ) Coupon Discount: ₹ {parseInt(totalCouponDiscount).toLocaleString("en-in")}</p>
                         </>}
+                    <p style={{ textAlign: "right", color: "grey",marginTop:"8px" }}>( - ) Credits Used: ₹ {parseInt(data?.products[0].walletAmount).toLocaleString("en-in")}</p>
                     <p style={{ textAlign: "right", color: "grey",marginTop:"8px" }}>Total Amount Paid: ₹ {parseInt(data?.products[0].amountPaid).toLocaleString("en-in")}</p>
                     <p style={{ textAlign: "right", color: "grey",marginTop:"8px" }}>Total Payable Amount: ₹ {parseInt(data?.products[0].leftAmount).toLocaleString("en-in")}</p>
                 </div>
