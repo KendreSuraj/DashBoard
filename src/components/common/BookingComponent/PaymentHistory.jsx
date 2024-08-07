@@ -29,7 +29,6 @@ const PaymentHistory = ({ sessionScheduleId, orderId }) => {
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Service Id</th>
                                 <th>Paid Amount</th>
                                 <th>Mode of Payment</th>
                                 <th>Added Date</th>
@@ -42,7 +41,6 @@ const PaymentHistory = ({ sessionScheduleId, orderId }) => {
                                 paymentHistory.sessionPayments.map((data) => (
                                     <tr key={data.id}>
                                         <td>{data.id}</td>
-                                        <td>{data.sessionScheduleId}</td>
                                         <td>{data.paidAmount}</td>
                                         <td>{data.modeOfPayment}</td>
                                         <td>{new Date(data.createdAt).toLocaleDateString('en-GB')}</td>
