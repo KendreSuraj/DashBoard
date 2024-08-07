@@ -34,7 +34,7 @@ const PackageDetails = ({ data }) => {
                 </table>
                 <div>
                     <p style={{ textAlign: "right", color: "grey", marginTop: "32px", marginBottom:"8px" }}>Total Order Amount: ₹ {data?.totalOrderPrice.toLocaleString("en-in")}</p>
-                    <p style={{ textAlign: "right", color: "grey" }}>Total Order Discount: ₹ {(data?.totalOrderDiscount).toLocaleString("en-in")} <span style={{ cursor: "pointer" }} onClick={() => setShowBreakUp(!showBreakup)}>{showBreakup ? "🔼" : "🔽"}</span></p>
+                    <p style={{ textAlign: "right", color: "grey" }}>Total Order Discount: ₹ {data?.totalOrderDiscount.toLocaleString("en-in")} <span style={{ cursor: "pointer" }} onClick={() => setShowBreakUp(!showBreakup)}>{showBreakup ? "🔼" : "🔽"}</span></p>
                     {showBreakup &&
                         <>
                             <p style={{ textAlign: "right", color: "grey",fontSize:"12px" }}>( - ) Total Product Discount: ₹ {(data?.totalOrderDiscount- totalCouponDiscount).toLocaleString("en-in")}</p>
