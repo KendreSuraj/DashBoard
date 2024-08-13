@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTherapistCustomslots, updateCustomTherapistSlot } from '../../store/actions/therapist.action'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ const RequestList = () => {
     const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
     const dispatch = useDispatch()
     const navigate = useNavigate() 
+    const [isSubmitting,setIsSubmtting]=useState(false)
     let therapistCustomSlot = useSelector(state => state?.therapist?.therapistCustomSlot?.slotDetails)
     const adminList = useSelector(state => state.center?.adminList)
     useEffect(() => {
@@ -22,14 +23,18 @@ const RequestList = () => {
     const localToken = JSON.parse(localStorage.getItem("userData"))
     const updateTherapistRequest = async (id, isApproved) => {
         try {
+            setIsSubmtting(true)
             const res = await updateCustomTherapistSlot(id, { adminId: parseInt(localToken?.user?.id), isApproved: isApproved });
             if (res.data?.status.code === 200) {
+                setIsSubmtting(false)
                 window.location.reload()
                 alert(res?.data.status?.message)
             } else if (res?.response?.data?.status.code === 400) {
+                setIsSubmtting(false)
                 alert(res?.response?.data?.status?.message)
             }
         } catch (error) {
+            setIsSubmtting(false)
             return error;
         }
     };
@@ -79,8 +84,8 @@ const RequestList = () => {
                                 <td>{schedule.type}</td>
                                 <td>
 
-                                    {schedule?.isApproved === null && hasAdminAndSuperAdminAccess(role)&& <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
-                                    {schedule?.isApproved === null &&hasAdminAndSuperAdminAccess(role) && <button className="action-btn" onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
+                                    {schedule?.isApproved === null && hasAdminAndSuperAdminAccess(role)&& <button className={`${isSubmitting?'action-btn-disable':'action-btn'}`} disabled={isSubmitting} onClick={() => updateTherapistRequest(schedule.id, true)}>Approve</button>}
+                                    {schedule?.isApproved === null &&hasAdminAndSuperAdminAccess(role) && <button className={`${isSubmitting?'action-btn-disable':'action-btn-1'}`} disabled={isSubmitting} onClick={() => updateTherapistRequest(schedule.id, false)}>Reject</button>}
                                     {schedule?.isApproved && `Approved By:${getAdminNameById(schedule.adminId)}`}
                                     {schedule?.isApproved === false && `Rejected By:${getAdminNameById(schedule.adminId)}`}
                                 </td>
