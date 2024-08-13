@@ -8,7 +8,7 @@ const Deallocation = () => {
     const [therapistList, setTherapistList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-
+    const [therapistId,setTherapistId]=useState()
     const handleInputChange = (e) => {
         setSessionScheduleId(e.target.value);
     };
@@ -27,14 +27,38 @@ const Deallocation = () => {
         }
     };
 
+    // const handleDeallocateTherapists = async () => {
+    //     setLoading(true);
+    //     setConfirmOpen(false);
+    //     try {
+    //         const response = await axios.post(`${process.env.REACT_APP_SCHEDULER_API_URL}/api/v1/allocate/deallocate-all-from-schedule`, { sessionScheduleId });
+    //         setTherapistList([]);
+    //         setSessionScheduleId('');
+    //         toast.success(response?.data?.status?.message);
+    //     } catch (err) {
+    //         console.log(err);
+    //         toast.error(err?.response?.data?.status?.message || 'An error occurred while deallocating.');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
     const handleDeallocateTherapists = async () => {
         setLoading(true);
         setConfirmOpen(false);
+        const reqBody={
+            sessionScheduleId:sessionScheduleId,
+            type:"BUG",
+            therapistId:parseInt(therapistId)
+        }
         try {
-            const response = await axios.post(`${process.env.REACT_APP_SCHEDULER_API_URL}/api/v1/allocate/deallocate-all-from-schedule`, { sessionScheduleId });
+            const response = await axios.post(`${process.env.REACT_APP_SCHEDULER_API_URL}/api/v1/allocate/deallocate-bug-therapist`,reqBody);
             setTherapistList([]);
-            setSessionScheduleId('');
+            setSessionScheduleId(sessionScheduleId);
+            setTherapistId('')
             toast.success(response?.data?.status?.message);
+            handleFetchTherapists()
         } catch (err) {
             console.log(err);
             toast.error(err?.response?.data?.status?.message || 'An error occurred while deallocating.');
@@ -43,7 +67,8 @@ const Deallocation = () => {
         }
     };
 
-    const handleConfirmOpen = () => {
+    const handleConfirmOpen = (id) => {
+        setTherapistId(id)
         setConfirmOpen(true);
     };
 
@@ -75,14 +100,30 @@ const Deallocation = () => {
                         <Box my={2}>
                             <List>
                                 {therapistList.map((therapist, index) => (
-                                    <ListItem key={index}>
-                                        {therapist.partnerId} {therapist.partnerName} - {therapist.type === 'ANALYTIC' ? 'B' : 'O'}
+                                    <ListItem key={index} sx={{ justifyContent: 'space-between', alignItems: 'center',borderBottom: '1px solid #ccc'}}>
+                                        <Box sx={{ color: therapist.type === 'ANALYTIC' ?'red':'green' }}>
+                                            {therapist.partnerId} {therapist.partnerName} - {therapist.type === 'ANALYTIC' ? 'B' : 'O'}
+                                        </Box>
+                                        {therapist.type === 'ANALYTIC'&&<button
+                                            style={{
+                                                display: "flex",
+                                                color: "black",
+                                                background: 'pink',
+                                                borderRadius: '10px',
+                                                justifyContent: 'center',
+                                                padding: '5px 10px',
+                                            }}
+                                            onClick={()=>handleConfirmOpen(therapist.partnerId)}
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Deallocating...' : 'Deallocate'}
+                                        </button>}
                                     </ListItem>
                                 ))}
                             </List>
-                            <Button variant="contained" color="secondary" onClick={handleConfirmOpen} fullWidth disabled={loading}>
-                                {loading ? 'Deallocating...' : 'Deallocate All'}
-                            </Button>
+                            {/* <Button variant="contained" color="secondary" onClick={handleConfirmOpen} fullWidth disabled={loading}>
+                              {loading ? 'Deallocating...' : 'Deallocate All'}
+                              </Button> */}
                         </Box>
                     ) : (
                         <Typography variant="body1" gutterBottom>
@@ -96,7 +137,7 @@ const Deallocation = () => {
                 <DialogTitle>Confirm Deallocation</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to deallocate all therapists from this session schedule?
+                        Are you sure you want to deallocate therapist from this session schedule?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
