@@ -12,7 +12,7 @@ function UpcomingBookings() {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/v1/admin/booking/fetch-advance-bookings', {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/fetch-advance-bookings`, {
                     headers: {
                         Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
                         token: getToken(),
