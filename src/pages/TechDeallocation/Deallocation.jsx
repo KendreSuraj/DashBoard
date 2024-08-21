@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, List, ListItem, Typography, Container, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Deallocation = () => {
     const [sessionScheduleId, setSessionScheduleId] = useState('');
@@ -12,7 +13,7 @@ const Deallocation = () => {
     const handleInputChange = (e) => {
         setSessionScheduleId(e.target.value);
     };
-
+    const navigate=useNavigate()
     const handleFetchTherapists = async () => {
         setLoading(true);
         try {
@@ -80,6 +81,24 @@ const Deallocation = () => {
         <>
             <Container>
                 <Box my={4}>
+                    <Button
+                        onClick={() => navigate("/duplicate-blocked-id")}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            ml: 'auto',
+                            backgroundColor: '#1976d2',
+                            color: 'white',
+                            padding: '8px 16px',
+                            fontWeight: 'bold',
+                            '&:hover': {
+                                backgroundColor: '#1565c0', 
+                            },
+                        }}
+                    >
+                        View Duplicate Therapists
+                    </Button>
                     <Typography variant="h4" component="h1" gutterBottom>
                         Deallocation
                     </Typography>
