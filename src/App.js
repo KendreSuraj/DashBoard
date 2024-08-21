@@ -31,6 +31,7 @@ import AddTherapistUnavailability from './pages/Request/AddTherapistUnavailabili
 import PackagesSteps from './pages/Packages/PackageStep/PackageSteps';
 import TransactionHistory from './pages/AdvancePayment/TransactionHistory.jsx';
 import Deallocation from './pages/TechDeallocation/Deallocation.jsx';
+import DuplicateBlockedId from './pages/TechDeallocation/DuplicateBlockedId.js';
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
             <Route path="/add-advance-payments" element={< AddAdvancePayments />} />
             <Route path="/transaction-history/:id" element={< TransactionHistory />} />
             <Route path="/therapist-deallocation" element={< Deallocation />} />
+            <Route path="/duplicate-blocked-id" element={<DuplicateBlockedId/>}/>
           </Route>
         </Routes>
       </Router>
