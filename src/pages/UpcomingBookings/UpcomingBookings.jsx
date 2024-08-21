@@ -45,6 +45,7 @@ function UpcomingBookings() {
                             <TableCell>Name</TableCell>
                             <TableCell>Gender</TableCell>
                             <TableCell>Product Name</TableCell>
+                            <TableCell>Appointment Date</TableCell>
                             <TableCell>Appointment At</TableCell>
                             <TableCell>Status</TableCell>
                             <TableCell>Action</TableCell>
@@ -59,7 +60,8 @@ function UpcomingBookings() {
                                     <TableCell>{booking.name}</TableCell>
                                     <TableCell>{booking.gender}</TableCell>
                                     <TableCell>{booking.productName}</TableCell>
-                                    <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell>
+                                    <TableCell>{new Date(booking?.appointmentAt).toLocaleDateString()}</TableCell>
+                                    <TableCell>{new Date(new Date(booking?.appointmentAt).getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[1].split('.')[0]}</TableCell>
                                     <TableCell>{booking.advanceBookingStatus}</TableCell>
                                     <TableCell>
                                         <Button variant="contained" color="primary" onClick={() => handleViewBooking(booking.serviceId)}>
