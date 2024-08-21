@@ -45,7 +45,6 @@ function UpcomingBookings() {
                             <TableCell>Name</TableCell>
                             <TableCell>Gender</TableCell>
                             <TableCell>Product Name</TableCell>
-                            <TableCell>Appointment Date</TableCell>
                             <TableCell>Appointment At</TableCell>
                             <TableCell>Status</TableCell>
                             <TableCell>Action</TableCell>
@@ -60,8 +59,19 @@ function UpcomingBookings() {
                                     <TableCell>{booking.name}</TableCell>
                                     <TableCell>{booking.gender}</TableCell>
                                     <TableCell>{booking.productName}</TableCell>
-                                    <TableCell>{new Date(booking?.appointmentAt).toLocaleDateString()}</TableCell>
-                                    <TableCell>{new Date(new Date(booking?.appointmentAt).getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[1].split('.')[0]}</TableCell>
+                                    {/* <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell> */}
+                                    <TableCell>
+                                        {new Intl.DateTimeFormat('en-GB', {
+                                            year: 'numeric',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit',
+                                            timeZone: 'UTC', // Adjust the time zone as needed
+                                            hour12: false,
+                                        }).format(new Date(booking.appointmentAt))}
+                                    </TableCell>
                                     <TableCell>{booking.advanceBookingStatus}</TableCell>
                                     <TableCell>
                                         <Button variant="contained" color="primary" onClick={() => handleViewBooking(booking.serviceId)}>
