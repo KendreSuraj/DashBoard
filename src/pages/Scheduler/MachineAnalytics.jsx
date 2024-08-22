@@ -229,7 +229,7 @@ const handleFree = async () => {
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="therapist availability table">
           <TableHead>
             <TableRow >
-              <TableCell align="center"  sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', position: 'sticky', left: 0, zIndex: 2 }}>Therapist&nbsp;Name</TableCell>
+              <TableCell align="center"  sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', position: 'sticky', left: 0, zIndex: 2 }}>Machine&nbsp;Name</TableCell>
               {timeSlots.map((slot, index) => (
                 <TableCell key={index} align="center" s sx={{ borderRight: 1, borderColor: 'divider', fontWeight: 'bold', whiteSpace: "nowrap", top: 0, position: 'sticky', backgroundColor: 'white', zIndex: 1 }}>{slot}</TableCell>
               ))}
