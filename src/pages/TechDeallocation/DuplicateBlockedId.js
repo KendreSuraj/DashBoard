@@ -86,7 +86,7 @@ const DuplicateBlockedId = () => {
                 <Typography variant="body1">No duplicate therapists found.</Typography>
             )}
         </Box>
-                <Box my={2}>
+                <Box sx={{marginTop:"250px"}}>
                 <Typography variant="h5" component="h3" mb={2} sx={{ fontWeight: 'bold', color: 'black' }}>
                     All Duplicate Machines Blocked Ids
                 </Typography>
