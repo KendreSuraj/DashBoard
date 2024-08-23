@@ -47,6 +47,7 @@ function UpcomingBookings() {
                             <TableCell>Product Name</TableCell>
                             <TableCell>Appointment At</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>City</TableCell>
                             <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -73,6 +74,7 @@ function UpcomingBookings() {
                                         }).format(new Date(booking.appointmentAt))}
                                     </TableCell>
                                     <TableCell>{booking.advanceBookingStatus}</TableCell>
+                                    <TableCell>{booking.city}</TableCell>
                                     <TableCell>
                                         <Button variant="contained" color="primary" onClick={() => handleViewBooking(booking.serviceId)}>
                                             View Booking
