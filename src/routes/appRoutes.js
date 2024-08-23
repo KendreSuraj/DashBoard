@@ -35,6 +35,7 @@ import Deallocation from '../pages/TechDeallocation/Deallocation';
 import BookingAnalytics from '../pages/Analytics/BookingAnalytics';
 import MissedBookings from '../pages/MIssedBookings/MissedBookings';
 import UpcomingBookings from '../pages/UpcomingBookings/UpcomingBookings';
+import UpcomingMissedBookings from '../pages/UpcomingMissedBookings.jsx/UpcomingMissedBookings';
 
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 
@@ -245,6 +246,15 @@ const appRoutes = [
     state: 'upcomingBookings',
     sidebarProps: {
       displayText: 'Upcoming Bookings',
+      icon: <BallotIcon />,
+    },
+  },
+  {
+    path: '/upcoming-missed-bookings',
+    element: <UpcomingMissedBookings />,
+    state: 'upcomingMissedBookings',
+    sidebarProps: {
+      displayText: 'Upcoming Missed Bookings',
       icon: <BallotIcon />,
     },
   },

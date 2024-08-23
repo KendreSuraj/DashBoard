@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from '../../components/common/userLocalStorageUtils';
 
-function UpcomingBookings() {
+function UpcomingMissedBookings() {
 
     const [bookings, setBookings] = useState([]);
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ function UpcomingBookings() {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/fetch-advance-bookings`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/admin/booking/fetch-not-scheduled-advance-bookings`, {
                     headers: {
                         Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
                         token: getToken(),
@@ -34,7 +34,7 @@ function UpcomingBookings() {
     return (
         <div>
             <Typography variant="h4" gutterBottom>
-                Upcoming Bookings
+                Upcoming Missed Bookings
             </Typography>
             <TableContainer component={Paper}>
                 <Table>
@@ -90,4 +90,4 @@ function UpcomingBookings() {
     );
 }
 
-export default UpcomingBookings;
+export default UpcomingMissedBookings;
