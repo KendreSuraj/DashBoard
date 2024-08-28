@@ -29,7 +29,6 @@ export const fetchBookings = createAsyncThunk(
       if (params.partnerFilter) {
         bookingApiUrl += `&partnerName=${params.partnerFilter}`;
       }
-      console.log("see booking url---",bookingApiUrl)
       const res = await axios.get(bookingApiUrl, {
         headers: {
           Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
