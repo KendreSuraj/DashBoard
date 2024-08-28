@@ -14,7 +14,9 @@ export const fetchBookings = createAsyncThunk(
       }
 
       if (params.serviceFilter) {
-        bookingApiUrl += `&serviceFilter=${params.serviceFilter}`;
+        // bookingApiUrl += `&serviceFilter=${params.serviceFilter}`;
+        const encodedServiceFilter = encodeURIComponent(params.serviceFilter);
+        bookingApiUrl += `&serviceFilter=${encodedServiceFilter}`;
       }
 
       if (params.cityFilter) {
@@ -27,6 +29,7 @@ export const fetchBookings = createAsyncThunk(
       if (params.partnerFilter) {
         bookingApiUrl += `&partnerName=${params.partnerFilter}`;
       }
+      console.log("see booking url---",bookingApiUrl)
       const res = await axios.get(bookingApiUrl, {
         headers: {
           Authorization: `Basic ${process.env.REACT_APP_ADMIN_APP_KEY}`,
