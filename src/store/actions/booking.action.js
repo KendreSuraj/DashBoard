@@ -14,7 +14,9 @@ export const fetchBookings = createAsyncThunk(
       }
 
       if (params.serviceFilter) {
-        bookingApiUrl += `&serviceFilter=${params.serviceFilter}`;
+        // bookingApiUrl += `&serviceFilter=${params.serviceFilter}`;
+        const encodedServiceFilter = encodeURIComponent(params.serviceFilter);
+        bookingApiUrl += `&serviceFilter=${encodedServiceFilter}`;
       }
 
       if (params.cityFilter) {
