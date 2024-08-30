@@ -36,7 +36,7 @@ import BookingAnalytics from '../pages/Analytics/BookingAnalytics';
 import MissedBookings from '../pages/MIssedBookings/MissedBookings';
 import UpcomingBookings from '../pages/UpcomingBookings/UpcomingBookings';
 import UpcomingMissedBookings from '../pages/UpcomingMissedBookings.jsx/UpcomingMissedBookings';
-
+import Upsell from '../pages/Upsell/upsell';
 const role = JSON.parse(localStorage.getItem('userData'))?.user?.role;
 
 const appRoutes = [
@@ -255,6 +255,15 @@ const appRoutes = [
     state: 'upcomingMissedBookings',
     sidebarProps: {
       displayText: 'Upcoming Missed Bookings',
+      icon: <BallotIcon />,
+    },
+  },
+  {
+    path: '/upsell',
+    element: <Upsell />,
+    state: 'upsell',
+    sidebarProps: {
+      displayText: 'Upsell',
       icon: <BallotIcon />,
     },
   },
