@@ -46,7 +46,7 @@ const BookingDetails = () => {
   const [isPackage, setIsPackage] = useState(false);
   const [packageSessionData, setPackageSessionData] = useState(null);
   const [packageDetails, setPackageDetails] = useState();
-  const [scehduleData, setScheduleData]=useState();
+  const [scehduleData, setScheduleData] = useState();
   const [isScheduleData, setIsScheduleData] = useState(false);
 
   const params = useParams();
@@ -189,7 +189,7 @@ const BookingDetails = () => {
               : bookingDetail.productName // if isPackage s false, use productNames
             : '-',
           "Order Id": bookingDetail && bookingDetail.orderId ? bookingDetail.orderId : "-",
-          "Session#": `${scehduleData?.schedule.findIndex((item)=>item.id==params.sessionScheduleId)+1} out of ${bookingDetail?.count}`,
+          "Session#": `${scehduleData?.schedule.findIndex((item) => item.id == params.sessionScheduleId) + 1} out of ${bookingDetail?.count}`,
           'Booking Date': formattedDateAndTime?.date,
           'Left for appointment': bookingDetail.officeLeftTime,
           'Payment ID': bookingDetail.rzpPaymentId ? bookingDetail.rzpPaymentId : "",
@@ -338,7 +338,7 @@ const BookingDetails = () => {
     }
   }, [isPackage]);
 
-  const ScheduleOfOrder=async(id)=>{
+  const ScheduleOfOrder = async (id) => {
     try {
       const abc = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/v1/admin/booking/booking-details-info/${id}`,
@@ -518,55 +518,55 @@ const BookingDetails = () => {
 
       <Grid item xs={12} md={6}>
         <Grid container spacing={2} mt={4}>
-          {!bookingData?.bookingDetail?.isPackage &&
+          {
             bookingData?.bookingDetail?.longitude !== '' &&
-            bookingData?.bookingDetail?.latitude !== '' &&
-            bookingData?.bookingDetail?.longitude &&
-            bookingData?.bookingDetail?.latitude &&
-            schedulerAllowedCity.includes(
-              bookingData?.bookingDetail?.addressRegionalCity,
-            ) ? (
-            <Grid item xs={6}>
-              <AllotTherapistComponent
-                handleAllotTherapist={handleSubmitAllotTherapist}
-                partnerNameStr={partnerNameStr ? partnerNameStr : ''}
-                secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
-                startDate={startDate ? startDate : ''}
-                startTime={startTime ? startTime : ''}
-                endTime={endTime ? endTime : ''}
-                isDisabled={
-                  userDataObject.Status === 'COMPLETED' ||
-                  userDataObject.Status === 'CANCELLED'
-                }
-                deleteFirstTherapistHandler={deleteFirstTherapistHandler}
-                deleteSecondTherapistHandler={deleteSecondTherapistHandler}
-                reAllocateBody={body}
-                therapist={userDataObject}
-                therapistGender={bookingData?.partnerDetail?.gender}
-              />
-            </Grid>
-          ) : (
-            <Grid item xs={6}>
-              <AllotTherapistV1
-                handleAllotTherapist={handleSubmitAllotTherapist}
-                partnerNameStr={partnerNameStr ? partnerNameStr : ''}
-                secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
-                startDate={startDate ? startDate : ''}
-                startTime={startTime ? startTime : ''}
-                endTime={endTime ? endTime : ''}
-                isDisabled={
-                  userDataObject.Status === 'COMPLETED' ||
-                  userDataObject.Status === 'PAID' ||
-                  userDataObject.Status === 'CANCELLED'
-                }
-                deleteFirstTherapistHandler={deleteFirstTherapistHandler}
-                deleteSecondTherapistHandler={deleteSecondTherapistHandler}
-                reAllocateBody={body}
-                therapist={userDataObject}
-              />
-            </Grid>
-          )}
-          {!bookingData?.bookingDetail?.isPackage &&
+              bookingData?.bookingDetail?.latitude !== '' &&
+              bookingData?.bookingDetail?.longitude &&
+              bookingData?.bookingDetail?.latitude &&
+              schedulerAllowedCity.includes(
+                bookingData?.bookingDetail?.addressRegionalCity,
+              ) ? (
+              <Grid item xs={6}>
+                <AllotTherapistComponent
+                  handleAllotTherapist={handleSubmitAllotTherapist}
+                  partnerNameStr={partnerNameStr ? partnerNameStr : ''}
+                  secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
+                  startDate={startDate ? startDate : ''}
+                  startTime={startTime ? startTime : ''}
+                  endTime={endTime ? endTime : ''}
+                  isDisabled={
+                    userDataObject.Status === 'COMPLETED' ||
+                    userDataObject.Status === 'CANCELLED'
+                  }
+                  deleteFirstTherapistHandler={deleteFirstTherapistHandler}
+                  deleteSecondTherapistHandler={deleteSecondTherapistHandler}
+                  reAllocateBody={body}
+                  therapist={userDataObject}
+                  therapistGender={bookingData?.partnerDetail?.gender}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={6}>
+                <AllotTherapistV1
+                  handleAllotTherapist={handleSubmitAllotTherapist}
+                  partnerNameStr={partnerNameStr ? partnerNameStr : ''}
+                  secondPartnerStr={secondPartnerStr ? secondPartnerStr : ''}
+                  startDate={startDate ? startDate : ''}
+                  startTime={startTime ? startTime : ''}
+                  endTime={endTime ? endTime : ''}
+                  isDisabled={
+                    userDataObject.Status === 'COMPLETED' ||
+                    userDataObject.Status === 'PAID' ||
+                    userDataObject.Status === 'CANCELLED'
+                  }
+                  deleteFirstTherapistHandler={deleteFirstTherapistHandler}
+                  deleteSecondTherapistHandler={deleteSecondTherapistHandler}
+                  reAllocateBody={body}
+                  therapist={userDataObject}
+                />
+              </Grid>
+            )}
+          {
             bookingData?.bookingDetail?.longitude !== '' &&
             bookingData?.bookingDetail?.latitude !== '' &&
             bookingData?.bookingDetail?.longitude &&
@@ -593,7 +593,6 @@ const BookingDetails = () => {
         </Grid>
         <Grid container spacing={2} mt={4}>
           {bookingData?.bookingDetail?.longitude !== '' &&
-            !bookingData?.bookingDetail?.isPackage &&
             bookingData?.bookingDetail?.latitude !== '' &&
             bookingData?.bookingDetail?.longitude &&
             bookingData?.bookingDetail?.latitude &&
@@ -676,24 +675,7 @@ const BookingDetails = () => {
                 </Grid>
               )
             )} */}
-          {bookingData?.bookingDetail?.isPackage ? (
-            <>
-              <Grid item xs={12} md={6}>
-                <UpdateStatusComponentPackage
-                  updateStatusHandler={updatePackageSessionStatus}
-                  packageSessionData={packageSessionData}
-                  sessionScheduleId={params.sessionScheduleId}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <UpdateStatusComponent
-                  updateStatusHandler={handleStatusUpdate}
-                  selectedStatus={selectedStatus}
-                  body={body}
-                />
-              </Grid>
-            </>
-          ) : bookingData?.bookingDetail?.latitude !== '' &&
+          {bookingData?.bookingDetail?.latitude !== '' &&
             bookingData?.bookingDetail?.longitude !== '' &&
             bookingData?.bookingDetail?.longitude &&
             bookingData?.bookingDetail?.latitude &&
