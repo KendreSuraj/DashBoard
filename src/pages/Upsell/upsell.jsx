@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from '../../components/common/userLocalStorageUtils';
+import moment from 'moment';
 
 function Upsell() {
 
@@ -74,6 +75,7 @@ function Upsell() {
                             <TableCell>End Price</TableCell>
                             <TableCell>Discount</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Remarks</TableCell>
                             <TableCell>Order ID</TableCell>
                             <TableCell>Payable Amount</TableCell>
                             <TableCell>Amount Paid</TableCell>
@@ -95,21 +97,13 @@ function Upsell() {
                                     <TableCell>{coupon.productName}</TableCell>
                                     {/* <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell> */}
                                     <TableCell>
-                                        {new Intl.DateTimeFormat('en-GB', {
-                                            year: 'numeric',
-                                            month: '2-digit',
-                                            day: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            second: '2-digit',
-                                            timeZone: 'UTC', // Adjust the time zone as needed
-                                            hour12: false,
-                                        }).format(new Date(coupon.createdAt))}
+                                        {moment(coupon.createdAt).format('YYYY-MM-DD HH:mm:ss')}
                                     </TableCell>
                                     <TableCell>{coupon.minCartDiscount}</TableCell>
                                     <TableCell>{coupon.maxCartDiscount}</TableCell>
                                     <TableCell>{coupon.discount}</TableCell>
                                     <TableCell>{coupon.status}</TableCell>
+                                    <TableCell>{coupon.remarks}</TableCell>
                                     <TableCell>{coupon.orderId}</TableCell>
                                     <TableCell>{coupon.payableAmount}</TableCell>
                                     <TableCell>{coupon.amountPaid}</TableCell>
