@@ -69,6 +69,7 @@ function Upsell() {
                             <TableCell>Client Name</TableCell>
                             <TableCell>Client Phone</TableCell>
                             <TableCell>Coupon Code</TableCell>
+                            <TableCell>Expiry Status</TableCell>
                             <TableCell>Product</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Start Price</TableCell>
@@ -94,6 +95,7 @@ function Upsell() {
                                     <TableCell>{coupon.clientName}</TableCell>
                                     <TableCell>{coupon.clientPhone}</TableCell>
                                     <TableCell>{coupon.code}</TableCell>
+                                    <TableCell>{coupon.is_valid ? 'Yes' : 'No'}</TableCell>
                                     <TableCell>{coupon.productName}</TableCell>
                                     {/* <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell> */}
                                     <TableCell>
