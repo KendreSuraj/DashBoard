@@ -84,7 +84,7 @@ function Upsell() {
                                 <TableRow key={index}>
                                     <TableCell>{coupon.serviceId}</TableCell>
                                     <TableCell>{coupon.partnerName}</TableCell>
-                                    <TableCell>{coupon.partnerMobile}</TableCell>
+                                    <TableCell>{coupon.partnerPhone}</TableCell>
                                     <TableCell>{coupon.clientName}</TableCell>
                                     <TableCell>{coupon.clientPhone}</TableCell>
                                     <TableCell>{coupon.code}</TableCell>
