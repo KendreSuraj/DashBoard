@@ -61,8 +61,10 @@ function Upsell() {
                     <TableHead>
                         <TableRow>
                             <TableCell>Service ID</TableCell>
+                            <TableCell>Therapist ID</TableCell>
                             <TableCell>Therapist Name</TableCell>
                             <TableCell>Therapist Phone</TableCell>
+                            <TableCell>Client ID</TableCell>
                             <TableCell>Client Name</TableCell>
                             <TableCell>Client Phone</TableCell>
                             <TableCell>Coupon Code</TableCell>
@@ -83,8 +85,10 @@ function Upsell() {
                             coupons && coupons.length > 0 ? coupons.map((coupon, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{coupon.serviceId}</TableCell>
+                                    <TableCell>{coupon.partnerId}</TableCell>
                                     <TableCell>{coupon.partnerName}</TableCell>
                                     <TableCell>{coupon.partnerPhone}</TableCell>
+                                    <TableCell>{coupon.clientId}</TableCell>
                                     <TableCell>{coupon.clientName}</TableCell>
                                     <TableCell>{coupon.clientPhone}</TableCell>
                                     <TableCell>{coupon.code}</TableCell>
