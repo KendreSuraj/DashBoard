@@ -27,6 +27,29 @@ function Upsell() {
         fetchCoupons();
     }, []);
 
+    // {
+    //     "serviceId": 23760,
+    //     "partnerName": "Meena",
+    //     "partnerPhone": "8766284199",
+    //     "clientName": "Sagar Paliwal",
+    //     "clientPhone": "9808342867",
+    //     "productName": "Arms Inch Loss",
+    //     "status": "REDEEMED",
+    //     "createdAt": "2024-09-02T14:26:15.000Z",
+    //     "minCartDiscount": "10000",
+    //     "maxCartDiscount": "15000",
+    //     "discount": "10",
+    //     "code": "AVT342867",
+    //     "cartId": "c76cde08-c246-4ab1-becd-c7cbac029dc7",
+    //     "remarks": "MyCoupon1",
+    //     "amountPaid": "4000",
+    //     "discountedPrice": "0",
+    //     "orderId": "31bca7e4-a9e2-46f6-b95b-79d2969bb108",
+    //     "payableAmount": "12575",
+    //     "leftAmount": "12575",
+    //     "products": "Full Legs Laser Hair Reduction - 3 female, "
+    // },
+
 
     return (
         <div>
@@ -42,12 +65,17 @@ function Upsell() {
                             <TableCell>Therapist Phone</TableCell>
                             <TableCell>Client Name</TableCell>
                             <TableCell>Client Phone</TableCell>
+                            <TableCell>Coupon Code</TableCell>
                             <TableCell>Product</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Start Price</TableCell>
                             <TableCell>End Price</TableCell>
                             <TableCell>Discount</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Order ID</TableCell>
+                            <TableCell>Payable Amount</TableCell>
+                            <TableCell>Amount Paid</TableCell>
+                            <TableCell>Left Amount</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -59,6 +87,7 @@ function Upsell() {
                                     <TableCell>{coupon.partnerMobile}</TableCell>
                                     <TableCell>{coupon.clientName}</TableCell>
                                     <TableCell>{coupon.clientPhone}</TableCell>
+                                    <TableCell>{coupon.code}</TableCell>
                                     <TableCell>{coupon.productName}</TableCell>
                                     {/* <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell> */}
                                     <TableCell>
@@ -77,6 +106,10 @@ function Upsell() {
                                     <TableCell>{coupon.maxCartDiscount}</TableCell>
                                     <TableCell>{coupon.discount}</TableCell>
                                     <TableCell>{coupon.status}</TableCell>
+                                    <TableCell>{coupon.orderId}</TableCell>
+                                    <TableCell>{coupon.payableAmount}</TableCell>
+                                    <TableCell>{coupon.amountPaid}</TableCell>
+                                    <TableCell>{coupon.leftAmount}</TableCell>
                                 </TableRow>
                             )) : <p>No Coupons</p>
                         }
