@@ -14,7 +14,7 @@ const AddTherapistUnavailability = () => {
     const therapistList = useSelector(state => state?.therapist?.therapistList?.therapists || []);
     const centerList = useSelector(state => state.center?.centerList?.centers || []);
     // let bookingList = useSelector((state) => state.booking.bookingList?.bookings);
-    const [bookingList,setBookingList]=useState([])
+    const [bookingList, setBookingList] = useState([])
 
     const today = new Date();
     const tomorrow = new Date();
@@ -50,7 +50,7 @@ const AddTherapistUnavailability = () => {
     const handleBookingDetail = (details) => {
         console.log(details);
         navigate(`/booking-details/${details['Service Id']}`);
-      };
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -70,31 +70,41 @@ const AddTherapistUnavailability = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        const reqBody = formData.type === "LEAVE"
-            ? {
-                therapistId: parseInt(formData?.therapistId),
-                startDate: formData.startDate,
-                endDate: formData.endDate,
-                type: formData.type,
+        try {
+            e.preventDefault();
+            setIsSubmitting(true);
+            const reqBody = formData.type === "LEAVE"
+                ? {
+                    therapistId: parseInt(formData?.therapistId),
+                    startDate: formData.startDate,
+                    endDate: formData.endDate,
+                    type: formData.type,
+                }
+                : {
+                    therapistId: parseInt(formData?.therapistId),
+                    startDate: formData.startDate,
+                    type: formData.type,
+                    startTime: formData.startTime + ":00",
+                    endTime: formData.endTime + ":00",
+                };
+            const res = await addTherapistUnavailabilityAndLeave(reqBody);
+            console.log("REEEEEEEE", res)
+            if (res?.status?.code === 200) {
+                alert(res.status?.message);
+                navigate("/allrequestlist");
+            } else {
+                alert(res)
+                window.location.reload()
             }
-            : {
-                therapistId: parseInt(formData?.therapistId),
-                startDate: formData.startDate,
-                type: formData.type,
-                startTime: formData.startTime + ":00",
-                endTime: formData.endTime + ":00",
-            };
-        const res = await addTherapistUnavailabilityAndLeave(reqBody);
-        if (res?.status?.code === 200) {
-            alert(res.status?.message);
-            navigate("/allrequestlist");
+            setIsSubmitting(false);
+        } catch (err) {
+            console.log("EEEEEEEErrrrrrr", err)
+            alert(err)
+            window.location.reload()
         }
-        setIsSubmitting(false);
     };
 
-    const fetchBookingData = async() => {
+    const fetchBookingData = async () => {
         const obj = {
             startDate: formData.startDate,
             endDate: formData.endDate,
@@ -102,33 +112,33 @@ const AddTherapistUnavailability = () => {
             searchType: "partnerName",
             searchText: formData.therapistName
         };
-       const res=await fetchBookingsByPartner(obj)
-       if(res.status.code===200){
-        //  setBookingList(res?.bookings)
-        const bookingList = res.bookings.map(data => {
-            const formattedDate = splitDateTime(data.appointmentAt);
-            const bookingDate = splitDateTime(data.bookingAt);
-    
-            return {
-                'Service Id': data?.sessionSchedulesId,
-                'Client Name': data.name ? data.name : '',
-                'Gender': data?.gender,
-                'Phone Number': data.phoneNumber,
-                'City': data.city ? data.city : '',
-                'Service Name': data.productName ? data.productName : '',
-                'Service Date': formattedDate.date,
-                'Service Time': formattedDate.time,
-                'Service Status': data.status ? data.status : '',
-                'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
-                "Start Time": data.startTime ? data.startTime : "",
-                "End Time": data.endTime ? data.endTime : "",
-                "Comment": data.comment ? data.comment : "",
-                "Booking Date": bookingDate?.date,
-                "Booking Time": data?.bookingTime
-            };
-        });    
-        setBookingList(bookingList);
-       }
+        const res = await fetchBookingsByPartner(obj)
+        if (res.status.code === 200) {
+            //  setBookingList(res?.bookings)
+            const bookingList = res.bookings.map(data => {
+                const formattedDate = splitDateTime(data.appointmentAt);
+                const bookingDate = splitDateTime(data.bookingAt);
+
+                return {
+                    'Service Id': data?.sessionSchedulesId,
+                    'Client Name': data.name ? data.name : '',
+                    'Gender': data?.gender,
+                    'Phone Number': data.phoneNumber,
+                    'City': data.city ? data.city : '',
+                    'Service Name': data.productName ? data.productName : '',
+                    'Service Date': formattedDate.date,
+                    'Service Time': formattedDate.time,
+                    'Service Status': data.status ? data.status : '',
+                    'Partner Name': data.partnerName ? data.partnerName : 'Not Assigned',
+                    "Start Time": data.startTime ? data.startTime : "",
+                    "End Time": data.endTime ? data.endTime : "",
+                    "Comment": data.comment ? data.comment : "",
+                    "Booking Date": bookingDate?.date,
+                    "Booking Time": data?.bookingTime
+                };
+            });
+            setBookingList(bookingList);
+        }
     };
 
     useEffect(() => {
@@ -214,7 +224,7 @@ const AddTherapistUnavailability = () => {
             <TableComponent
                 data={bookingList}
                 viewBookingButton={'view'}
-                 bookingDetails={handleBookingDetail}
+                bookingDetails={handleBookingDetail}
             />
         </div>
     );
