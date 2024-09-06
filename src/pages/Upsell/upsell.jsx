@@ -61,7 +61,6 @@ function Upsell() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Service ID</TableCell>
                             <TableCell>Therapist ID</TableCell>
                             <TableCell>Therapist Name</TableCell>
                             <TableCell>Therapist Phone</TableCell>
@@ -87,7 +86,6 @@ function Upsell() {
                         {
                             coupons && coupons.length > 0 ? coupons.map((coupon, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{coupon.serviceId}</TableCell>
                                     <TableCell>{coupon.partnerId}</TableCell>
                                     <TableCell>{coupon.partnerName}</TableCell>
                                     <TableCell>{coupon.partnerPhone}</TableCell>
@@ -95,8 +93,8 @@ function Upsell() {
                                     <TableCell>{coupon.clientName}</TableCell>
                                     <TableCell>{coupon.clientPhone}</TableCell>
                                     <TableCell>{coupon.code}</TableCell>
-                                    <TableCell>{coupon.is_valid ? 'Yes' : 'No'}</TableCell>
-                                    <TableCell>{coupon.productName}</TableCell>
+                                    <TableCell>{coupon.is_valid ? 'Not Expired' : 'Expired'}</TableCell>
+                                    <TableCell>{coupon.products}</TableCell>
                                     {/* <TableCell>{new Date(booking.appointmentAt).toLocaleString()}</TableCell> */}
                                     <TableCell>
                                         {moment(coupon.createdAt).format('YYYY-MM-DD HH:mm:ss')}
